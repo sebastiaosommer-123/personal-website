@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
+import ElasticLine from "@/components/fancy/physics/elastic-line";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -144,7 +145,15 @@ export default function Home() {
                   </span>
                 </div>
                 {i < experience.length - 1 && (
-                  <div className="mt-4 h-px bg-[#EEEFF1] w-full" />
+                  <div className="mt-4 w-full" style={{ height: 20 }}>
+                    <ElasticLine
+                      grabThreshold={20}
+                      releaseThreshold={12}
+                      strokeWidth={1}
+                      className="text-[#EEEFF1]"
+                      transition={{ type: "spring", stiffness: 800, damping: 40 }}
+                    />
+                  </div>
                 )}
               </div>
             ))}
