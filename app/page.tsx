@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
+import UnderlineToBackground from "@/components/fancy/text/underline-to-background";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -77,7 +78,7 @@ export default function Home() {
           </motion.p>
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
 
           {/* Bio */}
           <motion.div
@@ -93,6 +94,10 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <p className="text-base text-[#18191C]" style={{ lineHeight: 1.5 }}>
               Selected work and detailed case studies available upon request
+            </p>
+            <div className="h-[0.75em]" />
+            <p className="text-base text-[#18191C]" style={{ lineHeight: 1.5 }}>
+              On my free time I surf, play with shaders and build tools.
             </p>
           </motion.div>
 
@@ -159,31 +164,22 @@ export default function Home() {
             ))}
           </motion.div>
 
-          {/* Personal note */}
-          <motion.p
-            {...block(0.40)}
-            className="text-base text-[#18191C]"
-            style={{ lineHeight: 1.5 }}
-          >
-            On my free time I surf, play with shaders and build tools.
-          </motion.p>
-
           {/* Social links */}
-          <motion.div {...block(0.48)} className="flex justify-between gap-6">
+          <motion.div {...block(0.40)} className="flex justify-between gap-6">
             {socials.map((s) => (
               <a
                 key={s.label}
                 href={s.href}
                 className="text-base text-[#18191C]"
-                style={{
-                  lineHeight: 1.5,
-                  opacity: 0.5,
-                  transition: "opacity 150ms cubic-bezier(0.23, 1, 0.32, 1)",
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = "1"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = "0.5"; }}
+                style={{ lineHeight: 1.5 }}
               >
-                {s.label}
+                <UnderlineToBackground
+                  underlineHeightRatio={0.05}
+                  targetTextColor="#ffffff"
+                  transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                >
+                  {s.label}
+                </UnderlineToBackground>
               </a>
             ))}
           </motion.div>
