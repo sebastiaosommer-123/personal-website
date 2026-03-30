@@ -23,7 +23,7 @@ export function useElasticLineEvents(
   })
 
   useEffect(() => {
-    if (containerRef.current) {
+    if (containerRef.current && mousePosition) {
       const { width, height } = dimensions
       const x = mousePosition.x
       const y = mousePosition.y

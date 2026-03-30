@@ -3,7 +3,7 @@ import { RefObject, useEffect, useState } from "react"
 export const useMousePosition = (
   containerRef?: RefObject<HTMLElement | SVGElement | null>
 ) => {
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(null)
 
   useEffect(() => {
     const updatePosition = (x: number, y: number) => {
