@@ -157,7 +157,6 @@ export default function Home() {
               <motion.span
                 key={skill}
                 layout
-                whileHover={{ backgroundColor: "#D8D9DC" }}
                 onClick={(e) => handleSkillClick(skill, e)}
                 className="bg-[#EEEFF1] text-[#18191C] text-base px-2 flex items-center cursor-pointer select-none"
                 style={{ borderRadius: 12, height: 38, lineHeight: "1.4375" }}
