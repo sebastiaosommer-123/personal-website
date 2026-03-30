@@ -76,9 +76,9 @@ export default function Home() {
         skill,
         top,
         left,
-        amplitude: [15 + Math.random() * 20, 25 + Math.random() * 30, 20 + Math.random() * 25],
-        rotationRange: [10 + Math.random() * 10, 10 + Math.random() * 10, 5 + Math.random() * 5],
-        speed: 0.3 + Math.random() * 0.4,
+        amplitude: [60 + Math.random() * 80, 80 + Math.random() * 120, 20 + Math.random() * 30],
+        rotationRange: [5 + Math.random() * 8, 5 + Math.random() * 8, 3 + Math.random() * 4],
+        speed: 0.08 + Math.random() * 0.08,
       },
     ]);
     setVisibleSkills((prev) => prev.filter((s) => s !== skill));
