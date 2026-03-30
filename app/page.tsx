@@ -1,13 +1,15 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useState } from "react";
+import Float from "@/components/fancy/blocks/float";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
-import UnderlineToBackground from "@/components/fancy/text/underline-to-background";
+import { cn } from "@/lib/utils";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
   animate: { opacity: 1, filter: "blur(0px)" },
-  transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1], delay },
+  transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
 });
 
 const skills = [
@@ -54,9 +56,52 @@ const socials = [
 ];
 
 export default function Home() {
+  const [visibleSkills, setVisibleSkills] = useState(skills);
+  const [floatingSkills, setFloatingSkills] = useState<{
+    skill: string;
+    top: string;
+    left: string;
+    amplitude: [number, number, number];
+    rotationRange: [number, number, number];
+    speed: number;
+  }[]>([]);
+
+  const handleSkillClick = (skill: string, e: React.MouseEvent) => {
+    const tagRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const top = `${(tagRect.top / window.innerHeight) * 100}%`;
+    const left = `${(tagRect.left / window.innerWidth) * 100}%`;
+    setFloatingSkills((prev) => [
+      ...prev,
+      {
+        skill,
+        top,
+        left,
+        amplitude: [15 + Math.random() * 20, 25 + Math.random() * 30, 20 + Math.random() * 25],
+        rotationRange: [10 + Math.random() * 10, 10 + Math.random() * 10, 5 + Math.random() * 5],
+        speed: 0.3 + Math.random() * 0.4,
+      },
+    ]);
+    setVisibleSkills((prev) => prev.filter((s) => s !== skill));
+  };
+
   return (
-    <main className="min-h-screen bg-white flex items-start justify-center px-6 py-24">
-      <div className="w-full max-w-[469px] flex flex-col gap-4">
+    <main className="h-screen bg-white flex items-start justify-center px-6 py-24 relative overflow-visible">
+      <div className="fixed inset-0 pointer-events-none z-20">
+        {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
+          <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
+            <Float amplitude={amplitude} rotationRange={rotationRange} speed={speed}>
+              <span
+                className="bg-[#EEEFF1] text-[#18191C] text-base px-2 flex items-center select-none whitespace-nowrap"
+                style={{ borderRadius: 12, height: 38, lineHeight: "1.4375" }}
+              >
+                {skill}
+              </span>
+            </Float>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="relative w-full max-w-[469px] flex flex-col gap-4">
 
         {/* Name + Title */}
         <div className="flex flex-col gap-0.5 w-[210px]">
@@ -102,15 +147,18 @@ export default function Home() {
           </motion.div>
 
           {/* Skills */}
-          <motion.div {...block(0.24)} className="flex flex-wrap gap-2">
-            {skills.map((skill) => (
-              <span
+          <motion.div {...block(0.24)} layout className="flex flex-wrap gap-2">
+            {visibleSkills.map((skill) => (
+              <motion.span
                 key={skill}
-                className="bg-[#EEEFF1] text-[#18191C] text-base px-2 flex items-center"
+                layout
+                whileHover={{ backgroundColor: "#D8D9DC" }}
+                onClick={(e) => handleSkillClick(skill, e)}
+                className="bg-[#EEEFF1] text-[#18191C] text-base px-2 flex items-center cursor-pointer select-none"
                 style={{ borderRadius: 12, height: 38, lineHeight: "1.4375" }}
               >
                 {skill}
-              </span>
+              </motion.span>
             ))}
           </motion.div>
 
@@ -170,16 +218,31 @@ export default function Home() {
               <a
                 key={s.label}
                 href={s.href}
-                className="text-base text-[#18191C]"
+                target={s.href.startsWith("mailto:") ? undefined : "_blank"}
+                className={cn(
+                  "group relative flex items-center text-base font-medium text-[#18191C]",
+                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "hover:before:origin-left hover:before:scale-x-100",
+                )}
                 style={{ lineHeight: 1.5 }}
               >
-                <UnderlineToBackground
-                  underlineHeightRatio={0.05}
-                  targetTextColor="#ffffff"
-                  transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                {s.label}
+                <svg
+                  className="ml-[0.3em] size-[0.55em] translate-y-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+                  fill="none"
+                  viewBox="0 0 10 10"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
-                  {s.label}
-                </UnderlineToBackground>
+                  <path
+                    d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004"
+                    stroke="currentColor"
+                    strokeWidth="1.25"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </a>
             ))}
           </motion.div>
