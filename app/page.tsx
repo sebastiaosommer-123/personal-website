@@ -85,7 +85,7 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen bg-white flex items-start justify-center px-6 pt-10 md:pt-[100px] pb-24 relative overflow-visible">
+    <main className="h-screen bg-white flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-24 relative overflow-visible">
       <div className="fixed inset-0 pointer-events-none z-20">
         {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
           <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
