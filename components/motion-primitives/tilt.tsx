@@ -30,45 +30,71 @@ export function Tilt({
 }: TiltProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isTouchDevice = useRef(false);
-  const baseline = useRef<{ beta: number; gamma: number } | null>(null);
+  // Accumulate readings for a stable baseline
+  const baselineReadings = useRef<{ beta: number; gamma: number; alpha: number }[]>([]);
+  const baseline = useRef<{ beta: number; gamma: number; alpha: number } | null>(null);
+  const BASELINE_SAMPLES = 10;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const z = useMotionValue(0);
 
   const xSpring = useSpring(x, springOptions);
   const ySpring = useSpring(y, springOptions);
+  const zSpring = useSpring(z, springOptions);
 
   const rotateX = useTransform(
     ySpring,
     [-0.5, 0.5],
-    isRevese
-      ? [rotationFactor, -rotationFactor]
-      : [-rotationFactor, rotationFactor]
+    isRevese ? [rotationFactor, -rotationFactor] : [-rotationFactor, rotationFactor]
   );
   const rotateY = useTransform(
     xSpring,
     [-0.5, 0.5],
-    isRevese
-      ? [-rotationFactor, rotationFactor]
-      : [rotationFactor, -rotationFactor]
+    isRevese ? [-rotationFactor, rotationFactor] : [rotationFactor, -rotationFactor]
+  );
+  const rotateZ = useTransform(
+    zSpring,
+    [-0.5, 0.5],
+    isRevese ? [-rotationFactor, rotationFactor] : [rotationFactor, -rotationFactor]
   );
 
-  const transform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  const transform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
 
   useEffect(() => {
     isTouchDevice.current = window.matchMedia('(pointer: coarse)').matches;
     if (!isTouchDevice.current) return;
 
     const handleOrientation = (e: DeviceOrientationEvent) => {
-      if (e.beta === null || e.gamma === null) return;
+      if (e.beta === null || e.gamma === null || e.alpha === null) return;
+
+      // Accumulate samples for a stable baseline
       if (!baseline.current) {
-        baseline.current = { beta: e.beta, gamma: e.gamma };
+        baselineReadings.current.push({ beta: e.beta, gamma: e.gamma, alpha: e.alpha });
+        if (baselineReadings.current.length < BASELINE_SAMPLES) return;
+        const n = baselineReadings.current.length;
+        baseline.current = {
+          beta:  baselineReadings.current.reduce((s, r) => s + r.beta,  0) / n,
+          gamma: baselineReadings.current.reduce((s, r) => s + r.gamma, 0) / n,
+          alpha: baselineReadings.current.reduce((s, r) => s + r.alpha, 0) / n,
+        };
         return;
       }
+
+      // gamma: left/right (sensitive range ~±60°)
       const xPos = Math.max(-0.5, Math.min(0.5, (e.gamma - baseline.current.gamma) / 60));
-      const yPos = Math.max(-0.5, Math.min(0.5, (e.beta - baseline.current.beta) / 60));
+      // beta: front/back — more sensitive divisor (±30° = full range)
+      const yPos = Math.max(-0.5, Math.min(0.5, (e.beta  - baseline.current.beta)  / 30));
+      // alpha: compass/wrist rotation (±120° = full range)
+      let alphaDelta = e.alpha - baseline.current.alpha;
+      // Normalize to [-180, 180] to handle 0°/360° wraparound
+      if (alphaDelta > 180) alphaDelta -= 360;
+      if (alphaDelta < -180) alphaDelta += 360;
+      const zPos = Math.max(-0.5, Math.min(0.5, alphaDelta / 120));
+
       x.set(xPos);
       y.set(yPos);
+      z.set(zPos);
     };
 
     const start = () => {
@@ -88,7 +114,7 @@ export function Tilt({
     }
 
     return () => window.removeEventListener('deviceorientation', handleOrientation);
-  }, [x, y]);
+  }, [x, y, z]);
 
   return (
     <motion.div
