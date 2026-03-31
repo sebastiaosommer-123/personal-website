@@ -23,6 +23,10 @@
   --color-surface: #252628;
 }
 
+html {
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
 ::view-transition-old(root), ::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;

@@ -31,7 +31,7 @@ export default function RootLayout({
         <ThemeProvider>
           {children}
           <div className="fixed top-4 right-4 z-50">
-            <AnimatedThemeToggler className="text-[var(--color-fg)] hover:opacity-70 transition-opacity duration-200" />
+            <AnimatedThemeToggler className="text-[var(--color-fg)]" />
           </div>
         </ThemeProvider>
       </body>
