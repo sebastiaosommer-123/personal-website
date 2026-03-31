@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 *,
 *::before,
 *::after {
@@ -8,4 +10,20 @@
 
 :root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --color-bg: #ffffff;
+  --color-fg: #18191C;
+  --color-fg-muted: #464749;
+  --color-surface: #EEEFF1;
+}
+
+.dark {
+  --color-bg: #111113;
+  --color-fg: #E8E9EB;
+  --color-fg-muted: #A0A2A4;
+  --color-surface: #252628;
+}
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }

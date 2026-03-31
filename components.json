@@ -9,13 +9,15 @@
     "baseColor": "neutral",
     "cssVariables": true
   },
+  "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "hooks": "@/hooks",
-    "lib": "@/lib"
+    "lib": "@/lib",
+    "hooks": "@/hooks"
   },
   "registries": {
-    "@fancy": "https://fancycomponents.dev/r/{name}.json"
+    "@fancy": "https://fancycomponents.dev/r/{name}.json",
+    "@magicui": "https://magicui.design/r/{name}"
   }
 }
