@@ -136,21 +136,48 @@ export default function Home() {
           {/* Bio */}
           <motion.div
             initial={{ opacity: 0, filter: "blur(8px)" }}
-            animate={{ opacity: 0.8, filter: "blur(0px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.16 }}
           >
-            <p className="text-base text-[#18191C]" style={{ lineHeight: 1.5, textWrap: "pretty" } as React.CSSProperties}>
+            <p className="text-base text-[#464749]" style={{ lineHeight: 1.5, textWrap: "pretty" } as React.CSSProperties}>
               Working as Founding Product Designer at a stealth AI startup,
               collaborating closely with cross functional teams to design.
               Previously shipped features across multiple apps in production.
             </p>
             <div className="h-[0.75em]" />
-            <p className="text-base text-[#18191C]" style={{ lineHeight: 1.5 }}>
+            <p className="text-base text-[#464749]" style={{ lineHeight: 1.5 }}>
               Selected work and detailed case studies available upon request
             </p>
             <div className="h-[0.75em]" />
-            <p className="text-base text-[#18191C]" style={{ lineHeight: 1.5 }}>
-              On my free time I surf, play with shaders and build tools.
+            <p className="text-base text-[#464749]" style={{ lineHeight: 1.5 }}>
+              On my free time{" "}
+              <span
+                className={cn(
+                  "relative inline-block font-medium",
+                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "hover:before:origin-left hover:before:scale-x-100",
+                )}
+                style={{ color: '#18191C' }}
+              >I surf</span>,{" "}
+              <span
+                className={cn(
+                  "relative inline-block font-medium",
+                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "hover:before:origin-left hover:before:scale-x-100",
+                )}
+                style={{ color: '#18191C' }}
+              >play with shaders</span> and{" "}
+              <span
+                className={cn(
+                  "relative inline-block font-medium",
+                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "hover:before:origin-left hover:before:scale-x-100",
+                )}
+                style={{ color: '#18191C' }}
+              >build tools</span>.
             </p>
           </motion.div>
 
