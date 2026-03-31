@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import Float from "@/components/fancy/blocks/float";
+import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
 import { cn } from "@/lib/utils";
 
@@ -90,17 +91,19 @@ export default function Home() {
         {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
           <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
             <Float amplitude={amplitude} rotationRange={rotationRange} speed={speed}>
-              <span
-                className="bg-white text-[#18191C] text-base px-2 flex items-center select-none whitespace-nowrap"
-                style={{
-                  borderRadius: 12,
-                  height: 38,
-                  lineHeight: "1.4375",
-                  boxShadow: "0 0 0 1px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.05)",
-                }}
-              >
-                {skill}
-              </span>
+              <Tilt rotationFactor={30} springOptions={{ stiffness: 200, damping: 20 }}>
+                <span
+                  className="bg-white text-[#18191C] text-base px-2 flex items-center select-none whitespace-nowrap"
+                  style={{
+                    borderRadius: 12,
+                    height: 38,
+                    lineHeight: "1.4375",
+                    boxShadow: "0 0 0 1px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  {skill}
+                </span>
+              </Tilt>
             </Float>
           </motion.div>
         ))}
