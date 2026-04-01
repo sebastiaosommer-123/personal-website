@@ -5,8 +5,8 @@ import { useState } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
-import { cn } from "@/lib/utils";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { DirectionalUnderline } from "@/components/ui/directional-underline";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -152,28 +152,11 @@ export default function Home() {
               Selected work and detailed case studies available upon request
             </p>
             <div className="h-[0.75em]" />
-            <p className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
-              On my free time{" "}
-              <span
-                className={cn(
-                  "relative inline-block font-medium",
-                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  "hover:before:origin-left hover:before:scale-x-100",
-                )}
-                style={{ color: 'var(--color-fg)' }}
-              >I surf</span>,{" "}
+            <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
+              On my free time I{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <span
-                    className={cn(
-                      "relative inline-block font-medium cursor-pointer",
-                      "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                      "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                      "hover:before:origin-left hover:before:scale-x-100",
-                    )}
-                    style={{ color: 'var(--color-fg)' }}
-                  >play with shaders</span>
+                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }}>play with shaders</DirectionalUnderline>
                 </HoverCardTrigger>
                 <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
                   <div className="aspect-video w-full bg-violet-500" />
@@ -182,18 +165,10 @@ export default function Home() {
                     <p className="text-xs text-muted-foreground">GLSL experiments and visual playground.</p>
                   </div>
                 </HoverCardContent>
-              </HoverCard> and{" "}
+              </HoverCard>,{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <span
-                    className={cn(
-                      "relative inline-block font-medium cursor-pointer",
-                      "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                      "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                      "hover:before:origin-left hover:before:scale-x-100",
-                    )}
-                    style={{ color: 'var(--color-fg)' }}
-                  >build tools</span>
+                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }}>build tools</DirectionalUnderline>
                 </HoverCardTrigger>
                 <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
                   <div className="aspect-video w-full bg-sky-500" />
@@ -202,8 +177,9 @@ export default function Home() {
                     <p className="text-xs text-muted-foreground">Small tools I build for fun and productivity.</p>
                   </div>
                 </HoverCardContent>
-              </HoverCard>.
-            </p>
+              </HoverCard> and{" "}
+              <DirectionalUnderline className="font-medium" style={{ color: 'var(--color-fg)' }}>surf</DirectionalUnderline>.
+            </div>
           </motion.div>
 
           {/* Skills */}
@@ -281,16 +257,12 @@ export default function Home() {
           {/* Social links */}
           <motion.div {...block(0.40)} className="flex justify-between gap-6">
             {socials.map((s) => (
-              <a
+              <DirectionalUnderline
+                as="a"
                 key={s.label}
                 href={s.href}
                 target={s.href.startsWith("mailto:") ? undefined : "_blank"}
-                className={cn(
-                  "group relative flex items-center text-base font-medium",
-                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  "hover:before:origin-left hover:before:scale-x-100",
-                )}
+                className="group flex items-center text-base font-medium"
                 style={{ lineHeight: 1.5, color: "var(--color-fg)" }}
               >
                 {s.label}
@@ -309,7 +281,7 @@ export default function Home() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </a>
+              </DirectionalUnderline>
             ))}
           </motion.div>
         </div>
