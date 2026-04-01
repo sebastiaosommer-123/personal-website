@@ -6,6 +6,7 @@ import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
 import { cn } from "@/lib/utils";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -87,7 +88,7 @@ export default function Home() {
 
   return (
     <main className="h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-24 relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
-      <div className="fixed inset-0 pointer-events-none z-20">
+      {/* <div className="fixed inset-0 pointer-events-none z-20">
         {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
           <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
             <Float amplitude={amplitude} rotationRange={rotationRange} speed={speed}>
@@ -109,7 +110,7 @@ export default function Home() {
             </Float>
           </motion.div>
         ))}
-      </div>
+      </div> */}
 
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
 
@@ -162,29 +163,51 @@ export default function Home() {
                 )}
                 style={{ color: 'var(--color-fg)' }}
               >I surf</span>,{" "}
-              <span
-                className={cn(
-                  "relative inline-block font-medium",
-                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  "hover:before:origin-left hover:before:scale-x-100",
-                )}
-                style={{ color: 'var(--color-fg)' }}
-              >play with shaders</span> and{" "}
-              <span
-                className={cn(
-                  "relative inline-block font-medium",
-                  "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-                  "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-                  "hover:before:origin-left hover:before:scale-x-100",
-                )}
-                style={{ color: 'var(--color-fg)' }}
-              >build tools</span>.
+              <HoverCard openDelay={100} closeDelay={100}>
+                <HoverCardTrigger asChild>
+                  <span
+                    className={cn(
+                      "relative inline-block font-medium cursor-pointer",
+                      "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                      "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                      "hover:before:origin-left hover:before:scale-x-100",
+                    )}
+                    style={{ color: 'var(--color-fg)' }}
+                  >play with shaders</span>
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
+                  <div className="aspect-video w-full bg-violet-500" />
+                  <div className="space-y-1 p-3">
+                    <p className="font-medium text-sm">Shader Experiments</p>
+                    <p className="text-xs text-muted-foreground">GLSL experiments and visual playground.</p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard> and{" "}
+              <HoverCard openDelay={100} closeDelay={100}>
+                <HoverCardTrigger asChild>
+                  <span
+                    className={cn(
+                      "relative inline-block font-medium cursor-pointer",
+                      "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
+                      "before:origin-right before:scale-x-0 before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
+                      "hover:before:origin-left hover:before:scale-x-100",
+                    )}
+                    style={{ color: 'var(--color-fg)' }}
+                  >build tools</span>
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
+                  <div className="aspect-video w-full bg-sky-500" />
+                  <div className="space-y-1 p-3">
+                    <p className="font-medium text-sm">Tools & Utilities</p>
+                    <p className="text-xs text-muted-foreground">Small tools I build for fun and productivity.</p>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>.
             </p>
           </motion.div>
 
           {/* Skills */}
-          <motion.div {...block(0.24)} layout className="flex flex-wrap gap-2">
+          {/* <motion.div {...block(0.24)} layout className="flex flex-wrap gap-2">
             {visibleSkills.map((skill) => (
               <motion.span
                 key={skill}
@@ -202,7 +225,7 @@ export default function Home() {
                 {skill}
               </motion.span>
             ))}
-          </motion.div>
+          </motion.div> */}
 
           {/* Experience */}
           <motion.div {...block(0.32)} className="flex flex-col gap-4">
@@ -245,7 +268,8 @@ export default function Home() {
                       grabThreshold={20}
                       releaseThreshold={12}
                       strokeWidth={1}
-                      className="text-[var(--color-surface)]"
+                      strokeDasharray="4 4"
+                      className="text-[var(--color-border)]"
                       transition={{ type: "spring", stiffness: 800, damping: 40 }}
                     />
                   </div>
