@@ -17,6 +17,7 @@ interface ElasticLineProps {
   grabThreshold?: number
   releaseThreshold?: number
   strokeWidth?: number
+  strokeDasharray?: string
   transition?: ValueAnimationTransition
   animateInTransition?: ValueAnimationTransition
   className?: string
@@ -27,6 +28,7 @@ const ElasticLine: React.FC<ElasticLineProps> = ({
   grabThreshold = 5,
   releaseThreshold = 100,
   strokeWidth = 1,
+  strokeDasharray,
   transition = {
     type: "spring",
     stiffness: 300,
@@ -111,8 +113,9 @@ const ElasticLine: React.FC<ElasticLineProps> = ({
         ref={pathRef}
         stroke="currentColor"
         strokeWidth={strokeWidth}
-        initial={{ pathLength: 0 }}
-        style={{ pathLength }}
+        strokeDasharray={strokeDasharray}
+        initial={{ opacity: 0 }}
+        style={{ opacity: pathLength }}
         fill="none"
       />
     </svg>

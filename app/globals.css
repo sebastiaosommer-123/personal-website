@@ -14,6 +14,7 @@
   --color-fg: #18191C;
   --color-fg-muted: #464749;
   --color-surface: #EEEFF1;
+  --color-border: #C8CACD;
 }
 
 .dark {
@@ -21,6 +22,7 @@
   --color-fg: #E8E9EB;
   --color-fg-muted: #A0A2A4;
   --color-surface: #252628;
+  --color-border: #383A3D;
 }
 
 html {
@@ -30,4 +32,36 @@ html {
 ::view-transition-old(root), ::view-transition-new(root) {
     animation: none;
     mix-blend-mode: normal;
+}
+
+@keyframes hoverCardIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes hoverCardOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+}
+
+.hover-card-content[data-state="open"] {
+  animation: hoverCardIn 160ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  transform-origin: var(--radix-hover-card-content-transform-origin);
+}
+
+.hover-card-content[data-state="closed"] {
+  animation: hoverCardOut 100ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  transform-origin: var(--radix-hover-card-content-transform-origin);
 }
