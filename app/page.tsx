@@ -244,8 +244,8 @@ export default function Home() {
                       grabThreshold={20}
                       releaseThreshold={12}
                       strokeWidth={1}
-                      strokeDasharray="4 4"
-                      className="text-[var(--color-border)]"
+                      strokeDasharray="0"
+                      className="text-[var(--color-surface)]"
                       transition={{ type: "spring", stiffness: 800, damping: 40 }}
                     />
                   </div>
