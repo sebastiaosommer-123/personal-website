@@ -67,8 +67,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
         }}
         className={cn(
           "relative inline-block",
-          "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-px before:w-full before:content-['']",
-          "before:bg-[repeating-linear-gradient(to_right,var(--color-border)_0px,var(--color-border)_4px,transparent_4px,transparent_8px)]",
+          "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
           "before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
           hovered ? "before:scale-x-100" : "before:scale-x-0",
           origin === "left" ? "before:origin-left" : "before:origin-right",
