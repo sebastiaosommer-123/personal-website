@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
@@ -57,8 +57,15 @@ const socials = [
   { label: "Email", href: "mailto:hello@example.com" },
 ];
 
+function detectDir(e: MouseEvent<Element>): "left" | "right" {
+  const rect = e.currentTarget.getBoundingClientRect()
+  return e.clientX < rect.left + rect.width / 2 ? "left" : "right"
+}
+
 export default function Home() {
   const [visibleSkills, setVisibleSkills] = useState(skills);
+  const [shaderDir, setShaderDir] = useState<"left" | "right">("left");
+  const [toolsDir, setToolsDir] = useState<"left" | "right">("left");
   const [floatingSkills, setFloatingSkills] = useState<{
     skill: string;
     top: string;
@@ -156,26 +163,18 @@ export default function Home() {
               On my free time I{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }}>play with shaders</DirectionalUnderline>
+                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => setShaderDir(detectDir(e))} onMouseLeave={(e) => setShaderDir(detectDir(e))}>play with shaders</DirectionalUnderline>
                 </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]" data-direction={shaderDir}>
                   <div className="aspect-video w-full bg-violet-500" />
-                  <div className="space-y-1 p-3">
-                    <p className="font-medium text-sm">Shader Experiments</p>
-                    <p className="text-xs text-muted-foreground">GLSL experiments and visual playground.</p>
-                  </div>
                 </HoverCardContent>
               </HoverCard>,{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }}>build tools</DirectionalUnderline>
+                  <DirectionalUnderline className="font-medium cursor-pointer" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => setToolsDir(detectDir(e))} onMouseLeave={(e) => setToolsDir(detectDir(e))}>build tools</DirectionalUnderline>
                 </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]">
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999]" data-direction={toolsDir}>
                   <div className="aspect-video w-full bg-sky-500" />
-                  <div className="space-y-1 p-3">
-                    <p className="font-medium text-sm">Tools & Utilities</p>
-                    <p className="text-xs text-muted-foreground">Small tools I build for fun and productivity.</p>
-                  </div>
                 </HoverCardContent>
               </HoverCard> and{" "}
               <DirectionalUnderline className="font-medium" style={{ color: 'var(--color-fg)' }}>surf</DirectionalUnderline>.
