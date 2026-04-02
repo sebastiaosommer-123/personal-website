@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState, type MouseEvent } from "react";
+import { useState } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
@@ -57,15 +57,8 @@ const socials = [
   { label: "Email", href: "mailto:hello@example.com" },
 ];
 
-function detectDir(e: MouseEvent<Element>): "left" | "right" {
-  const rect = e.currentTarget.getBoundingClientRect()
-  return e.clientX < rect.left + rect.width / 2 ? "left" : "right"
-}
-
 export default function Home() {
   const [visibleSkills, setVisibleSkills] = useState(skills);
-  const [shaderDir, setShaderDir] = useState<"left" | "right">("left");
-  const [toolsDir, setToolsDir] = useState<"left" | "right">("left");
   const [floatingSkills, setFloatingSkills] = useState<{
     skill: string;
     top: string;
@@ -163,17 +156,17 @@ export default function Home() {
               On my free time I{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => setShaderDir(detectDir(e))}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
+                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
                 </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none" data-direction={shaderDir}>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
                   <div className="aspect-video w-full bg-violet-500" />
                 </HoverCardContent>
               </HoverCard>,{" "}
               <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => setToolsDir(detectDir(e))}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
+                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
                 </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none" data-direction={toolsDir}>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
                   <div className="aspect-video w-full bg-sky-500" />
                 </HoverCardContent>
               </HoverCard> and{" "}
