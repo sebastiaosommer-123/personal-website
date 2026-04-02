@@ -14,6 +14,7 @@ type DirectionalUnderlineProps = {
   onClick?: (e: React.MouseEvent) => void
   onMouseEnter?: (e: React.MouseEvent) => void
   onMouseLeave?: (e: React.MouseEvent) => void
+  onMouseMove?: (e: React.MouseEvent) => void
 }
 
 export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnderlineProps>(
