@@ -35,37 +35,36 @@ html {
 }
 
 @keyframes hoverCardInFromLeft {
-  from { opacity: 0; transform: translateX(-8px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 @keyframes hoverCardInFromRight {
-  from { opacity: 0; transform: translateX(8px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(8px) scale(0.97); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
 }
 
-@keyframes hoverCardOutToLeft {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(-8px); }
-}
-
-@keyframes hoverCardOutToRight {
-  from { opacity: 1; transform: translateX(0); }
-  to   { opacity: 0; transform: translateX(8px); }
+@keyframes hoverCardOut {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to   { opacity: 0; transform: translateX(0) scale(0.97); }
 }
 
 .hover-card-content[data-state="open"][data-direction="left"] {
-  animation: hoverCardInFromLeft 160ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: hoverCardInFromLeft 180ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 .hover-card-content[data-state="open"][data-direction="right"] {
-  animation: hoverCardInFromRight 160ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: hoverCardInFromRight 180ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
 .hover-card-content[data-state="closed"] {
-  animation: hoverCardOutToLeft 100ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  animation: hoverCardOut 110ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-.hover-card-content[data-state="closed"][data-direction="right"] {
-  animation: hoverCardOutToRight 100ms cubic-bezier(0.23, 1, 0.32, 1) forwards;
+@media (prefers-reduced-motion: reduce) {
+  .hover-card-content[data-state="open"],
+  .hover-card-content[data-state="closed"] {
+    animation: none;
+    opacity: 1;
+  }
 }

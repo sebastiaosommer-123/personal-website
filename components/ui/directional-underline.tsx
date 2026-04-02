@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useRef, useState, useCallback } from "react"
+import React, { useRef, useCallback } from "react"
 import { cn } from "@/lib/utils"
 
 type DirectionalUnderlineProps = {
@@ -30,6 +30,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
     forwardedRef
   ) {
     const innerRef = useRef<HTMLElement>(null)
+    const underlineRef = useRef<HTMLSpanElement>(null)
 
     const mergedRef = useCallback(
       (node: HTMLElement | null) => {
@@ -43,40 +44,60 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
       [forwardedRef]
     )
 
-    const [hovered, setHovered] = useState(false)
-    const [origin, setOrigin] = useState<"left" | "right">("left")
-
-    const getDirection = useCallback((e: React.MouseEvent) => {
-      if (!innerRef.current) return "left" as const
-      const rect = innerRef.current.getBoundingClientRect()
-      return e.clientX < rect.left + rect.width / 2 ? ("left" as const) : ("right" as const)
-    }, [])
+    const prefersReducedMotion = () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
     return (
       <Tag
         ref={mergedRef}
         onMouseEnter={(e: React.MouseEvent) => {
-          setOrigin(getDirection(e))
-          setHovered(true)
+          const el = underlineRef.current
+          const host = innerRef.current
+          if (el && host) {
+            const rect = host.getBoundingClientRect()
+            const x = ((e.clientX - rect.left) / rect.width) * 100
+            if (prefersReducedMotion()) {
+              el.style.transition = "none"
+              el.style.clipPath = "inset(0 0 0 0)"
+            } else {
+              el.style.transition = "none"
+              el.style.clipPath = `inset(0 ${100 - x}% 0 ${x}%)`
+              requestAnimationFrame(() => {
+                el.style.transition = "clip-path 150ms cubic-bezier(0.23,1,0.32,1)"
+                el.style.clipPath = "inset(0 0 0 0)"
+              })
+            }
+          }
           externalOnMouseEnter?.(e)
         }}
         onMouseLeave={(e: React.MouseEvent) => {
-          setOrigin(getDirection(e))
-          setHovered(false)
+          const el = underlineRef.current
+          const host = innerRef.current
+          if (el && host) {
+            const rect = host.getBoundingClientRect()
+            const x = ((e.clientX - rect.left) / rect.width) * 100
+            if (prefersReducedMotion()) {
+              el.style.transition = "none"
+              el.style.clipPath = `inset(0 ${100 - x}% 0 ${x}%)`
+            } else {
+              el.style.transition = "clip-path 150ms cubic-bezier(0.23,1,0.32,1)"
+              el.style.clipPath = `inset(0 ${100 - x}% 0 ${x}%)`
+            }
+          }
           externalOnMouseLeave?.(e)
         }}
-        className={cn(
-          "relative inline-block",
-          "before:pointer-events-none before:absolute before:left-0 before:top-[1.5em] before:h-[0.05em] before:w-full before:bg-current before:content-['']",
-          "before:transition-transform before:duration-300 before:ease-[cubic-bezier(0.4,0,0.2,1)]",
-          hovered ? "before:scale-x-100" : "before:scale-x-0",
-          origin === "left" ? "before:origin-left" : "before:origin-right",
-          className,
-        )}
+        className={cn("relative inline-block", className)}
         style={style}
         {...props}
       >
         {children}
+        <span
+          ref={underlineRef}
+          aria-hidden="true"
+          className="pointer-events-none absolute left-0 top-[1.5em] h-[0.05em] w-full bg-current"
+          style={{ clipPath: "inset(0 100% 0 0)" }}
+        />
       </Tag>
     )
   }
