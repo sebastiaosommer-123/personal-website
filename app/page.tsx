@@ -173,6 +173,22 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               On my free time I{" "}
+              <HoverCard openDelay={150} closeDelay={100}>
+                <HoverCardTrigger asChild>
+                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
+                  <div className="aspect-video w-full bg-black" />
+                </HoverCardContent>
+              </HoverCard>,{" "}
+              <HoverCard openDelay={150} closeDelay={100}>
+                <HoverCardTrigger asChild>
+                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
+                  <div className="aspect-video w-full bg-black" />
+                </HoverCardContent>
+              </HoverCard>, and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -188,23 +204,7 @@ export default function Home() {
                 onMouseLeave={() => setSurfPeeking(false)}
               >
                 surf
-              </Toggle>,{" "}
-              <HoverCard openDelay={150} closeDelay={100}>
-                <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
-                </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
-                  <div className="aspect-video w-full bg-black" />
-                </HoverCardContent>
-              </HoverCard>, and{" "}
-              <HoverCard openDelay={150} closeDelay={100}>
-                <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
-                </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
-                  <div className="aspect-video w-full bg-black" />
-                </HoverCardContent>
-              </HoverCard>.
+              </Toggle>.
             </div>
           </motion.div>
 
