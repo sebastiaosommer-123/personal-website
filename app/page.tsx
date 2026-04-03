@@ -28,26 +28,26 @@ const skills = [
 const experience = [
   {
     company: "Stealth AI Startup",
-    role: "Senior Product Designer",
+    role: "Sr. Product Designer",
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
   },
   {
     company: "HOP Design",
-    role: "Senior Product Designer",
-    period: "2023 – 2025",
+    role: "Sr. Product Designer",
+    period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
   },
   {
     company: "Tempest",
-    role: "Senior Product Designer",
-    period: "2022 – 2023",
+    role: "Sr. Product Designer",
+    period: "2022 – 23'",
     logo: "/assets/tempest.svg",
   },
   {
     company: "HOP Studio",
     role: "UX/UI Designer",
-    period: "2020 – 2022",
+    period: "2020 – 22'",
     logo: "/assets/44-studio.svg",
   },
 ];
@@ -152,7 +152,7 @@ export default function Home() {
           </motion.p>
         </div>
 
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
 
           {/* Bio */}
           <motion.div
@@ -228,7 +228,7 @@ export default function Home() {
           </motion.div> */}
 
           {/* Experience */}
-          <motion.div {...block(0.32)} className="flex flex-col">
+          <motion.div {...block(0.32)} className="flex flex-col -mx-3">
             <AnimatedBackground
               enableHover
               className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
@@ -240,7 +240,7 @@ export default function Home() {
                   data-id={exp.company}
                   className="w-full cursor-pointer"
                 >
-                  <div className="flex w-full items-center justify-between px-3 py-2.5">
+                  <div className="flex w-full items-center justify-between px-3 py-3">
                     <div className="flex items-center gap-3">
                       <div
                         className="shrink-0 overflow-hidden flex items-center justify-center"
