@@ -1,12 +1,13 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
+import { Toggle } from "@/components/ui/toggle";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -58,6 +59,7 @@ const socials = [
 ];
 
 export default function Home() {
+  const [surfOpen, setSurfOpen] = useState(false);
   const [visibleSkills, setVisibleSkills] = useState(skills);
   const [floatingSkills, setFloatingSkills] = useState<{
     skill: string;
@@ -154,7 +156,7 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               On my free time I{" "}
-              <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCard openDelay={150} closeDelay={100}>
                 <HoverCardTrigger asChild>
                   <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
                 </HoverCardTrigger>
@@ -162,7 +164,7 @@ export default function Home() {
                   <div className="aspect-video w-full bg-black" />
                 </HoverCardContent>
               </HoverCard>,{" "}
-              <HoverCard openDelay={100} closeDelay={100}>
+              <HoverCard openDelay={150} closeDelay={100}>
                 <HoverCardTrigger asChild>
                   <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
                 </HoverCardTrigger>
@@ -170,7 +172,12 @@ export default function Home() {
                   <div className="aspect-video w-full bg-black" />
                 </HoverCardContent>
               </HoverCard> and{" "}
-              <DirectionalUnderline className="font-medium" style={{ color: 'var(--color-fg)' }}>surf</DirectionalUnderline>.
+              <Toggle
+                pressed={surfOpen}
+                onPressedChange={setSurfOpen}
+                className="h-auto p-0 font-medium bg-transparent border-0 shadow-none rounded-none data-[state=on]:bg-transparent hover:bg-transparent data-[state=on]:text-[var(--color-fg)] inline cursor-pointer"
+                style={{ color: 'var(--color-fg)', lineHeight: 'inherit', verticalAlign: 'baseline', fontSize: 'inherit' }}
+              >surf</Toggle>.
             </div>
           </motion.div>
 
@@ -278,6 +285,27 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {surfOpen && (
+          <motion.div
+            className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+            initial={{ y: "100vh", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100vh", opacity: 0 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <iframe
+              src="/surf-device/index.html"
+              className="pointer-events-auto"
+              width={470}
+              height={440}
+              style={{ border: "none", background: "transparent" }}
+              title="Surf Video Device"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
