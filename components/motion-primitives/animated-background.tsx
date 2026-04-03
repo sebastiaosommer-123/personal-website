@@ -5,9 +5,10 @@ import {
   Children,
   cloneElement,
   ReactElement,
+  useCallback,
   useEffect,
+  useRef,
   useState,
-  useId,
 } from 'react';
 
 export type AnimatedBackgroundProps = {
@@ -29,62 +30,65 @@ export function AnimatedBackground({
   transition,
   enableHover = false,
 }: AnimatedBackgroundProps) {
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const uniqueId = useId();
+  const [activeId, setActiveId] = useState<string | null>(defaultValue ?? null);
+  const [rect, setRect] = useState<{ top: number; height: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const leaveTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSetActiveId = (id: string | null) => {
+  const updateRect = useCallback((id: string) => {
+    const el = itemRefs.current.get(id);
+    if (!el) return;
+    setRect({ top: el.offsetTop, height: el.offsetHeight });
+  }, []);
+
+  const handleEnter = (id: string) => {
+    if (leaveTimeout.current) clearTimeout(leaveTimeout.current);
     setActiveId(id);
+    updateRect(id);
+    if (onValueChange) onValueChange(id);
+  };
 
-    if (onValueChange) {
-      onValueChange(id);
-    }
+  const handleLeave = () => {
+    leaveTimeout.current = setTimeout(() => {
+      setActiveId(null);
+      setRect(null);
+      if (onValueChange) onValueChange(null);
+    }, 100);
   };
 
   useEffect(() => {
-    if (defaultValue !== undefined) {
-      setActiveId(defaultValue);
-    }
-  }, [defaultValue]);
+    if (defaultValue) updateRect(defaultValue);
+  }, [defaultValue, updateRect]);
 
-  return Children.map(children, (child: any, index) => {
-    const id = child.props['data-id'];
-
-    const interactionProps = enableHover
-      ? {
-          onMouseEnter: () => handleSetActiveId(id),
-          onMouseLeave: () => handleSetActiveId(null),
-        }
-      : {
-          onClick: () => handleSetActiveId(id),
-        };
-
-    return cloneElement(
-      child,
-      {
-        key: index,
-        className: cn('relative flex', child.props.className),
-        'data-checked': activeId === id ? 'true' : 'false',
-        ...interactionProps,
-      },
-      <>
-        <AnimatePresence initial={false}>
-          {activeId === id && (
-            <motion.div
-              layoutId={`background-${uniqueId}`}
-              className={cn('absolute inset-0', className)}
-              transition={transition}
-              initial={{ opacity: defaultValue ? 1 : 0 }}
-              animate={{
-                opacity: 1,
-              }}
-              exit={{
-                opacity: 0,
-              }}
-            />
-          )}
-        </AnimatePresence>
-        <div className='z-10 flex w-full'>{child.props.children}</div>
-      </>
-    );
-  });
+  return (
+    <div ref={containerRef} className='relative'>
+      <AnimatePresence>
+        {rect && (
+          <motion.div
+            className={cn('absolute left-0 right-0 pointer-events-none', className)}
+            style={{ top: rect.top, height: rect.height }}
+            layout
+            transition={transition}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.15 } }}
+          />
+        )}
+      </AnimatePresence>
+      {Children.map(children, (child: any) => {
+        const id = child.props['data-id'];
+        const interactionProps = enableHover
+          ? { onMouseEnter: () => handleEnter(id), onMouseLeave: handleLeave }
+          : { onClick: () => handleEnter(id) };
+        return cloneElement(child, {
+          ...interactionProps,
+          ref: (el: HTMLElement | null) => {
+            if (el) itemRefs.current.set(id, el);
+            else itemRefs.current.delete(id);
+          },
+        });
+      })}
+    </div>
+  );
 }
