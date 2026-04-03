@@ -61,6 +61,7 @@ const socials = [
 
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
+  const [surfPeeking, setSurfPeeking] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -183,6 +184,8 @@ export default function Home() {
                            active:scale-[0.97] focus-visible:ring-0 focus-visible:ring-offset-0
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
                 style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
+                onMouseEnter={() => setSurfPeeking(true)}
+                onMouseLeave={() => setSurfPeeking(false)}
               >
                 surf
               </Toggle>,{" "}
@@ -307,6 +310,26 @@ export default function Home() {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {surfPeeking && !surfOpen && (
+          <motion.div
+            className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none z-40"
+            initial={{ y: 440 }}
+            animate={{ y: 360 }}
+            exit={{ y: 440 }}
+            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <iframe
+              src="/surf-device/index.html"
+              width={470}
+              height={440}
+              style={{ border: "none", background: "transparent" }}
+              title="Surf Video Device Preview"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence initial={false}>
         {surfOpen && (
