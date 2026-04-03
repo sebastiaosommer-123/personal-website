@@ -176,7 +176,7 @@ export default function Home() {
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
                 variant="outline"
-                className="rounded-full h-auto min-w-0 py-0.5 pl-1.5 pr-2 mr-0.5 gap-1.5 font-medium whitespace-nowrap
+                className="rounded-[8px] h-auto min-w-0 py-0.5 px-1.5 mr-0.5 gap-1 font-medium whitespace-nowrap
                            border-[var(--color-border)]
                            hover:bg-[var(--color-surface)] hover:text-[var(--color-fg)]
                            data-[state=on]:bg-[var(--color-surface)] data-[state=on]:text-[var(--color-fg)] data-[state=on]:border-[var(--color-border)]
@@ -184,7 +184,6 @@ export default function Home() {
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
                 style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
               >
-                <Power className="size-[0.7em]" strokeWidth={1.5} />
                 surf
               </Toggle>,{" "}
               <HoverCard openDelay={150} closeDelay={100}>
