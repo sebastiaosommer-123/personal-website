@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
-import ElasticLine from "@/components/fancy/physics/elastic-line";
+import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
@@ -228,54 +228,52 @@ export default function Home() {
           </motion.div> */}
 
           {/* Experience */}
-          <motion.div {...block(0.32)} className="flex flex-col gap-4">
-            {experience.map((exp, i) => (
-              <div key={exp.company}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="shrink-0 overflow-hidden flex items-center justify-center"
-                      style={{ width: 38, height: 38, borderRadius: 10.36, backgroundColor: "var(--color-surface)" }}
+          <motion.div {...block(0.32)} className="flex flex-col">
+            <AnimatedBackground
+              enableHover
+              className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
+              transition={{ type: "spring", stiffness: 400, damping: 35 }}
+            >
+              {experience.map((exp) => (
+                <div
+                  key={exp.company}
+                  data-id={exp.company}
+                  className="w-full cursor-pointer"
+                >
+                  <div className="flex w-full items-center justify-between px-3 py-2.5">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="shrink-0 overflow-hidden flex items-center justify-center"
+                        style={{ width: 38, height: 38, borderRadius: 10.36, backgroundColor: "var(--color-surface)" }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={exp.logo}
+                          alt={exp.company}
+                          width={38}
+                          height={38}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
+                        <span className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
+                          {exp.role}
+                        </span>
+                        <span className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
+                          {exp.company}
+                        </span>
+                      </div>
+                    </div>
+                    <span
+                      className="text-sm text-right"
+                      style={{ lineHeight: 1.643, fontVariantNumeric: "tabular-nums", color: "var(--color-fg)" }}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={exp.logo}
-                        alt={exp.company}
-                        width={38}
-                        height={38}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
-                      <span className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
-                        {exp.role}
-                      </span>
-                      <span className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
-                        {exp.company}
-                      </span>
-                    </div>
+                      {exp.period}
+                    </span>
                   </div>
-                  <span
-                    className="text-sm text-right"
-                    style={{ lineHeight: 1.643, fontVariantNumeric: "tabular-nums", color: "var(--color-fg)" }}
-                  >
-                    {exp.period}
-                  </span>
                 </div>
-                {i < experience.length - 1 && (
-                  <div className="mt-4 w-full" style={{ height: 20 }}>
-                    <ElasticLine
-                      grabThreshold={20}
-                      releaseThreshold={12}
-                      strokeWidth={1}
-                      strokeDasharray="0"
-                      className="text-[var(--color-surface)]"
-                      transition={{ type: "spring", stiffness: 800, damping: 40 }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
+            </AnimatedBackground>
           </motion.div>
 
           {/* Social links */}
