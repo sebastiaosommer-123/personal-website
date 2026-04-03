@@ -66,8 +66,15 @@ export default function Home() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && surfOpen) setSurfOpen(false);
     };
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data === "surf-device-close") setSurfOpen(false);
+    };
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("message", handleMessage);
+    };
   }, [surfOpen]);
   const [visibleSkills, setVisibleSkills] = useState(skills);
   const [floatingSkills, setFloatingSkills] = useState<{

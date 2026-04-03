@@ -211,6 +211,10 @@
                 loadVideo((currentVideoIndex + 1) % VIDEOS.length);
             });
 
+            document.querySelector('button[aria-label="Power"]').addEventListener('click', () => {
+                window.parent.postMessage('surf-device-close', '*');
+            });
+
             // Volume controls
             document.querySelector('button[aria-label="Volume Up"]').addEventListener('pointerdown', () => {
                 volumeLevel = Math.min(VOLUME_MAX, volumeLevel + 1);
