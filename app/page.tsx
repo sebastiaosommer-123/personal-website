@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import ElasticLine from "@/components/fancy/physics/elastic-line";
@@ -61,6 +61,14 @@ const socials = [
 
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && surfOpen) setSurfOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [surfOpen]);
   const [visibleSkills, setVisibleSkills] = useState(skills);
   const [floatingSkills, setFloatingSkills] = useState<{
     skill: string;
@@ -161,13 +169,13 @@ export default function Home() {
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
                 variant="outline"
-                className="rounded-full h-auto min-w-0 py-0.5 px-2.5 gap-1.5 font-medium whitespace-nowrap
+                className="rounded-full h-auto min-w-0 py-0.5 pl-1.5 pr-2 mr-0.5 gap-1.5 font-medium whitespace-nowrap
                            border-[var(--color-border)]
                            hover:bg-[var(--color-surface)] hover:text-[var(--color-fg)]
                            data-[state=on]:bg-[var(--color-surface)] data-[state=on]:text-[var(--color-fg)] data-[state=on]:border-[var(--color-border)]
                            active:scale-[0.97] focus-visible:ring-0 focus-visible:ring-offset-0
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
-                style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2 }}
+                style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
               >
                 <Power className="size-[0.7em]" strokeWidth={1.5} />
                 surf
