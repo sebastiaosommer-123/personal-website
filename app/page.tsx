@@ -247,7 +247,7 @@ export default function Home() {
           {/* Experience */}
           <motion.div {...block(0.32)} className="flex flex-col -mx-3">
             <AnimatedBackground
-              enableHover
+              enableHover={!isTouch}
               className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
               transition={{ type: "spring", stiffness: 400, damping: 35 }}
             >
@@ -340,6 +340,7 @@ export default function Home() {
                 src="/surf-device/index.html"
                 width={IFRAME_W}
                 height={IFRAME_H}
+                allowTransparency={true}
                 style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
                 title="Surf Video Device Preview"
               />
@@ -371,6 +372,7 @@ export default function Home() {
                   src="/surf-device/index.html"
                   width={IFRAME_W}
                   height={IFRAME_H}
+                  allowTransparency={true}
                   style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
                   title="Surf Video Device"
                 />
