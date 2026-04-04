@@ -2,6 +2,14 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+@variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+}
+
 *,
 *::before,
 *::after {
