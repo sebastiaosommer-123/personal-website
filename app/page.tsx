@@ -62,6 +62,21 @@ const socials = [
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
+  const [deviceScale, setDeviceScale] = useState(1);
+  const [isTouch, setIsTouch] = useState(false);
+
+  const IFRAME_W = 470;
+  const IFRAME_H = 440;
+
+  useEffect(() => {
+    const update = () => {
+      setDeviceScale(Math.min(1, window.innerWidth / 470));
+      setIsTouch(window.matchMedia('(hover: none)').matches);
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -188,7 +203,7 @@ export default function Home() {
                 <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
                   <div className="aspect-video w-full bg-black" />
                 </HoverCardContent>
-              </HoverCard>, and{" "}
+              </HoverCard>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -200,11 +215,11 @@ export default function Home() {
                            active:scale-[0.97] focus-visible:ring-0 focus-visible:ring-offset-0
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
                 style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
-                onMouseEnter={() => setSurfPeeking(true)}
-                onMouseLeave={() => setSurfPeeking(false)}
+                onMouseEnter={() => { if (!isTouch) setSurfPeeking(true); }}
+                onMouseLeave={() => { if (!isTouch) setSurfPeeking(false); }}
               >
                 surf
-              </Toggle>.
+              </Toggle>.</span>
             </div>
           </motion.div>
 
@@ -315,18 +330,20 @@ export default function Home() {
         {surfPeeking && !surfOpen && (
           <motion.div
             className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none z-40"
-            initial={{ y: 440 }}
-            animate={{ y: 360 }}
-            exit={{ y: 440 }}
+            initial={{ y: IFRAME_H * deviceScale }}
+            animate={{ y: 360 * deviceScale }}
+            exit={{ y: IFRAME_H * deviceScale }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           >
-            <iframe
-              src="/surf-device/index.html"
-              width={470}
-              height={440}
-              style={{ border: "none", background: "transparent" }}
-              title="Surf Video Device Preview"
-            />
+            <div style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}>
+              <iframe
+                src="/surf-device/index.html"
+                width={IFRAME_W}
+                height={IFRAME_H}
+                style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
+                title="Surf Video Device Preview"
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -340,14 +357,16 @@ export default function Home() {
             exit={{ y: "100vh", opacity: 0 }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
           >
-            <iframe
-              src="/surf-device/index.html"
-              className="pointer-events-auto"
-              width={470}
-              height={440}
-              style={{ border: "none", background: "transparent" }}
-              title="Surf Video Device"
-            />
+            <div style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}>
+              <iframe
+                src="/surf-device/index.html"
+                className="pointer-events-auto"
+                width={IFRAME_W}
+                height={IFRAME_H}
+                style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
+                title="Surf Video Device"
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
