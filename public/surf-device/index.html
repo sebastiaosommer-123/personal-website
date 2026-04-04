@@ -108,25 +108,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Sync background color from parent page so it matches the theme (light/dark)
-            // without relying on cross-browser iframe transparency
-            function syncBg() {
-                try {
-                    const bg = window.parent.getComputedStyle(window.parent.document.documentElement)
-                        .getPropertyValue('--color-bg').trim();
-                    if (bg) {
-                        document.documentElement.style.backgroundColor = bg;
-                        document.body.style.backgroundColor = bg;
-                    }
-                } catch(e) {}
-            }
-            syncBg();
-            try {
-                new MutationObserver(syncBg).observe(window.parent.document.documentElement, {
-                    attributes: true, attributeFilter: ['class']
-                });
-            } catch(e) {}
-
             const sliders = document.querySelectorAll('[data-slider]');
             sliders.forEach(slider => {
                 const knob = slider.querySelector('[data-knob]');

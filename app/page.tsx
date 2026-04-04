@@ -9,6 +9,7 @@ import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/h
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
 import { Power } from "lucide-react";
+import { SurfDevice } from "@/components/surf-device";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -65,12 +66,12 @@ export default function Home() {
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
 
-  const IFRAME_W = 470;
-  const IFRAME_H = 440;
+  const DEVICE_W = 420;
+  const DEVICE_H = 440;
 
   useEffect(() => {
     const update = () => {
-      setDeviceScale(Math.min(1, window.innerWidth / 470));
+      setDeviceScale(Math.min(1, window.innerWidth / DEVICE_W));
       setIsTouch(window.matchMedia('(hover: none)').matches);
     };
     update();
@@ -82,15 +83,8 @@ export default function Home() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && surfOpen) setSurfOpen(false);
     };
-    const handleMessage = (e: MessageEvent) => {
-      if (e.data === "surf-device-close") setSurfOpen(false);
-    };
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("message", handleMessage);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("message", handleMessage);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [surfOpen]);
   const [visibleSkills, setVisibleSkills] = useState(skills);
   const [floatingSkills, setFloatingSkills] = useState<{
@@ -330,21 +324,13 @@ export default function Home() {
         {surfPeeking && !surfOpen && (
           <motion.div
             className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none z-40"
-            initial={{ y: IFRAME_H * deviceScale }}
-            animate={{ y: 360 * deviceScale }}
-            exit={{ y: IFRAME_H * deviceScale }}
+            initial={{ y: DEVICE_H * deviceScale }}
+            animate={{ y: (DEVICE_H - 80) * deviceScale }}
+            exit={{ y: DEVICE_H * deviceScale }}
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            style={{ transformOrigin: 'bottom center', transform: `scale(${deviceScale})` }}
           >
-            <div style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}>
-              <iframe
-                src="/surf-device/index.html"
-                width={IFRAME_W}
-                height={IFRAME_H}
-
-                style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
-                title="Surf Video Device Preview"
-              />
-            </div>
+            <SurfDevice onClose={() => setSurfOpen(false)} />
           </motion.div>
         )}
       </AnimatePresence>
@@ -365,17 +351,10 @@ export default function Home() {
             >
               <div
                 className="pointer-events-auto"
-                style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}
+                style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}
                 onClick={(e) => e.stopPropagation()}
               >
-                <iframe
-                  src="/surf-device/index.html"
-                  width={IFRAME_W}
-                  height={IFRAME_H}
-  
-                  style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
-                  title="Surf Video Device"
-                />
+                <SurfDevice onClose={() => setSurfOpen(false)} />
               </div>
             </motion.div>
           </>
