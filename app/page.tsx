@@ -350,24 +350,33 @@ export default function Home() {
 
       <AnimatePresence initial={false}>
         {surfOpen && (
-          <motion.div
-            className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
-            initial={{ y: "100vh", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "100vh", opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-          >
-            <div style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}>
-              <iframe
-                src="/surf-device/index.html"
+          <>
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setSurfOpen(false)}
+            />
+            <motion.div
+              className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+              initial={{ y: "100vh", opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: "100vh", opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <div
                 className="pointer-events-auto"
-                width={IFRAME_W}
-                height={IFRAME_H}
-                style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
-                title="Surf Video Device"
-              />
-            </div>
-          </motion.div>
+                style={{ width: IFRAME_W * deviceScale, height: IFRAME_H * deviceScale, overflow: 'hidden' }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <iframe
+                  src="/surf-device/index.html"
+                  width={IFRAME_W}
+                  height={IFRAME_H}
+                  style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
+                  title="Surf Video Device"
+                />
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </main>
