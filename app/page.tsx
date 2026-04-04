@@ -340,7 +340,7 @@ export default function Home() {
                 src="/surf-device/index.html"
                 width={IFRAME_W}
                 height={IFRAME_H}
-                allowtransparency="true"
+                allowTransparency={true}
                 style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
                 title="Surf Video Device Preview"
               />
@@ -364,7 +364,7 @@ export default function Home() {
                 className="pointer-events-auto"
                 width={IFRAME_W}
                 height={IFRAME_H}
-                allowtransparency="true"
+                allowTransparency={true}
                 style={{ border: "none", background: "transparent", transformOrigin: 'top left', transform: `scale(${deviceScale})`, display: 'block' }}
                 title="Surf Video Device"
               />
