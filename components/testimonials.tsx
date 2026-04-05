@@ -105,7 +105,7 @@ export function Testimonials() {
                   { lineHeight: 1.5, textWrap: "pretty", color: "var(--color-fg-muted)" } as React.CSSProperties
                 }
               >
-                &ldquo;{t.quote}&rdquo;
+                <em>{t.quote}</em>
               </p>
               <div className="h-[0.75em]" />
               <p className="text-sm font-medium" style={{ lineHeight: 1.5, color: "var(--color-fg)" }}>
@@ -120,7 +120,7 @@ export function Testimonials() {
       </motion.div>
 
       {/* Progress nav dots */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-center gap-[6px]">
         {testimonials.map((_, i) => (
           <button
             key={i}
