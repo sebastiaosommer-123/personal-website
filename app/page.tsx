@@ -117,7 +117,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-10 md:pb-[60px] lg:pb-[80px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
+    <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* <div className="fixed inset-0 pointer-events-none z-20">
         {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
           <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
