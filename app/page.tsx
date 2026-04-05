@@ -355,14 +355,14 @@ export default function Home() {
       </AnimatePresence>
       <div
         ref={shadersCardRef}
-        className="fixed z-[9999] pointer-events-none w-64 rounded-md shadow-md overflow-hidden"
+        className="fixed z-[9999] pointer-events-none w-64 rounded-lg shadow-md overflow-hidden"
         style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
       >
         <div className="aspect-video w-full bg-black" />
       </div>
       <div
         ref={toolsCardRef}
-        className="fixed z-[9999] pointer-events-none w-64 rounded-md shadow-md overflow-hidden"
+        className="fixed z-[9999] pointer-events-none w-64 rounded-lg shadow-md overflow-hidden"
         style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
       >
         <div className="aspect-video w-full bg-black" />
