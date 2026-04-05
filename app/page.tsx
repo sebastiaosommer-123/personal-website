@@ -179,7 +179,7 @@ export default function Home() {
             </p>
             <div className="h-[0.75em]" />
             <p className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
-              Selected work and detailed case studies available upon request
+              Selected work and detailed case studies available upon request.
             </p>
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
