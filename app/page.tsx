@@ -9,6 +9,7 @@ import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
 import { Power } from "lucide-react";
 import { SurfDevice } from "@/components/surf-device";
+import { Testimonials } from "@/components/testimonials";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -116,7 +117,7 @@ export default function Home() {
   };
 
   return (
-    <main className="h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-24 relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
+    <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-10 md:pb-[60px] lg:pb-[80px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       {/* <div className="fixed inset-0 pointer-events-none z-20">
         {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
           <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
@@ -274,8 +275,13 @@ export default function Home() {
             </AnimatedBackground>
           </motion.div>
 
+          {/* Testimonials */}
+          <motion.div {...block(0.40)}>
+            <Testimonials />
+          </motion.div>
+
           {/* Social links */}
-          <motion.div {...block(0.40)} className="flex justify-between gap-6">
+          <motion.div {...block(0.48)} className="flex justify-between gap-6">
             {socials.map((s) => (
               <DirectionalUnderline
                 as="a"
