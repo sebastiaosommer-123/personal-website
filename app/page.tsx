@@ -1,11 +1,10 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
 import { Power } from "lucide-react";
@@ -63,6 +62,8 @@ const socials = [
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
+  const shadersCardRef = useRef<HTMLDivElement>(null);
+  const toolsCardRef = useRef<HTMLDivElement>(null);
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
 
@@ -182,22 +183,8 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               On my free time I{" "}
-              <HoverCard openDelay={150} closeDelay={100}>
-                <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
-                </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
-                  <div className="aspect-video w-full bg-black" />
-                </HoverCardContent>
-              </HoverCard>,{" "}
-              <HoverCard openDelay={150} closeDelay={100}>
-                <HoverCardTrigger asChild>
-                  <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }} onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); document.documentElement.style.setProperty('--hover-card-offset-x', `${e.clientX - (r.left + r.width / 2)}px`); }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>
-                </HoverCardTrigger>
-                <HoverCardContent side="top" className="w-64 overflow-hidden p-0 !z-[9999] pointer-events-none">
-                  <div className="aspect-video w-full bg-black" />
-                </HoverCardContent>
-              </HoverCard>,{" "}<span className="whitespace-nowrap">and{" "}
+              <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}>play with shaders<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+              <DirectionalUnderline as="a" href="https://example.com" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}>build tools<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -360,6 +347,20 @@ export default function Home() {
           </>
         )}
       </AnimatePresence>
+      <div
+        ref={shadersCardRef}
+        className="fixed z-[9999] pointer-events-none w-64 rounded-md shadow-md overflow-hidden"
+        style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
+      >
+        <div className="aspect-video w-full bg-black" />
+      </div>
+      <div
+        ref={toolsCardRef}
+        className="fixed z-[9999] pointer-events-none w-64 rounded-md shadow-md overflow-hidden"
+        style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
+      >
+        <div className="aspect-video w-full bg-black" />
+      </div>
     </main>
   );
 }
