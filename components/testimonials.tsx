@@ -2,7 +2,6 @@
 
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { motion, useMotionValue, animate, useReducedMotion } from "motion/react";
-import { cn } from "@/lib/utils";
 
 const GAP = 16;
 
@@ -32,8 +31,6 @@ const testimonials = [
 
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
   const prefersReducedMotion = useReducedMotion();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,7 +40,6 @@ export function Testimonials() {
   const isDragging = useRef(false);
   const pointerStartX = useRef(0);
   const motionStartX = useRef(0);
-  const isHovered = useRef(false);
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -71,7 +67,6 @@ export function Testimonials() {
       animate(x, target, { type: "spring", bounce: 0, duration: 0.4 });
     }
     setActiveIndex(index);
-    setAnimKey((k) => k + 1);
   };
 
   const navigate = (dir: number) => {
@@ -79,26 +74,10 @@ export function Testimonials() {
     snapTo(next);
   };
 
-  // Auto-play
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (isPaused || cardWidth === 0) return;
-    const id = setInterval(() => {
-      setActiveIndex((prev) => {
-        const next = (prev + 1) % testimonials.length;
-        animate(x, -(next * (cardWidth + GAP)), { type: "spring", bounce: 0, duration: 0.5 });
-        setAnimKey((k) => k + 1);
-        return next;
-      });
-    }, 6000);
-    return () => clearInterval(id);
-  }, [isPaused, cardWidth]);
-
   const handlePointerDown = (e: React.PointerEvent) => {
     isDragging.current = true;
     pointerStartX.current = e.clientX;
     motionStartX.current = x.get();
-    setIsPaused(true);
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   };
 
@@ -125,22 +104,10 @@ export function Testimonials() {
     } else {
       animate(x, getTargetX(activeIndex), { type: "spring", bounce: 0.1, duration: 0.35 });
     }
-
-    if (!isHovered.current) setIsPaused(false);
   };
 
   return (
-    <div
-      className="flex flex-col gap-3"
-      onMouseEnter={() => {
-        isHovered.current = true;
-        setIsPaused(true);
-      }}
-      onMouseLeave={() => {
-        isHovered.current = false;
-        setIsPaused(false);
-      }}
-    >
+    <div className="flex flex-col gap-3">
       <div ref={containerRef} className="overflow-hidden w-full">
         <motion.div
           className="flex cursor-grab active:cursor-grabbing select-none"
@@ -197,7 +164,7 @@ export function Testimonials() {
           </svg>
         </button>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           {testimonials.map((_, i) => (
             <button
               key={i}
@@ -205,30 +172,15 @@ export function Testimonials() {
               onClick={() => snapTo(i)}
               aria-label={`Go to testimonial ${i + 1}`}
               className="flex items-center justify-center"
-              style={{ minHeight: 24, minWidth: i === activeIndex ? 28 : 14 }}
+              style={{ minHeight: 24, minWidth: 14 }}
             >
               <div
-                className={cn(
-                  "h-[6px] rounded-full overflow-hidden transition-all duration-300",
-                  i === activeIndex ? "w-7 opacity-40" : "w-[6px] opacity-40"
-                )}
-                style={{ background: "var(--color-border)" }}
-              >
-                {i === activeIndex && (
-                  <div
-                    key={animKey}
-                    className="h-full rounded-full"
-                    style={{
-                      background: "var(--color-fg)",
-                      animationName: "testimonial-progress",
-                      animationDuration: "6s",
-                      animationTimingFunction: "linear",
-                      animationFillMode: "forwards",
-                      animationPlayState: isPaused ? "paused" : "running",
-                    }}
-                  />
-                )}
-              </div>
+                className="h-[6px] w-[6px] rounded-full transition-opacity duration-300"
+                style={{
+                  background: i === activeIndex ? "var(--color-fg)" : "var(--color-border)",
+                  opacity: i === activeIndex ? 0.6 : 0.4,
+                }}
+              />
             </button>
           ))}
         </div>
