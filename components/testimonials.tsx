@@ -127,7 +127,7 @@ export function Testimonials() {
               <p
                 className="text-base flex-1"
                 style={
-                  { lineHeight: 1.5, textWrap: "pretty", color: "var(--color-fg-muted)" } as React.CSSProperties
+                  { lineHeight: 1.5, color: "var(--color-fg-muted)" }
                 }
               >
                 <em>{t.quote}</em>
@@ -160,7 +160,7 @@ export function Testimonials() {
           </svg>
         </button>
 
-        <div className="flex items-center gap-[6px]">
+        <div className="flex items-center gap-1">
           {testimonials.map((_, i) => (
             <button
               key={i}
@@ -173,7 +173,7 @@ export function Testimonials() {
               <div
                 className={cn(
                   "h-[6px] rounded-full overflow-hidden transition-all duration-300",
-                  i === activeIndex ? "w-7" : "w-[6px] opacity-40"
+                  i === activeIndex ? "w-7 opacity-40" : "w-[6px] opacity-40"
                 )}
                 style={{ background: "var(--color-border)" }}
               >

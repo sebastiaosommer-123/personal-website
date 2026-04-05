@@ -281,7 +281,7 @@ export default function Home() {
           </motion.div>
 
           {/* Social links */}
-          <motion.div {...block(0.48)} className="flex justify-between gap-6">
+          <motion.div {...block(0.48)} className="flex justify-between gap-6 mt-2">
             {socials.map((s) => (
               <DirectionalUnderline
                 as="a"
