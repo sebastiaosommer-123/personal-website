@@ -96,7 +96,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
         <span
           ref={underlineRef}
           aria-hidden="true"
-          className="pointer-events-none absolute left-0 top-[1.5em] h-[0.05em] w-full bg-current"
+          className="pointer-events-none absolute left-0 top-[1.5em] h-px w-full bg-current"
           style={{ clipPath: "inset(0 100% 0 0)" }}
         />
       </Tag>
