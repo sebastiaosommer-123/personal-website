@@ -72,7 +72,7 @@ export default function Home() {
 
   useEffect(() => {
     const update = () => {
-      setDeviceScale(Math.min(1, window.innerWidth / DEVICE_W));
+      setDeviceScale(Math.min(1, (window.innerWidth - 32) / DEVICE_W));
       setIsTouch(window.matchMedia('(hover: none)').matches);
     };
     update();
