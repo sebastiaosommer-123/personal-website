@@ -25,6 +25,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
   const knob2Ref = useRef<HTMLDivElement>(null);
   const volIndicatorRef = useRef<HTMLDivElement>(null);
   const volTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const hasInteractedRef = useRef(false);
 
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -46,6 +47,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
 
   // Volume indicator fade
   useEffect(() => {
+    if (!hasInteractedRef.current) return;
     const el = volIndicatorRef.current;
     if (!el) return;
     el.style.transition = "opacity 0.2s ease";
@@ -86,6 +88,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
   }, [playClick, loadVideo, currentVideoIndex]);
 
   const handleVolumeUp = useCallback(() => {
+    hasInteractedRef.current = true;
     playVolumeClick();
     setVolumeLevel((prev) => {
       const next = Math.min(VOLUME_MAX, prev + 1);
@@ -99,6 +102,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
   }, [playVolumeClick]);
 
   const handleVolumeDown = useCallback(() => {
+    hasInteractedRef.current = true;
     playVolumeClick();
     setVolumeLevel((prev) => {
       const next = Math.max(0, prev - 1);
