@@ -164,7 +164,7 @@ export function Testimonials() {
           </svg>
         </button>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {testimonials.map((_, i) => (
             <button
               key={i}
@@ -172,7 +172,7 @@ export function Testimonials() {
               onClick={() => snapTo(i)}
               aria-label={`Go to testimonial ${i + 1}`}
               className="flex items-center justify-center"
-              style={{ minHeight: 24, minWidth: 14 }}
+              style={{ minHeight: 24, minWidth: 6 }}
             >
               <div
                 className="h-[6px] w-[6px] rounded-full transition-opacity duration-300"
