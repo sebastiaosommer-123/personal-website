@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion, useMotionValue, animate } from "motion/react";
 
 const THRESHOLD = 50;
@@ -58,6 +58,16 @@ const ease = [0.23, 1, 0.32, 1] as const;
 
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [minHeight, setMinHeight] = useState<number | undefined>(undefined);
+  const measureRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    if (!measureRef.current) return;
+    const heights = Array.from(measureRef.current.children).map(
+      (el) => (el as HTMLElement).offsetHeight
+    );
+    setMinHeight(Math.max(...heights));
+  }, []);
   const prefersReducedMotion = useReducedMotion();
   const direction = useRef(1);
   const pointerStartX = useRef(0);
@@ -123,8 +133,23 @@ export function Testimonials() {
   const activeVariants = prefersReducedMotion ? reducedMotionVariants : variants;
 
   return (
-    <div className="flex flex-col gap-3">
-      <AnimatePresence mode="wait" custom={direction.current}>
+    <div className="relative flex flex-col gap-3">
+      {/* Hidden measurement container — renders all full cards to find the tallest */}
+      <div ref={measureRef} aria-hidden className="invisible absolute w-full pointer-events-none">
+        {testimonials.map((t, i) => (
+          <div key={i} className="flex flex-col items-center text-center">
+            <p className="text-base" style={{ lineHeight: 1.5, textWrap: "pretty" }}>
+              <em>{t.quote}</em>
+            </p>
+            <div className="h-[0.75em]" />
+            <p className="text-sm font-medium" style={{ lineHeight: 1.5 }}>{t.name}</p>
+            <p className="text-sm" style={{ lineHeight: 1.5 }}>{t.role} {t.company}</p>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ minHeight }}>
+        <AnimatePresence mode="wait" custom={direction.current}>
         <motion.div
           key={activeIndex}
           custom={direction.current}
@@ -145,7 +170,7 @@ export function Testimonials() {
         >
           <p
             className="text-base"
-            style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}
+            style={{ lineHeight: 1.5, color: "var(--color-fg-muted)", textWrap: "pretty" }}
           >
             <em>{t.quote}</em>
           </p>
@@ -161,6 +186,7 @@ export function Testimonials() {
           </p>
         </motion.div>
       </AnimatePresence>
+      </div>
 
       {/* Progress nav */}
       <div className="flex items-center justify-between w-full">
