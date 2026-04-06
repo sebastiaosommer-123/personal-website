@@ -30,6 +30,8 @@ const testimonials = [
   },
 ];
 
+const ease = [0.23, 1, 0.32, 1] as const;
+
 const variants = {
   initial: (dir: number) => ({
     x: dir * 16,
@@ -45,6 +47,7 @@ const variants = {
     x: dir * -16,
     filter: "blur(8px)",
     opacity: 0,
+    transition: { duration: 0.25, ease },
   }),
 };
 
@@ -53,8 +56,6 @@ const reducedMotionVariants = {
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
-
-const ease = [0.23, 1, 0.32, 1] as const;
 
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -160,7 +161,6 @@ export function Testimonials() {
           transition={{
             duration: 0.4,
             ease,
-            exit: { duration: 0.25 },
           }}
           style={{ x: dragX, opacity: dragOpacity, filter: dragFilter }}
           className="flex flex-col items-center text-center select-none cursor-grab active:cursor-grabbing"
