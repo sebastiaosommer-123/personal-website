@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, useRef, useLayoutEffect, useEffect } from "react";
-import { motion, useMotionValue, animate, useReducedMotion } from "motion/react";
-
-const GAP = 16;
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 
 const testimonials = [
   {
@@ -32,121 +30,71 @@ const testimonials = [
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [cardWidth, setCardWidth] = useState(0);
-  const x = useMotionValue(0);
-
-  const isDragging = useRef(false);
   const pointerStartX = useRef(0);
-  const motionStartX = useRef(0);
-
-  useLayoutEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const update = () => setCardWidth(el.offsetWidth);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  const getTargetX = (index: number) => -(index * (cardWidth + GAP));
-
-  // Sync x when cardWidth changes (e.g. window resize)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (cardWidth > 0) x.set(getTargetX(activeIndex));
-  }, [cardWidth]);
-
-  const snapTo = (index: number) => {
-    const target = getTargetX(index);
-    if (prefersReducedMotion) {
-      x.set(target);
-    } else {
-      animate(x, target, { type: "spring", bounce: 0, duration: 0.4 });
-    }
-    setActiveIndex(index);
-  };
 
   const navigate = (dir: number) => {
-    const next = (activeIndex + dir + testimonials.length) % testimonials.length;
-    snapTo(next);
+    setActiveIndex((i) => (i + dir + testimonials.length) % testimonials.length);
   };
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    isDragging.current = true;
     pointerStartX.current = e.clientX;
-    motionStartX.current = x.get();
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging.current) return;
-    const delta = e.clientX - pointerStartX.current;
-    const rawX = motionStartX.current + delta;
-    const minX = getTargetX(testimonials.length - 1);
-    const maxX = 0;
-    x.set(Math.max(minX, Math.min(maxX, rawX)));
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (!isDragging.current) return;
-    isDragging.current = false;
-
     const delta = e.clientX - pointerStartX.current;
-    const threshold = cardWidth * 0.2;
-
-    if (delta < -threshold && activeIndex < testimonials.length - 1) {
-      snapTo(activeIndex + 1);
-    } else if (delta > threshold && activeIndex > 0) {
-      snapTo(activeIndex - 1);
-    } else {
-      animate(x, getTargetX(activeIndex), { type: "spring", bounce: 0.1, duration: 0.35 });
-    }
+    if (delta < -50) navigate(1);
+    else if (delta > 50) navigate(-1);
   };
+
+  const t = testimonials[activeIndex];
+
+  const initial = prefersReducedMotion
+    ? { opacity: 0 }
+    : { filter: "blur(8px)", opacity: 0 };
+
+  const animate = prefersReducedMotion
+    ? { opacity: 1 }
+    : { filter: "blur(0px)", opacity: 1 };
+
+  const exit = prefersReducedMotion
+    ? { opacity: 0 }
+    : { filter: "blur(8px)", opacity: 0 };
 
   return (
     <div className="flex flex-col gap-3">
-      <div ref={containerRef} className="overflow-hidden w-full">
+      <AnimatePresence mode="wait">
         <motion.div
-          className="flex cursor-grab active:cursor-grabbing select-none"
-          style={{ x, gap: GAP, touchAction: "pan-y", willChange: "transform" }}
+          key={activeIndex}
+          initial={initial}
+          animate={animate}
+          exit={exit}
+          transition={{
+            duration: 0.4,
+            ease: [0.23, 1, 0.32, 1],
+            exit: { duration: 0.25 },
+          }}
+          className="flex flex-col items-center text-center select-none"
           onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
         >
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 rounded-xl border p-4 flex flex-col"
-              style={{
-                width: cardWidth || "100%",
-                background: "var(--color-bg)",
-                borderColor: "color-mix(in srgb, var(--color-border) 40%, transparent)",
-              }}
-            >
-              <p
-                className="text-base flex-1"
-                style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}
-              >
-                <em>{t.quote}</em>
-              </p>
-              <div className="h-[0.75em]" />
-              <p
-                className="text-sm font-medium"
-                style={{ lineHeight: 1.5, color: "var(--color-fg)" }}
-              >
-                {t.name}
-              </p>
-              <p className="text-sm" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
-                {t.role} {t.company}
-              </p>
-            </div>
-          ))}
+          <p
+            className="text-base"
+            style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}
+          >
+            <em>{t.quote}</em>
+          </p>
+          <div className="h-[0.75em]" />
+          <p
+            className="text-sm font-medium"
+            style={{ lineHeight: 1.5, color: "var(--color-fg)" }}
+          >
+            {t.name}
+          </p>
+          <p className="text-sm" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
+            {t.role} {t.company}
+          </p>
         </motion.div>
-      </div>
+      </AnimatePresence>
 
       {/* Progress nav */}
       <div className="flex items-center justify-between w-full">
@@ -169,7 +117,7 @@ export function Testimonials() {
             <button
               key={i}
               type="button"
-              onClick={() => snapTo(i)}
+              onClick={() => setActiveIndex(i)}
               aria-label={`Go to testimonial ${i + 1}`}
               className="flex items-center justify-center"
               style={{ minHeight: 24, minWidth: 6 }}
