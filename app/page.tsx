@@ -167,7 +167,7 @@ export default function Home() {
         <div className="flex flex-col gap-6">
 
           {/* Bio */}
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, filter: "blur(8px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.16 }}
@@ -176,10 +176,6 @@ export default function Home() {
               Working as Founding Product Designer at a stealth AI startup,
               collaborating closely with cross functional teams to design.
               Previously shipped features across multiple apps in production.
-            </p>
-            <div className="h-[0.75em]" />
-            <p className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
-              Selected work and detailed case studies available upon request.
             </p>
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
