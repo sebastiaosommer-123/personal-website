@@ -98,7 +98,8 @@ export function Testimonials() {
   const handlePointerMove = (e: React.PointerEvent) => {
     if (e.buttons === 0) return;
     const delta = e.clientX - pointerStartX.current;
-    const progress = Math.min(Math.abs(delta) / DRAG_RANGE, 1);
+    const clampedDelta = Math.sign(delta) * Math.min(Math.abs(delta), THRESHOLD);
+    const progress = Math.abs(clampedDelta) / DRAG_RANGE;
 
     if (!prefersReducedMotion) {
       dragX.set(Math.sign(delta) * progress * 16);
