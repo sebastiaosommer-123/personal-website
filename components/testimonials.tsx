@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { motion, AnimatePresence, useReducedMotion, useMotionValue, animate } from "motion/react";
+
+const THRESHOLD = 50;
+const DRAG_RANGE = 160; // distance over which exit values are fully reached
 
 const testimonials = [
   {
@@ -51,11 +54,31 @@ const reducedMotionVariants = {
   exit: { opacity: 0 },
 };
 
+const ease = [0.23, 1, 0.32, 1] as const;
+
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
   const direction = useRef(1);
   const pointerStartX = useRef(0);
+
+  const dragX = useMotionValue(0);
+  const dragOpacity = useMotionValue(1);
+  const dragFilter = useMotionValue("blur(0px)");
+
+  const resetDrag = (animate_: boolean) => {
+    if (animate_) {
+      animate(dragX, 0, { duration: 0.25, ease });
+      animate(dragOpacity, 1, { duration: 0.25, ease });
+      if (!prefersReducedMotion) {
+        animate(dragFilter, "blur(0px)", { duration: 0.25, ease });
+      }
+    } else {
+      dragX.set(0);
+      dragOpacity.set(1);
+      dragFilter.set("blur(0px)");
+    }
+  };
 
   const navigate = (dir: number) => {
     direction.current = dir;
@@ -63,6 +86,7 @@ export function Testimonials() {
   };
 
   const goTo = (i: number) => {
+    resetDrag(false);
     direction.current = i > activeIndex ? 1 : -1;
     setActiveIndex(i);
   };
@@ -71,10 +95,27 @@ export function Testimonials() {
     pointerStartX.current = e.clientX;
   };
 
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (e.buttons === 0) return;
+    const delta = e.clientX - pointerStartX.current;
+    const progress = Math.min(Math.abs(delta) / DRAG_RANGE, 1);
+
+    if (!prefersReducedMotion) {
+      dragX.set(Math.sign(delta) * progress * 16);
+      dragFilter.set(`blur(${progress * 8}px)`);
+    }
+    dragOpacity.set(1 - progress);
+  };
+
   const handlePointerUp = (e: React.PointerEvent) => {
     const delta = e.clientX - pointerStartX.current;
-    if (delta < -50) navigate(1);
-    else if (delta > 50) navigate(-1);
+    if (delta < -THRESHOLD) {
+      navigate(1);
+    } else if (delta > THRESHOLD) {
+      navigate(-1);
+    } else {
+      resetDrag(true);
+    }
   };
 
   const t = testimonials[activeIndex];
@@ -92,11 +133,13 @@ export function Testimonials() {
           exit="exit"
           transition={{
             duration: 0.4,
-            ease: [0.23, 1, 0.32, 1],
+            ease,
             exit: { duration: 0.25 },
           }}
+          style={{ x: dragX, opacity: dragOpacity, filter: dragFilter }}
           className="flex flex-col items-center text-center select-none cursor-grab active:cursor-grabbing"
           onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
         >
           <p
