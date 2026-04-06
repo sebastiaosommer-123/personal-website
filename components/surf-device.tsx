@@ -187,7 +187,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
           {/* Playback buttons */}
           <div className="w-full flex items-center justify-between px-1 mb-2">
             <button
-              className="w-16 h-16 rounded-full bg-[#D8DADD] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
+              className="w-16 h-16 rounded-full bg-[#F5F6F7] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
               aria-label="Previous"
               onClick={handlePrev}
             >
@@ -197,7 +197,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
             </button>
 
             <button
-              className="w-16 h-16 rounded-full bg-[#D8DADD] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
+              className="w-16 h-16 rounded-full bg-[#F5F6F7] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
               aria-label="Play/Pause"
               onClick={handlePlayPause}
             >
@@ -207,7 +207,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
             </button>
 
             <button
-              className="w-16 h-16 rounded-full bg-[#D8DADD] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
+              className="w-16 h-16 rounded-full bg-[#F5F6F7] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
               aria-label="Next"
               onClick={handleNext}
             >
@@ -217,7 +217,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
             </button>
 
             <button
-              className="w-16 h-16 rounded-full bg-[#D8DADD] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.18)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
+              className="w-16 h-16 rounded-full bg-[#F5F6F7] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
               aria-label="Power"
               onClick={() => { playClick(); onClose(); }}
             >
