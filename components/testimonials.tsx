@@ -27,13 +27,44 @@ const testimonials = [
   },
 ];
 
+const variants = {
+  initial: (dir: number) => ({
+    x: dir * 16,
+    filter: "blur(8px)",
+    opacity: 0,
+  }),
+  animate: {
+    x: 0,
+    filter: "blur(0px)",
+    opacity: 1,
+  },
+  exit: (dir: number) => ({
+    x: dir * -16,
+    filter: "blur(8px)",
+    opacity: 0,
+  }),
+};
+
+const reducedMotionVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
+
 export function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
   const prefersReducedMotion = useReducedMotion();
+  const direction = useRef(1);
   const pointerStartX = useRef(0);
 
   const navigate = (dir: number) => {
+    direction.current = dir;
     setActiveIndex((i) => (i + dir + testimonials.length) % testimonials.length);
+  };
+
+  const goTo = (i: number) => {
+    direction.current = i > activeIndex ? 1 : -1;
+    setActiveIndex(i);
   };
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -47,33 +78,24 @@ export function Testimonials() {
   };
 
   const t = testimonials[activeIndex];
-
-  const initial = prefersReducedMotion
-    ? { opacity: 0 }
-    : { filter: "blur(8px)", opacity: 0 };
-
-  const animate = prefersReducedMotion
-    ? { opacity: 1 }
-    : { filter: "blur(0px)", opacity: 1 };
-
-  const exit = prefersReducedMotion
-    ? { opacity: 0 }
-    : { filter: "blur(8px)", opacity: 0 };
+  const activeVariants = prefersReducedMotion ? reducedMotionVariants : variants;
 
   return (
     <div className="flex flex-col gap-3">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" custom={direction.current}>
         <motion.div
           key={activeIndex}
-          initial={initial}
-          animate={animate}
-          exit={exit}
+          custom={direction.current}
+          variants={activeVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
           transition={{
             duration: 0.4,
             ease: [0.23, 1, 0.32, 1],
             exit: { duration: 0.25 },
           }}
-          className="flex flex-col items-center text-center select-none"
+          className="flex flex-col items-center text-center select-none cursor-grab active:cursor-grabbing"
           onPointerDown={handlePointerDown}
           onPointerUp={handlePointerUp}
         >
@@ -117,7 +139,7 @@ export function Testimonials() {
             <button
               key={i}
               type="button"
-              onClick={() => setActiveIndex(i)}
+              onClick={() => goTo(i)}
               aria-label={`Go to testimonial ${i + 1}`}
               className="flex items-center justify-center"
               style={{ minHeight: 24, minWidth: 6 }}
