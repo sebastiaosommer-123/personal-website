@@ -154,7 +154,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
 
         {/* Screen */}
         <div className="relative w-full h-[220px] bg-black shrink-0 border-b border-[#C8CACD] dark:border-gunmetal-900 z-20">
-          <div className="absolute inset-[2.5px] rounded-t-[29.5px] rounded-b-[4px] overflow-hidden">
+          <div className="absolute inset-[1px] rounded-t-[31px] rounded-b-[4px] overflow-hidden">
             <video
               ref={videoRef}
               className="w-full h-full"
@@ -165,7 +165,7 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
               autoPlay
             />
           </div>
-          <div className="absolute inset-[2.5px] border-[1.5px] border-gunmetal-800 rounded-t-[29.5px] rounded-b-[4px] pointer-events-none shadow-[inset_0_0_0_1px_rgba(0,0,0,0.5)]" />
+          <div className="absolute inset-[1px] border-[1.5px] border-gunmetal-800 rounded-t-[31px] rounded-b-[4px] pointer-events-none shadow-[inset_0_0_0_1px_rgba(0,0,0,0.5)]" />
         </div>
 
         {/* Controls */}
