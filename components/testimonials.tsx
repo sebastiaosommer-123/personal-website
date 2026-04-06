@@ -167,6 +167,7 @@ export function Testimonials() {
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
+          onPointerCancel={() => resetDrag(true)}
         >
           <p
             className="text-base"
