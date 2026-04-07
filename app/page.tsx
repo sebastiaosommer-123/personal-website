@@ -72,7 +72,8 @@ export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [videoModal, setVideoModal] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
@@ -396,6 +397,7 @@ export default function Home() {
         style={{ left: 0, top: 0, pointerEvents: activeProject ? 'auto' : 'none', x: cardX, y: cardY }}
       >
         <motion.div
+          ref={cardRef}
           className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
             y: activeProject ? 0 : 16,
@@ -411,7 +413,19 @@ export default function Home() {
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
-          onClick={() => setVideoModal(activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC)}
+          onClick={() => {
+            const rect = cardRef.current?.getBoundingClientRect();
+            const src = activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC;
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const modalWidth = Math.min(720, vw * 0.9);
+            const scale = rect ? rect.width / modalWidth : 0.97;
+            const offsetX = rect ? (rect.left + rect.width / 2) - vw / 2 : 0;
+            const offsetY = rect ? (rect.top + rect.height / 2) - vh / 2 : 0;
+            clearTimeout(hideTimer.current);
+            setActiveProject(null);
+            setVideoModal({ src, scale, offsetX, offsetY });
+          }}
         >
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <motion.video
@@ -434,25 +448,34 @@ export default function Home() {
 
       <AnimatePresence>
         {videoModal && (
-          <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center">
+          <>
             <motion.div
+              key="video-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute left-0 top-0 h-full w-full bg-black/60 backdrop-blur-sm"
+              className="fixed left-0 top-0 z-[9999] h-full w-full bg-black/60 backdrop-blur-sm"
               onClick={() => setVideoModal(null)}
             />
+            <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center pointer-events-none">
             <motion.div
-              initial={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              initial={{ scale: videoModal.scale, x: videoModal.offsetX, y: videoModal.offsetY, borderRadius: "8px" }}
+              animate={{ scale: 1, x: 0, y: 0, borderRadius: "0px" }}
               exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
-              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-              className="relative aspect-video w-[min(720px,90vw)]"
+              transition={{
+                scale:        { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                x:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                y:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                borderRadius: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                opacity:      { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                filter:       { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+              }}
+              className="pointer-events-auto relative aspect-video w-[min(720px,90vw)] overflow-hidden"
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
                 <VideoPlayerContent
-                  src={videoModal}
+                  src={videoModal.src}
                   autoPlay
                   slot="media"
                   className="w-full object-cover"
@@ -464,14 +487,15 @@ export default function Home() {
                 >
                   <Plus className="size-5 rotate-45 text-white" />
                 </span>
-                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5">
+                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
                   <VideoPlayerPlayButton className="h-4 bg-transparent" />
                   <VideoPlayerTimeRange className="bg-transparent" />
                   <VideoPlayerMuteButton className="size-4 bg-transparent" />
                 </VideoPlayerControlBar>
               </VideoPlayer>
             </motion.div>
-          </div>
+            </div>
+          </>
         )}
       </AnimatePresence>
     </main>
