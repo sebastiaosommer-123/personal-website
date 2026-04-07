@@ -68,28 +68,12 @@ const socials = [
   { label: "Email", href: "mailto:hello@example.com" },
 ];
 
-function getInitialClipPath(originRect: DOMRect): string {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  const mW = Math.min(720, vw * 0.9);
-  const mH = mW * (9 / 16);
-  const mLeft = (vw - mW) / 2;
-  const mTop = (vh - mH) / 2;
-
-  const top    = Math.max(0, (originRect.top    - mTop)      / mH * 100).toFixed(2);
-  const left   = Math.max(0, (originRect.left   - mLeft)     / mW * 100).toFixed(2);
-  const bottom = Math.max(0, (mTop + mH - originRect.bottom) / mH * 100).toFixed(2);
-  const right  = Math.max(0, (mLeft + mW - originRect.right) / mW * 100).toFixed(2);
-
-  return `inset(${top}% ${right}% ${bottom}% ${left}% round 8px)`;
-}
-
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
-  const [videoModal, setVideoModal] = useState<{ src: string; initialClipPath: string } | null>(null);
+  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
@@ -432,12 +416,15 @@ export default function Home() {
           onClick={() => {
             const rect = cardRef.current?.getBoundingClientRect();
             const src = activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC;
-            const initialClipPath = rect
-              ? getInitialClipPath(rect)
-              : "inset(50% 50% 50% 50% round 8px)";
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            const modalWidth = Math.min(720, vw * 0.9);
+            const scale = rect ? rect.width / modalWidth : 0.97;
+            const offsetX = rect ? (rect.left + rect.width / 2) - vw / 2 : 0;
+            const offsetY = rect ? (rect.top + rect.height / 2) - vh / 2 : 0;
             clearTimeout(hideTimer.current);
             setActiveProject(null);
-            setVideoModal({ src, initialClipPath });
+            setVideoModal({ src, scale, offsetX, offsetY });
           }}
         >
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
