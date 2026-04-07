@@ -7,7 +7,15 @@ import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
-import { Power } from "lucide-react";
+import { Power, Plus } from "lucide-react";
+import {
+  VideoPlayer,
+  VideoPlayerContent,
+  VideoPlayerControlBar,
+  VideoPlayerPlayButton,
+  VideoPlayerTimeRange,
+  VideoPlayerMuteButton,
+} from "@/components/ui/skiper-ui/skiper67";
 import { SurfDevice } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
 
@@ -65,6 +73,11 @@ export default function Home() {
   const [surfPeeking, setSurfPeeking] = useState(false);
   const shadersCardRef = useRef<HTMLDivElement>(null);
   const toolsCardRef = useRef<HTMLDivElement>(null);
+  const shadersHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const toolsHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const [videoModal, setVideoModal] = useState<string | null>(null);
+
+  const PREVIEW_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
 
@@ -83,11 +96,14 @@ export default function Home() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && surfOpen) setSurfOpen(false);
+      if (e.key === "Escape") {
+        if (videoModal) setVideoModal(null);
+        else if (surfOpen) setSurfOpen(false);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [surfOpen]);
+  }, [surfOpen, videoModal]);
   const [visibleSkills, setVisibleSkills] = useState(skills);
   const [floatingSkills, setFloatingSkills] = useState<{
     skill: string;
@@ -180,8 +196,8 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               In my free time, I build{" "}
-              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
-              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
+              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(shadersHideTimer.current); const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { shadersHideTimer.current = setTimeout(() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 150); }}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(toolsHideTimer.current); const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { toolsHideTimer.current = setTimeout(() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 150); }}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -351,18 +367,77 @@ export default function Home() {
       </AnimatePresence>
       <div
         ref={shadersCardRef}
-        className="fixed z-[9999] pointer-events-none w-64 rounded-lg shadow-md overflow-hidden"
+        className="fixed z-[9999] w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
         style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
+        onMouseEnter={() => clearTimeout(shadersHideTimer.current)}
+        onMouseLeave={() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}
+        onClick={() => setVideoModal(PREVIEW_VIDEO_SRC)}
       >
-        <div className="aspect-video w-full bg-black" />
+        <video autoPlay muted loop playsInline className="w-full aspect-video object-cover block" src={PREVIEW_VIDEO_SRC} />
       </div>
       <div
         ref={toolsCardRef}
-        className="fixed z-[9999] pointer-events-none w-64 rounded-lg shadow-md overflow-hidden"
+        className="fixed z-[9999] w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
         style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
+        onMouseEnter={() => clearTimeout(toolsHideTimer.current)}
+        onMouseLeave={() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}
+        onClick={() => setVideoModal(PREVIEW_VIDEO_SRC)}
       >
-        <div className="aspect-video w-full bg-black" />
+        <video autoPlay muted loop playsInline className="w-full aspect-video object-cover block" src={PREVIEW_VIDEO_SRC} />
       </div>
+
+      <AnimatePresence>
+        {videoModal && (
+          <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="absolute left-0 top-0 h-full w-full bg-black/60 backdrop-blur-sm"
+              onClick={() => setVideoModal(null)}
+            />
+            <motion.div
+              initial={{ clipPath: "inset(43.5% 43.5% 33.5% 43.5%)", opacity: 0 }}
+              animate={{ clipPath: "inset(0 0 0 0)", opacity: 1 }}
+              exit={{
+                clipPath: "inset(43.5% 43.5% 33.5% 43.5%)",
+                opacity: 0,
+                transition: {
+                  duration: 1,
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  opacity: { duration: 0.2, delay: 0.8 },
+                },
+              }}
+              transition={{ duration: 1, type: "spring", stiffness: 100, damping: 20 }}
+              className="relative aspect-video w-[min(720px,90vw)]"
+            >
+              <VideoPlayer style={{ width: "100%", height: "100%" }}>
+                <VideoPlayerContent
+                  src={videoModal}
+                  autoPlay
+                  slot="media"
+                  className="w-full object-cover"
+                  style={{ width: "100%", height: "100%" }}
+                />
+                <span
+                  onClick={() => setVideoModal(null)}
+                  className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
+                >
+                  <Plus className="size-5 rotate-45 text-white" />
+                </span>
+                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5">
+                  <VideoPlayerPlayButton className="h-4 bg-transparent" />
+                  <VideoPlayerTimeRange className="bg-transparent" />
+                  <VideoPlayerMuteButton className="size-4 bg-transparent" />
+                </VideoPlayerControlBar>
+              </VideoPlayer>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
