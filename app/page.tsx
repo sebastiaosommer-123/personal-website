@@ -435,6 +435,8 @@ export default function Home() {
             const initialClipPath = rect
               ? getInitialClipPath(rect)
               : "inset(50% 50% 50% 50% round 8px)";
+            clearTimeout(hideTimer.current);
+            setActiveProject(null);
             setVideoModal({ src, initialClipPath });
           }}
         >
