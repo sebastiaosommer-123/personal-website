@@ -68,11 +68,28 @@ const socials = [
   { label: "Email", href: "mailto:hello@example.com" },
 ];
 
+function getInitialClipPath(originRect: DOMRect): string {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const mW = Math.min(720, vw * 0.9);
+  const mH = mW * (9 / 16);
+  const mLeft = (vw - mW) / 2;
+  const mTop = (vh - mH) / 2;
+
+  const top    = Math.max(0, (originRect.top    - mTop)      / mH * 100).toFixed(2);
+  const left   = Math.max(0, (originRect.left   - mLeft)     / mW * 100).toFixed(2);
+  const bottom = Math.max(0, (mTop + mH - originRect.bottom) / mH * 100).toFixed(2);
+  const right  = Math.max(0, (mLeft + mW - originRect.right) / mW * 100).toFixed(2);
+
+  return `inset(${top}% ${right}% ${bottom}% ${left}% round 8px)`;
+}
+
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const [videoModal, setVideoModal] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [videoModal, setVideoModal] = useState<{ src: string; initialClipPath: string } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
@@ -396,6 +413,7 @@ export default function Home() {
         style={{ left: 0, top: 0, pointerEvents: activeProject ? 'auto' : 'none', x: cardX, y: cardY }}
       >
         <motion.div
+          ref={cardRef}
           className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
             y: activeProject ? 0 : 16,
@@ -411,7 +429,14 @@ export default function Home() {
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
-          onClick={() => setVideoModal(activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC)}
+          onClick={() => {
+            const rect = cardRef.current?.getBoundingClientRect();
+            const src = activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC;
+            const initialClipPath = rect
+              ? getInitialClipPath(rect)
+              : "inset(50% 50% 50% 50% round 8px)";
+            setVideoModal({ src, initialClipPath });
+          }}
         >
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <motion.video
@@ -444,15 +469,20 @@ export default function Home() {
               onClick={() => setVideoModal(null)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              initial={{ clipPath: videoModal.initialClipPath }}
+              animate={{ clipPath: "inset(0% 0% 0% 0% round 0px)" }}
               exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
-              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+              transition={{
+                clipPath: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                scale: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+              }}
               className="relative aspect-video w-[min(720px,90vw)]"
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
                 <VideoPlayerContent
-                  src={videoModal}
+                  src={videoModal.src}
                   autoPlay
                   slot="media"
                   className="w-full object-cover"
