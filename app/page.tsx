@@ -458,14 +458,16 @@ export default function Home() {
               onClick={() => setVideoModal(null)}
             />
             <motion.div
-              initial={{ clipPath: videoModal.initialClipPath }}
-              animate={{ clipPath: "inset(0% 0% 0% 0% round 0px)" }}
+              initial={{ scale: videoModal.scale, x: videoModal.offsetX, y: videoModal.offsetY, borderRadius: "8px" }}
+              animate={{ scale: 1, x: 0, y: 0, borderRadius: "0px" }}
               exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
               transition={{
-                clipPath: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
-                opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-                scale: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-                filter: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                scale:        { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                x:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                y:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                borderRadius: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
+                opacity:      { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                filter:       { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
               }}
               className="relative aspect-video w-[min(720px,90vw)]"
             >
