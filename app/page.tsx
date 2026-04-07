@@ -448,15 +448,17 @@ export default function Home() {
 
       <AnimatePresence>
         {videoModal && (
-          <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center">
+          <>
             <motion.div
+              key="video-backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute left-0 top-0 h-full w-full bg-black/60 backdrop-blur-sm"
+              className="fixed left-0 top-0 z-[9999] h-full w-full bg-black/60 backdrop-blur-sm"
               onClick={() => setVideoModal(null)}
             />
+            <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center pointer-events-none">
             <motion.div
               initial={{ scale: videoModal.scale, x: videoModal.offsetX, y: videoModal.offsetY, borderRadius: "8px" }}
               animate={{ scale: 1, x: 0, y: 0, borderRadius: "0px" }}
@@ -469,7 +471,7 @@ export default function Home() {
                 opacity:      { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
                 filter:       { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
               }}
-              className="relative aspect-video w-[min(720px,90vw)] overflow-hidden"
+              className="pointer-events-auto relative aspect-video w-[min(720px,90vw)] overflow-hidden"
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
                 <VideoPlayerContent
@@ -485,14 +487,15 @@ export default function Home() {
                 >
                   <Plus className="size-5 rotate-45 text-white" />
                 </span>
-                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5">
+                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
                   <VideoPlayerPlayButton className="h-4 bg-transparent" />
                   <VideoPlayerTimeRange className="bg-transparent" />
                   <VideoPlayerMuteButton className="size-4 bg-transparent" />
                 </VideoPlayerControlBar>
               </VideoPlayer>
             </motion.div>
-          </div>
+            </div>
+          </>
         )}
       </AnimatePresence>
     </main>
