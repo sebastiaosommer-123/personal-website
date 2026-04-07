@@ -54,12 +54,14 @@ Negative inset values are safe — they just mean the card extended past the mod
   animate={{ clipPath: "inset(0% 0% 0% 0% round 0px)", opacity: 1 }}
   exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
   transition={{
-    clipPath: { type: "spring", stiffness: 100, damping: 20 },
+    clipPath: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
     opacity: { duration: 0 },
   }}
   className="relative aspect-video w-[min(720px,90vw)]"
 >
 ```
+
+The site uses `[0.23, 1, 0.32, 1]` as its universal easing curve. `0.4s` matches the page-level fade-ins (the largest motion tier on the site), appropriate for a significant spatial expansion. The Skiper67 reference's `spring stiffness:100/damping:20` is from a different design context and is too slow and bouncy for this site's snappy feel.
 
 ## Changes in `page.tsx`
 
