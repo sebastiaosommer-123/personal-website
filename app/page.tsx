@@ -196,8 +196,8 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               In my free time, I build{" "}
-              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(shadersHideTimer.current); const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { shadersHideTimer.current = setTimeout(() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 150); }}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
-              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(toolsHideTimer.current); const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144 - 6}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { toolsHideTimer.current = setTimeout(() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 150); }}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
+              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(shadersHideTimer.current); const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { shadersHideTimer.current = setTimeout(() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 300); }}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(toolsHideTimer.current); const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { toolsHideTimer.current = setTimeout(() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 300); }}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -398,20 +398,10 @@ export default function Home() {
               onClick={() => setVideoModal(null)}
             />
             <motion.div
-              initial={{ clipPath: "inset(43.5% 43.5% 33.5% 43.5%)", opacity: 0 }}
-              animate={{ clipPath: "inset(0 0 0 0)", opacity: 1 }}
-              exit={{
-                clipPath: "inset(43.5% 43.5% 33.5% 43.5%)",
-                opacity: 0,
-                transition: {
-                  duration: 1,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  opacity: { duration: 0.2, delay: 0.8 },
-                },
-              }}
-              transition={{ duration: 1, type: "spring", stiffness: 100, damping: 20 }}
+              initial={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
+              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
               className="relative aspect-video w-[min(720px,90vw)]"
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
