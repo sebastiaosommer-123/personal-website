@@ -71,13 +71,27 @@ const socials = [
 export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
-  const shadersCardRef = useRef<HTMLDivElement>(null);
-  const toolsCardRef = useRef<HTMLDivElement>(null);
-  const shadersHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const toolsHideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [videoModal, setVideoModal] = useState<string | null>(null);
+  const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
+  const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
 
-  const PREVIEW_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
+  const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
+  const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
+
+  const CARD_W = 256;
+  const CARD_H = 144;
+
+  const handleProjectEnter = (project: 'shaders' | 'tools', e: React.MouseEvent) => {
+    clearTimeout(hideTimer.current);
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    setCardPos({ x: rect.left + rect.width / 2 - CARD_W / 2, y: rect.top - CARD_H - 12 });
+    setActiveProject(project);
+  };
+
+  const startHideTimer = () => {
+    hideTimer.current = setTimeout(() => setActiveProject(null), 300);
+  };
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
 
@@ -196,8 +210,8 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               In my free time, I build{" "}
-              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(shadersHideTimer.current); const c = shadersCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = shadersCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { shadersHideTimer.current = setTimeout(() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 300); }}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
-              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { clearTimeout(toolsHideTimer.current); const c = toolsCardRef.current; if (c) { const rect = (e.currentTarget as HTMLElement).getBoundingClientRect(); c.style.left = `${e.clientX - 128}px`; c.style.top = `${rect.top - 144}px`; c.style.opacity = '1'; c.style.transform = 'translateY(0) scale(1)'; } }} onMouseMove={(e) => { const c = toolsCardRef.current; if (c) { c.style.left = `${e.clientX - 128}px`; } }} onMouseLeave={() => { toolsHideTimer.current = setTimeout(() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }, 300); }}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
+              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => handleProjectEnter('shaders', e)} onMouseLeave={startHideTimer}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => handleProjectEnter('tools', e)} onMouseLeave={startHideTimer}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -365,26 +379,44 @@ export default function Home() {
           </>
         )}
       </AnimatePresence>
-      <div
-        ref={shadersCardRef}
-        className="fixed z-[9999] w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
-        style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
-        onMouseEnter={() => clearTimeout(shadersHideTimer.current)}
-        onMouseLeave={() => { const c = shadersCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}
-        onClick={() => setVideoModal(PREVIEW_VIDEO_SRC)}
+      {/* Shared video preview card */}
+      <motion.div
+        className="fixed z-[9999]"
+        style={{ left: 0, top: 0, pointerEvents: activeProject ? 'auto' : 'none' }}
+        animate={{ x: cardPos.x, y: cardPos.y }}
+        transition={{ type: 'spring', stiffness: 400, damping: 35 }}
       >
-        <video autoPlay muted loop playsInline className="w-full aspect-video object-cover block" src={PREVIEW_VIDEO_SRC} />
-      </div>
-      <div
-        ref={toolsCardRef}
-        className="fixed z-[9999] w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
-        style={{ opacity: 0, transform: 'translateY(6px) scale(0.97)', transition: 'opacity 200ms cubic-bezier(0.23,1,0.32,1), transform 200ms cubic-bezier(0.23,1,0.32,1)', left: 0, top: 0 }}
-        onMouseEnter={() => clearTimeout(toolsHideTimer.current)}
-        onMouseLeave={() => { const c = toolsCardRef.current; if (c) { c.style.opacity = '0'; c.style.transform = 'translateY(6px) scale(0.97)'; } }}
-        onClick={() => setVideoModal(PREVIEW_VIDEO_SRC)}
-      >
-        <video autoPlay muted loop playsInline className="w-full aspect-video object-cover block" src={PREVIEW_VIDEO_SRC} />
-      </div>
+        <motion.div
+          className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
+          animate={{
+            y: activeProject ? 0 : 6,
+            opacity: activeProject ? 1 : 0,
+            scale: activeProject ? 1 : 0.97,
+          }}
+          initial={{ y: 6, opacity: 0, scale: 0.97 }}
+          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          onMouseEnter={() => clearTimeout(hideTimer.current)}
+          onMouseLeave={startHideTimer}
+          onClick={() => setVideoModal(activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC)}
+        >
+          <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+            <motion.video
+              autoPlay muted loop playsInline
+              className="absolute inset-0 w-full h-full object-cover block"
+              src={SHADERS_VIDEO_SRC}
+              animate={{ opacity: activeProject === 'shaders' ? 1 : 0 }}
+              transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            />
+            <motion.video
+              autoPlay muted loop playsInline
+              className="absolute inset-0 w-full h-full object-cover block"
+              src={TOOLS_VIDEO_SRC}
+              animate={{ opacity: activeProject === 'tools' ? 1 : 0 }}
+              transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            />
+          </div>
+        </motion.div>
+      </motion.div>
 
       <AnimatePresence>
         {videoModal && (
