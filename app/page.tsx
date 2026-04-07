@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, animate } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
@@ -74,7 +74,8 @@ export default function Home() {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [videoModal, setVideoModal] = useState<string | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
-  const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
+  const cardX = useMotionValue(0);
+  const cardY = useMotionValue(0);
 
   const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
   const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322120/2_axbpw4.mov";
@@ -85,7 +86,17 @@ export default function Home() {
   const handleProjectEnter = (project: 'shaders' | 'tools', e: React.MouseEvent) => {
     clearTimeout(hideTimer.current);
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    setCardPos({ x: rect.left + rect.width / 2 - CARD_W / 2, y: rect.top - CARD_H - 12 });
+    const newX = rect.left + rect.width / 2 - CARD_W / 2;
+    const newY = rect.top - CARD_H - 12;
+    if (activeProject === null) {
+      // Snap directly — no animation on fresh appear
+      cardX.set(newX);
+      cardY.set(newY);
+    } else {
+      // Spring between positions when card is already visible
+      animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
+      animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+    }
     setActiveProject(project);
   };
 
@@ -382,19 +393,22 @@ export default function Home() {
       {/* Shared video preview card */}
       <motion.div
         className="fixed z-[9999]"
-        style={{ left: 0, top: 0, pointerEvents: activeProject ? 'auto' : 'none' }}
-        animate={{ x: cardPos.x, y: cardPos.y }}
-        transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+        style={{ left: 0, top: 0, pointerEvents: activeProject ? 'auto' : 'none', x: cardX, y: cardY }}
       >
         <motion.div
           className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
-            y: activeProject ? 0 : 6,
+            y: activeProject ? 0 : 16,
             opacity: activeProject ? 1 : 0,
-            scale: activeProject ? 1 : 0.97,
+            scale: activeProject ? 1 : 0.98,
+            filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
-          initial={{ y: 6, opacity: 0, scale: 0.97 }}
-          transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+          initial={{ y: 16, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          transition={
+            activeProject
+              ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
+              : { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+          }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
           onClick={() => setVideoModal(activeProject === 'shaders' ? SHADERS_VIDEO_SRC : TOOLS_VIDEO_SRC)}
