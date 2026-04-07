@@ -469,7 +469,7 @@ export default function Home() {
                 opacity:      { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
                 filter:       { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
               }}
-              className="relative aspect-video w-[min(720px,90vw)]"
+              className="relative aspect-video w-[min(720px,90vw)] overflow-hidden"
             >
               <VideoPlayer style={{ width: "100%", height: "100%" }}>
                 <VideoPlayerContent
