@@ -62,6 +62,7 @@ export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const showRaf   = useRef<number | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
   const shadersVideoRef = useRef<HTMLVideoElement>(null);
   const toolsVideoRef   = useRef<HTMLVideoElement>(null);
@@ -79,22 +80,27 @@ export default function Home() {
 
   const handleProjectEnter = (project: 'shaders' | 'tools', e: React.MouseEvent) => {
     clearTimeout(hideTimer.current);
+    cancelAnimationFrame(showRaf.current!);
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const newX = rect.left + rect.width / 2 - CARD_W / 2;
     const newY = rect.top - CARD_H - 12;
     if (activeProject === null) {
-      // Snap directly — no animation on fresh appear
+      // Set position first, then wait one RAF for Framer Motion to flush
+      // the transform to the DOM before making the card visible.
+      // This prevents a one-frame flash at the wrong position on first hover.
       cardX.set(newX);
       cardY.set(newY);
+      showRaf.current = requestAnimationFrame(() => setActiveProject(project));
     } else {
       // Spring between positions when card is already visible
       animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
       animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+      setActiveProject(project);
     }
-    setActiveProject(project);
   };
 
   const startHideTimer = () => {
+    cancelAnimationFrame(showRaf.current!);
     hideTimer.current = setTimeout(() => setActiveProject(null), 300);
   };
 
