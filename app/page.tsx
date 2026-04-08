@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence, useMotionValue, animate } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
@@ -24,15 +23,6 @@ const block = (delay: number) => ({
   animate: { opacity: 1, filter: "blur(0px)" },
   transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
 });
-
-const skills = [
-  "Product Design",
-  "UX/UI Design",
-  "Interaction Design",
-  "Web Design",
-  "Prototyping",
-  "User Research",
-];
 
 const experience = [
   {
@@ -138,60 +128,8 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [surfOpen, videoModal]);
-  const [visibleSkills, setVisibleSkills] = useState(skills);
-  const [floatingSkills, setFloatingSkills] = useState<{
-    skill: string;
-    top: string;
-    left: string;
-    amplitude: [number, number, number];
-    rotationRange: [number, number, number];
-    speed: number;
-  }[]>([]);
-
-  const handleSkillClick = (skill: string, e: React.MouseEvent) => {
-    const tagRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const top = `${(tagRect.top / window.innerHeight) * 100}%`;
-    const left = `${(tagRect.left / window.innerWidth) * 100}%`;
-    setFloatingSkills((prev) => [
-      ...prev,
-      {
-        skill,
-        top,
-        left,
-        amplitude: [60 + Math.random() * 80, 80 + Math.random() * 120, 20 + Math.random() * 30],
-        rotationRange: [5 + Math.random() * 8, 5 + Math.random() * 8, 3 + Math.random() * 4],
-        speed: 0.08 + Math.random() * 0.08,
-      },
-    ]);
-    setVisibleSkills((prev) => prev.filter((s) => s !== skill));
-  };
-
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
-      {/* <div className="fixed inset-0 pointer-events-none z-20">
-        {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
-          <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
-            <Float amplitude={amplitude} rotationRange={rotationRange} speed={speed}>
-              <Tilt rotationFactor={30} springOptions={{ stiffness: 200, damping: 20 }}>
-                <span
-                  className="text-base px-2 flex items-center select-none whitespace-nowrap"
-                  style={{
-                    borderRadius: 12,
-                    height: 38,
-                    lineHeight: "1.4375",
-                    backgroundColor: "var(--color-bg)",
-                    color: "var(--color-fg)",
-                    boxShadow: "0 0 0 1px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.05)",
-                  }}
-                >
-                  {skill}
-                </span>
-              </Tilt>
-            </Float>
-          </motion.div>
-        ))}
-      </div> */}
-
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
 
         {/* Name + Title */}
@@ -250,27 +188,6 @@ export default function Home() {
               </Toggle>.</span>
             </div>
           </motion.div>
-
-          {/* Skills */}
-          {/* <motion.div {...block(0.24)} layout className="flex flex-wrap gap-2">
-            {visibleSkills.map((skill) => (
-              <motion.span
-                key={skill}
-                layout
-                onClick={(e) => handleSkillClick(skill, e)}
-                className="text-base px-2 flex items-center cursor-pointer select-none"
-                style={{
-                  borderRadius: 12,
-                  height: 38,
-                  lineHeight: "1.4375",
-                  backgroundColor: "var(--color-surface)",
-                  color: "var(--color-fg)",
-                }}
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </motion.div> */}
 
           {/* Experience */}
           <motion.div {...block(0.32)} className="flex flex-col -mx-3">
