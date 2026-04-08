@@ -395,7 +395,7 @@ export default function Home() {
               transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             />
             {/* Play overlay */}
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center pointer-events-none">
               <div className="flex items-center gap-1 bg-white/20 group-hover:bg-white/40 backdrop-blur-md rounded-[6px] pl-1.5 pr-2 py-1.5 transition-colors duration-150 overflow-hidden">
                 <Play className="w-3.5 h-3.5 text-white" />
                 <span className="text-white text-sm font-medium leading-none">Play</span>
