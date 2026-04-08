@@ -73,8 +73,11 @@ export default function Home() {
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
-  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number } | null>(null);
+  const shadersVideoRef = useRef<HTMLVideoElement>(null);
+  const toolsVideoRef   = useRef<HTMLVideoElement>(null);
+  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
+  const [cardSnappedHidden, setCardSnappedHidden] = useState(false);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
 
@@ -104,6 +107,11 @@ export default function Home() {
   const startHideTimer = () => {
     hideTimer.current = setTimeout(() => setActiveProject(null), 300);
   };
+
+  const closeModal = () => {
+    setCardSnappedHidden(false);
+    setVideoModal(null);
+  };
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
 
@@ -123,7 +131,7 @@ export default function Home() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (videoModal) setVideoModal(null);
+        if (videoModal) closeModal();
         else if (surfOpen) setSurfOpen(false);
       }
     };
@@ -401,15 +409,17 @@ export default function Home() {
           className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
             y: activeProject ? 0 : 16,
-            opacity: activeProject ? 1 : 0,
+            opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
             scale: activeProject ? 1 : 0.98,
             filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
           initial={{ y: 16, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
           transition={
-            activeProject
-              ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
-              : { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+            cardSnappedHidden
+              ? { duration: 0 }
+              : activeProject
+                ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
+                : { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
@@ -423,20 +433,39 @@ export default function Home() {
             const offsetX = rect ? (rect.left + rect.width / 2) - vw / 2 : 0;
             const offsetY = rect ? (rect.top + rect.height / 2) - vh / 2 : 0;
             clearTimeout(hideTimer.current);
+            const videoEl = activeProject === 'shaders' ? shadersVideoRef.current : toolsVideoRef.current;
+            let frameDataUrl: string | null = null;
+            if (videoEl && videoEl.readyState >= 2) {
+              try {
+                const canvas = document.createElement('canvas');
+                canvas.width  = videoEl.videoWidth  || videoEl.clientWidth;
+                canvas.height = videoEl.videoHeight || videoEl.clientHeight;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                  ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+                  frameDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                }
+              } catch {
+                frameDataUrl = null;
+              }
+            }
+            setCardSnappedHidden(true);
             setActiveProject(null);
-            setVideoModal({ src, scale, offsetX, offsetY });
+            setVideoModal({ src, scale, offsetX, offsetY, frameDataUrl });
           }}
         >
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <motion.video
-              autoPlay muted loop playsInline
+              ref={shadersVideoRef}
+              autoPlay muted loop playsInline crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover block"
               src={SHADERS_VIDEO_SRC}
               animate={{ opacity: activeProject === 'shaders' ? 1 : 0 }}
               transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             />
             <motion.video
-              autoPlay muted loop playsInline
+              ref={toolsVideoRef}
+              autoPlay muted loop playsInline crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover block"
               src={TOOLS_VIDEO_SRC}
               animate={{ opacity: activeProject === 'tools' ? 1 : 0 }}
@@ -456,7 +485,7 @@ export default function Home() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed left-0 top-0 z-[9999] h-full w-full bg-black/60 backdrop-blur-sm"
-              onClick={() => setVideoModal(null)}
+              onClick={closeModal}
             />
             <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center pointer-events-none">
             <motion.div
@@ -481,18 +510,38 @@ export default function Home() {
                   className="w-full object-cover"
                   style={{ width: "100%", height: "100%" }}
                 />
-                <span
-                  onClick={() => setVideoModal(null)}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                  onClick={closeModal}
                   className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
                 >
                   <Plus className="size-5 rotate-45 text-white" />
-                </span>
-                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
-                  <VideoPlayerPlayButton className="h-4 bg-transparent" />
-                  <VideoPlayerTimeRange className="bg-transparent" />
-                  <VideoPlayerMuteButton className="size-4 bg-transparent" />
-                </VideoPlayerControlBar>
+                </motion.span>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                >
+                  <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
+                    <VideoPlayerPlayButton className="h-4 bg-transparent" />
+                    <VideoPlayerTimeRange className="bg-transparent" />
+                    <VideoPlayerMuteButton className="size-4 bg-transparent" />
+                  </VideoPlayerControlBar>
+                </motion.div>
               </VideoPlayer>
+              {videoModal.frameDataUrl && (
+                <motion.img
+                  src={videoModal.frameDataUrl}
+                  alt=""
+                  aria-hidden="true"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                />
+              )}
             </motion.div>
             </div>
           </>
