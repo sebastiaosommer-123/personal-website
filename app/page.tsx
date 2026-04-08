@@ -6,7 +6,7 @@ import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
-import { Power, Plus } from "lucide-react";
+import { Power, Plus, Play } from "lucide-react";
 import {
   VideoPlayer,
   VideoPlayerContent,
@@ -329,7 +329,7 @@ export default function Home() {
       >
         <motion.div
           ref={cardRef}
-          className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
+          className="group w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
             y: activeProject ? 0 : 16,
             opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
@@ -394,6 +394,13 @@ export default function Home() {
               animate={{ opacity: activeProject === 'tools' ? 1 : 0 }}
               transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             />
+            {/* Play overlay */}
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center pointer-events-none">
+              <div className="flex items-center gap-1.5 bg-white/20 group-hover:bg-white/70 rounded-[6px] px-3 py-1.5 transition-colors duration-150">
+                <Play className="w-3.5 h-3.5 text-white" />
+                <span className="text-white text-xs font-medium leading-none">Play</span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
