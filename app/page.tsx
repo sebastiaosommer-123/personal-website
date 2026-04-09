@@ -337,12 +337,13 @@ export default function Home() {
             filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
           initial={{ y: 16, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          whileTap={{ scale: 0.97 }}
           transition={
             cardSnappedHidden
               ? { duration: 0 }
               : activeProject
-                ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
-                : { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+                ? { duration: 0.2, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.15, ease: 'easeInOut' } }
+                : { duration: 0.15, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.15, ease: 'easeInOut' } }
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
