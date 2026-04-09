@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useSpring } from "framer-motion";
-import { Play, Plus } from "lucide-react";
+import { Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import {
   MediaControlBar,
   MediaController,
@@ -78,7 +78,10 @@ export const VideoPlayerPlayButton = ({
   className,
   ...props
 }: VideoPlayerPlayButtonProps) => (
-  <MediaPlayButton className={cn("", className)} {...props} />
+  <MediaPlayButton className={cn("", className)} {...props}>
+    <Play slot="play" className="size-4" />
+    <Pause slot="pause" className="size-4" />
+  </MediaPlayButton>
 );
 
 export type VideoPlayerSeekBackwardButtonProps = ComponentProps<
@@ -109,7 +112,12 @@ export const VideoPlayerMuteButton = ({
   className,
   ...props
 }: VideoPlayerMuteButtonProps) => (
-  <MediaMuteButton className={cn("", className)} {...props} />
+  <MediaMuteButton className={cn("", className)} {...props}>
+    <Volume2 slot="high" className="size-4" />
+    <Volume2 slot="medium" className="size-4" />
+    <Volume2 slot="low" className="size-4" />
+    <VolumeX slot="off" className="size-4" />
+  </MediaMuteButton>
 );
 
 export type VideoPlayerContentProps = ComponentProps<"video">;
@@ -229,7 +237,7 @@ const VideoPopOver = ({
             onClick={() => setShowVideoPopOver(false)}
             className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
           >
-            <Plus className="size-5 rotate-45 text-white" />
+            <X className="size-5 text-white" />
           </span>
           <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5">
             <VideoPlayerPlayButton className="h-4 bg-transparent" />
