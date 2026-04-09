@@ -101,7 +101,7 @@ export default function Home() {
 
   const startHideTimer = () => {
     cancelAnimationFrame(showRaf.current!);
-    hideTimer.current = setTimeout(() => setActiveProject(null), 300);
+    hideTimer.current = setTimeout(() => setActiveProject(null), 200);
   };
 
   const closeModal = () => {
@@ -331,19 +331,19 @@ export default function Home() {
           ref={cardRef}
           className="group w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
-            y: activeProject ? 0 : 16,
+            y: activeProject ? 0 : 20,
             opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
             scale: activeProject ? 1 : 0.98,
             filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
-          initial={{ y: 16, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          initial={{ y: 20, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
           whileTap={{ scale: 0.97 }}
           transition={
             cardSnappedHidden
               ? { duration: 0 }
               : activeProject
-                ? { duration: 0.2, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.15, ease: 'easeInOut' } }
-                : { duration: 0.15, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.15, ease: 'easeInOut' } }
+                ? { duration: 0.25, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } }
+                : { duration: 0.12, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } }
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
