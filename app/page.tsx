@@ -6,7 +6,7 @@ import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
-import { Power, Plus, Play } from "lucide-react";
+import { Play, Power, X } from "lucide-react";
 import {
   VideoPlayer,
   VideoPlayerContent,
@@ -448,7 +448,7 @@ export default function Home() {
                   onClick={closeModal}
                   className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
                 >
-                  <Plus className="size-5 rotate-45 text-white" />
+                  <X className="size-5 text-white" />
                 </motion.span>
                 <motion.div
                   initial={{ opacity: 0 }}
