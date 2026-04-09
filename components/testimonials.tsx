@@ -195,10 +195,8 @@ export function Testimonials() {
           type="button"
           aria-label="Previous testimonial"
           onClick={() => navigate(-1)}
-          className="flex items-center justify-center transition-opacity duration-150"
-          style={{ minHeight: 24, minWidth: 24, opacity: 0.4, color: "var(--color-fg)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.4")}
+          className="flex items-center justify-center transition-opacity duration-150 [@media(hover:hover)]:opacity-40 hover:opacity-100"
+          style={{ minHeight: 24, minWidth: 24, color: "var(--color-fg)" }}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M8.5 2.5L4 7l4.5 4.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
@@ -230,10 +228,8 @@ export function Testimonials() {
           type="button"
           aria-label="Next testimonial"
           onClick={() => navigate(1)}
-          className="flex items-center justify-center transition-opacity duration-150"
-          style={{ minHeight: 24, minWidth: 24, opacity: 0.4, color: "var(--color-fg)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.4")}
+          className="flex items-center justify-center transition-opacity duration-150 [@media(hover:hover)]:opacity-40 hover:opacity-100"
+          style={{ minHeight: 24, minWidth: 24, color: "var(--color-fg)" }}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.5 2.5L10 7l-4.5 4.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
