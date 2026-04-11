@@ -58,11 +58,11 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const raf = requestAnimationFrame(() => {
       containerControls.start({
         clipPath: "inset(0px 0px 0px 0px round 12px)",
-        transition: { duration: 0.45, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
       });
       headerControls.start({
         y: 0,
-        transition: { duration: 0.45, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
       });
     });
 
@@ -108,9 +108,9 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Image placeholder — transparent during clip expansion, fades in after */}
           <motion.div
             className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.06]"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35, duration: 0.2 }}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
           />
 
           {/* Header row — travels from list position to modal header via translateY */}
@@ -171,9 +171,9 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
 
           {/* Body content — fades in after clip expansion completes */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35, duration: 0.2 }}
+            initial={{ opacity: 0, filter: "blur(4px)" }}
+            animate={{ opacity: 1, filter: "blur(0px)" }}
+            transition={{ delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
           >
             <p
               className="px-4 pt-2 text-base"
