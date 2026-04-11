@@ -34,9 +34,9 @@ export function JobExperienceModal({ experience, onClose }: JobExperienceModalPr
           />
 
           {/* Card wrapper — centers card, passes pointer events through */}
-          <div className="fixed inset-0 z-[10001] flex items-center justify-center px-3 pointer-events-none">
+          <div className="fixed inset-0 z-[10001] flex items-start justify-center px-3 py-6 overflow-y-auto pointer-events-none">
             <motion.div
-              className="relative w-full max-w-[469px] rounded-xl bg-black/[0.04] dark:bg-white/[0.06] overflow-hidden pointer-events-auto"
+              className="relative w-full max-w-[469px] rounded-xl bg-black/[0.04] dark:bg-white/[0.06] overflow-hidden pointer-events-auto my-auto"
               initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)", transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
