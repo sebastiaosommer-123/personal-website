@@ -258,7 +258,7 @@ export default function Home() {
                     setSelectedExperience(exp);
                   }}
                 >
-                  <div className="flex w-full items-center justify-between px-3 py-3">
+                  <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.1, ease: [0.23, 1, 0.32, 1] }} className="flex w-full items-center justify-between px-3 py-3">
                     <div className="flex items-center gap-3">
                       <div
                         data-morph="logo"
@@ -290,7 +290,7 @@ export default function Home() {
                     >
                       {exp.period}
                     </span>
-                  </div>
+                  </motion.div>
                 </div>
               ))}
             </AnimatedBackground>
