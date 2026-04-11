@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "motion/react";
-import { useEffect } from "react";
 import { X } from "lucide-react";
 
 export interface ExperienceItem {
@@ -20,16 +19,6 @@ interface JobExperienceModalProps {
 }
 
 export function JobExperienceModal({ experience, onClose }: JobExperienceModalProps) {
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (experience) {
-      document.addEventListener("keydown", handleKey);
-    }
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [experience, onClose]);
-
   return (
     <AnimatePresence>
       {experience && (
