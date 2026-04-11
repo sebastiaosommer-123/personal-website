@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export interface ExperienceItem {
   company: string;
@@ -67,6 +67,13 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     });
 
     return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const handleClose = () => onClose();
