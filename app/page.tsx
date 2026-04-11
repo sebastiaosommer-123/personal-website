@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/skiper-ui/skiper67";
 import { SurfDevice } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
+import { JobExperienceModal, type ExperienceItem } from "@/components/job-experience-modal";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -24,30 +25,62 @@ const block = (delay: number) => ({
   transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
 });
 
-const experience = [
+const experience: ExperienceItem[] = [
   {
     company: "Stealth AI Startup",
     role: "Sr. Product Designer",
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Design",
     role: "Sr. Product Designer",
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "Tempest",
     role: "Sr. Product Designer",
     period: "2022 – 23'",
     logo: "/assets/tempest.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Studio",
     role: "UX/UI Designer",
     period: "2020 – 22'",
     logo: "/assets/44-studio.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
 ];
 
@@ -69,6 +102,7 @@ export default function Home() {
   const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const [cardSnappedHidden, setCardSnappedHidden] = useState(false);
+  const [selectedExperience, setSelectedExperience] = useState<ExperienceItem | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
 
@@ -207,6 +241,7 @@ export default function Home() {
                   key={exp.company}
                   data-id={exp.company}
                   className="w-full cursor-pointer"
+                  onClick={() => setSelectedExperience(exp)}
                 >
                   <div className="flex w-full items-center justify-between px-3 py-3">
                     <div className="flex items-center gap-3">
@@ -478,6 +513,10 @@ export default function Home() {
           </>
         )}
       </AnimatePresence>
+      <JobExperienceModal
+        experience={selectedExperience}
+        onClose={() => setSelectedExperience(null)}
+      />
     </main>
   );
 }
