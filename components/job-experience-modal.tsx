@@ -50,7 +50,7 @@ export function JobExperienceModal({ experience, onClose }: JobExperienceModalPr
               className="relative w-full max-w-[469px] rounded-xl bg-black/[0.04] dark:bg-white/[0.06] overflow-hidden pointer-events-auto"
               initial={{ opacity: 0, scale: 0.96, filter: "blur(8px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
+              exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)", transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] } }}
               transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
             >
               {/* Close button */}
@@ -63,7 +63,7 @@ export function JobExperienceModal({ experience, onClose }: JobExperienceModalPr
               </button>
 
               {/* Image placeholder */}
-              <div className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.08]" />
+              <div className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.06]" />
 
               {/* Header row */}
               <div className="flex items-center justify-between px-4 pt-4">
@@ -115,7 +115,7 @@ export function JobExperienceModal({ experience, onClose }: JobExperienceModalPr
 
               {/* Description */}
               <p
-                className="px-4 pt-3 text-base"
+                className="px-4 pt-2 text-base"
                 style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
               >
                 {experience.description}
