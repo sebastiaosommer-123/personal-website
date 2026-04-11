@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 
 export interface ExperienceItem {
   company: string;
@@ -69,16 +69,17 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const scrollY = window.scrollY;
     const prevOverflow = document.body.style.overflow;
     const prevPosition = document.body.style.position;
     const prevTop = document.body.style.top;
     const prevWidth = document.body.style.width;
+    const bodyWidth = document.body.getBoundingClientRect().width;
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = '100%';
+    document.body.style.width = `${bodyWidth}px`;
     return () => {
       document.body.style.overflow = prevOverflow;
       document.body.style.position = prevPosition;
