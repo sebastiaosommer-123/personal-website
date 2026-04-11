@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/skiper-ui/skiper67";
 import { SurfDevice } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
-import { JobExperienceModal, type ExperienceItem } from "@/components/job-experience-modal";
+import { JobExperienceModal, type ExperienceItem, type OriginRects } from "@/components/job-experience-modal";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -103,6 +103,7 @@ export default function Home() {
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const [cardSnappedHidden, setCardSnappedHidden] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<ExperienceItem | null>(null);
+  const originRectsRef = useRef<OriginRects | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
 
@@ -242,11 +243,25 @@ export default function Home() {
                   key={exp.company}
                   data-id={exp.company}
                   className="w-full cursor-pointer"
-                  onClick={() => setSelectedExperience(exp)}
+                  onClick={(e) => {
+                    const row = e.currentTarget as HTMLElement;
+                    const rowRect = row.getBoundingClientRect();
+                    const get = (key: string) =>
+                      row.querySelector(`[data-morph="${key}"]`)?.getBoundingClientRect();
+                    const logo = get("logo"),
+                      role = get("role"),
+                      company = get("company"),
+                      period = get("period");
+                    if (logo && role && company && period) {
+                      originRectsRef.current = { row: rowRect, logo, role, company, period };
+                    }
+                    setSelectedExperience(exp);
+                  }}
                 >
                   <div className="flex w-full items-center justify-between px-3 py-3">
                     <div className="flex items-center gap-3">
                       <div
+                        data-morph="logo"
                         className="shrink-0 overflow-hidden flex items-center justify-center"
                         style={{ width: 38, height: 38, borderRadius: 10.36, backgroundColor: "var(--color-surface)" }}
                       >
@@ -260,15 +275,16 @@ export default function Home() {
                         />
                       </div>
                       <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
-                        <span className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
+                        <span data-morph="role" className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
                           {exp.role}
                         </span>
-                        <span className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
+                        <span data-morph="company" className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
                           {exp.company}
                         </span>
                       </div>
                     </div>
                     <span
+                      data-morph="period"
                       className="text-sm text-right"
                       style={{ lineHeight: 1.643, fontVariantNumeric: "tabular-nums", color: "var(--color-fg)" }}
                     >
@@ -516,7 +532,8 @@ export default function Home() {
       </AnimatePresence>
       <JobExperienceModal
         experience={selectedExperience}
-        onClose={() => setSelectedExperience(null)}
+        originRects={originRectsRef.current}
+        onClose={() => { setSelectedExperience(null); originRectsRef.current = null; }}
       />
     </main>
   );
