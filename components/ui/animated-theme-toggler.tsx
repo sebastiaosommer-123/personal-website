@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 import { Moon, Sun } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -13,29 +14,17 @@ export const AnimatedThemeToggler = ({
   className,
   ...props
 }: AnimatedThemeTogglerProps) => {
-  const [isDark, setIsDark] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => {
-    const updateTheme = () => {
-      setIsDark(document.documentElement.classList.contains("dark"))
-    }
-
-    updateTheme()
-
-    const observer = new MutationObserver(updateTheme)
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    })
-
-    return () => observer.disconnect()
+    setMounted(true)
   }, [])
 
+  const isDark = mounted && resolvedTheme === "dark"
+
   const toggleTheme = () => {
-    const newTheme = !isDark
-    setIsDark(newTheme)
-    document.documentElement.classList.toggle("dark")
-    localStorage.setItem("theme", newTheme ? "dark" : "light")
+    setTheme(isDark ? "light" : "dark")
   }
 
   return (

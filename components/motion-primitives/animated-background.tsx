@@ -78,9 +78,10 @@ export function AnimatedBackground({
       </AnimatePresence>
       {Children.map(children, (child: any) => {
         const id = child.props['data-id'];
+        const existingOnClick = child.props.onClick;
         const interactionProps = enableHover
           ? { onMouseEnter: () => handleEnter(id), onMouseLeave: handleLeave }
-          : { onClick: () => handleEnter(id) };
+          : { onClick: (e: React.MouseEvent) => { handleEnter(id); existingOnClick?.(e); handleLeave(); } };
         return cloneElement(child, {
           ...interactionProps,
           ref: (el: HTMLElement | null) => {

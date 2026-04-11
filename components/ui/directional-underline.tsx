@@ -53,6 +53,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
       <Tag
         ref={mergedRef}
         onMouseEnter={(e: React.MouseEvent) => {
+          if (typeof window !== "undefined" && window.matchMedia("(hover: none)").matches) return;
           const el = underlineRef.current
           const host = innerRef.current
           if (el && host) {
@@ -73,6 +74,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
           externalOnMouseEnter?.(e)
         }}
         onMouseLeave={(e: React.MouseEvent) => {
+          if (typeof window !== "undefined" && window.matchMedia("(hover: none)").matches) return;
           const el = underlineRef.current
           const host = innerRef.current
           if (el && host) {

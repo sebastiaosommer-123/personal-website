@@ -2,12 +2,11 @@
 
 import { motion, AnimatePresence, useMotionValue, animate } from "motion/react";
 import { useState, useEffect, useRef } from "react";
-import Float from "@/components/fancy/blocks/float";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
-import { Power, Plus } from "lucide-react";
+import { Play, Power, X } from "lucide-react";
 import {
   VideoPlayer,
   VideoPlayerContent,
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/skiper-ui/skiper67";
 import { SurfDevice } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
+import { JobExperienceModal, type ExperienceItem, type OriginRects } from "@/components/job-experience-modal";
 
 const block = (delay: number) => ({
   initial: { opacity: 0, filter: "blur(8px)" },
@@ -25,39 +25,62 @@ const block = (delay: number) => ({
   transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
 });
 
-const skills = [
-  "Product Design",
-  "UX/UI Design",
-  "Interaction Design",
-  "Web Design",
-  "Prototyping",
-  "User Research",
-];
-
-const experience = [
+const experience: ExperienceItem[] = [
   {
     company: "Stealth AI Startup",
     role: "Sr. Product Designer",
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Design",
     role: "Sr. Product Designer",
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "Tempest",
     role: "Sr. Product Designer",
     period: "2022 – 23'",
     logo: "/assets/tempest.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Studio",
     role: "UX/UI Designer",
     period: "2020 – 22'",
     logo: "/assets/44-studio.svg",
+    description:
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+    highlights: [
+      "Shipped impactful features across multiple client products",
+      "Redesigned core dashboards, enhancing usability and accessibility",
+      "Played a key role in delivering multiple high-impact projects",
+    ],
+    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
 ];
 
@@ -72,37 +95,53 @@ export default function Home() {
   const [surfOpen, setSurfOpen] = useState(false);
   const [surfPeeking, setSurfPeeking] = useState(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const showRaf   = useRef<number | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
-  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number } | null>(null);
+  const shadersVideoRef = useRef<HTMLVideoElement>(null);
+  const toolsVideoRef   = useRef<HTMLVideoElement>(null);
+  const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
+  const [cardSnappedHidden, setCardSnappedHidden] = useState(false);
+  const [selectedExperience, setSelectedExperience] = useState<ExperienceItem | null>(null);
+  const originRectsRef = useRef<OriginRects | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
 
   const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
-  const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322120/2_axbpw4.mov";
+  const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775757301/ui-sound-lab-walkthrough_nrszl7.mp4";
 
   const CARD_W = 256;
   const CARD_H = 144;
 
   const handleProjectEnter = (project: 'shaders' | 'tools', e: React.MouseEvent) => {
     clearTimeout(hideTimer.current);
+    cancelAnimationFrame(showRaf.current!);
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const newX = rect.left + rect.width / 2 - CARD_W / 2;
     const newY = rect.top - CARD_H - 12;
     if (activeProject === null) {
-      // Snap directly — no animation on fresh appear
+      // Set position first, then wait one RAF for Framer Motion to flush
+      // the transform to the DOM before making the card visible.
+      // This prevents a one-frame flash at the wrong position on first hover.
       cardX.set(newX);
       cardY.set(newY);
+      showRaf.current = requestAnimationFrame(() => setActiveProject(project));
     } else {
       // Spring between positions when card is already visible
       animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
       animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+      setActiveProject(project);
     }
-    setActiveProject(project);
   };
 
   const startHideTimer = () => {
-    hideTimer.current = setTimeout(() => setActiveProject(null), 300);
+    cancelAnimationFrame(showRaf.current!);
+    hideTimer.current = setTimeout(() => setActiveProject(null), 200);
+  };
+
+  const closeModal = () => {
+    setCardSnappedHidden(false);
+    setVideoModal(null);
   };
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
@@ -123,67 +162,16 @@ export default function Home() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (videoModal) setVideoModal(null);
+        if (videoModal) closeModal();
+        else if (selectedExperience) setSelectedExperience(null);
         else if (surfOpen) setSurfOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [surfOpen, videoModal]);
-  const [visibleSkills, setVisibleSkills] = useState(skills);
-  const [floatingSkills, setFloatingSkills] = useState<{
-    skill: string;
-    top: string;
-    left: string;
-    amplitude: [number, number, number];
-    rotationRange: [number, number, number];
-    speed: number;
-  }[]>([]);
-
-  const handleSkillClick = (skill: string, e: React.MouseEvent) => {
-    const tagRect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const top = `${(tagRect.top / window.innerHeight) * 100}%`;
-    const left = `${(tagRect.left / window.innerWidth) * 100}%`;
-    setFloatingSkills((prev) => [
-      ...prev,
-      {
-        skill,
-        top,
-        left,
-        amplitude: [60 + Math.random() * 80, 80 + Math.random() * 120, 20 + Math.random() * 30],
-        rotationRange: [5 + Math.random() * 8, 5 + Math.random() * 8, 3 + Math.random() * 4],
-        speed: 0.08 + Math.random() * 0.08,
-      },
-    ]);
-    setVisibleSkills((prev) => prev.filter((s) => s !== skill));
-  };
-
+  }, [surfOpen, videoModal, selectedExperience]);
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
-      {/* <div className="fixed inset-0 pointer-events-none z-20">
-        {floatingSkills.map(({ skill, top, left, amplitude, rotationRange, speed }) => (
-          <motion.div key={skill} className="absolute" style={{ top, left }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25, ease: "easeOut" }}>
-            <Float amplitude={amplitude} rotationRange={rotationRange} speed={speed}>
-              <Tilt rotationFactor={30} springOptions={{ stiffness: 200, damping: 20 }}>
-                <span
-                  className="text-base px-2 flex items-center select-none whitespace-nowrap"
-                  style={{
-                    borderRadius: 12,
-                    height: 38,
-                    lineHeight: "1.4375",
-                    backgroundColor: "var(--color-bg)",
-                    color: "var(--color-fg)",
-                    boxShadow: "0 0 0 1px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.05)",
-                  }}
-                >
-                  {skill}
-                </span>
-              </Tilt>
-            </Float>
-          </motion.div>
-        ))}
-      </div> */}
-
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
 
         {/* Name + Title */}
@@ -222,8 +210,8 @@ export default function Home() {
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
               In my free time, I build{" "}
-              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => handleProjectEnter('shaders', e)} onMouseLeave={startHideTimer}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
-              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => handleProjectEnter('tools', e)} onMouseLeave={startHideTimer}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
+              <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { if (!isTouch) handleProjectEnter('shaders', e); }} onMouseLeave={!isTouch ? startHideTimer : undefined}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+              <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { if (!isTouch) handleProjectEnter('tools', e); }} onMouseLeave={!isTouch ? startHideTimer : undefined}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
@@ -243,27 +231,6 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Skills */}
-          {/* <motion.div {...block(0.24)} layout className="flex flex-wrap gap-2">
-            {visibleSkills.map((skill) => (
-              <motion.span
-                key={skill}
-                layout
-                onClick={(e) => handleSkillClick(skill, e)}
-                className="text-base px-2 flex items-center cursor-pointer select-none"
-                style={{
-                  borderRadius: 12,
-                  height: 38,
-                  lineHeight: "1.4375",
-                  backgroundColor: "var(--color-surface)",
-                  color: "var(--color-fg)",
-                }}
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </motion.div> */}
-
           {/* Experience */}
           <motion.div {...block(0.32)} className="flex flex-col -mx-3">
             <AnimatedBackground
@@ -276,10 +243,25 @@ export default function Home() {
                   key={exp.company}
                   data-id={exp.company}
                   className="w-full cursor-pointer"
+                  onClick={(e) => {
+                    const row = e.currentTarget as HTMLElement;
+                    const rowRect = row.getBoundingClientRect();
+                    const get = (key: string) =>
+                      row.querySelector(`[data-morph="${key}"]`)?.getBoundingClientRect();
+                    const logo = get("logo"),
+                      role = get("role"),
+                      company = get("company"),
+                      period = get("period");
+                    if (logo && role && company && period) {
+                      originRectsRef.current = { row: rowRect, logo, role, company, period };
+                    }
+                    setSelectedExperience(exp);
+                  }}
                 >
-                  <div className="flex w-full items-center justify-between px-3 py-3">
+                  <motion.div whileTap={{ scale: 0.98 }} transition={{ duration: 0.1, ease: [0.23, 1, 0.32, 1] }} className="flex w-full items-center justify-between px-3 py-3">
                     <div className="flex items-center gap-3">
                       <div
+                        data-morph="logo"
                         className="shrink-0 overflow-hidden flex items-center justify-center"
                         style={{ width: 38, height: 38, borderRadius: 10.36, backgroundColor: "var(--color-surface)" }}
                       >
@@ -293,21 +275,22 @@ export default function Home() {
                         />
                       </div>
                       <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
-                        <span className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
+                        <span data-morph="role" className="font-medium text-base" style={{ lineHeight: 1.3, color: "var(--color-fg)" }}>
                           {exp.role}
                         </span>
-                        <span className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
+                        <span data-morph="company" className="text-sm" style={{ lineHeight: 1.3, color: "var(--color-fg)", opacity: 0.7 }}>
                           {exp.company}
                         </span>
                       </div>
                     </div>
                     <span
+                      data-morph="period"
                       className="text-sm text-right"
                       style={{ lineHeight: 1.643, fontVariantNumeric: "tabular-nums", color: "var(--color-fg)" }}
                     >
                       {exp.period}
                     </span>
-                  </div>
+                  </motion.div>
                 </div>
               ))}
             </AnimatedBackground>
@@ -398,18 +381,21 @@ export default function Home() {
       >
         <motion.div
           ref={cardRef}
-          className="w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
+          className="group w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
           animate={{
-            y: activeProject ? 0 : 16,
-            opacity: activeProject ? 1 : 0,
+            y: activeProject ? 0 : 20,
+            opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
             scale: activeProject ? 1 : 0.98,
             filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
-          initial={{ y: 16, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          initial={{ y: 20, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          whileTap={{ scale: 0.97 }}
           transition={
-            activeProject
-              ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] }
-              : { duration: 0.15, ease: [0.23, 1, 0.32, 1] }
+            cardSnappedHidden
+              ? { duration: 0 }
+              : activeProject
+                ? { duration: 0.25, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } }
+                : { duration: 0.12, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } }
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
@@ -423,25 +409,51 @@ export default function Home() {
             const offsetX = rect ? (rect.left + rect.width / 2) - vw / 2 : 0;
             const offsetY = rect ? (rect.top + rect.height / 2) - vh / 2 : 0;
             clearTimeout(hideTimer.current);
+            const videoEl = activeProject === 'shaders' ? shadersVideoRef.current : toolsVideoRef.current;
+            let frameDataUrl: string | null = null;
+            if (videoEl && videoEl.readyState >= 2) {
+              try {
+                const canvas = document.createElement('canvas');
+                canvas.width  = videoEl.videoWidth  || videoEl.clientWidth;
+                canvas.height = videoEl.videoHeight || videoEl.clientHeight;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                  ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+                  frameDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+                }
+              } catch {
+                frameDataUrl = null;
+              }
+            }
+            setCardSnappedHidden(true);
             setActiveProject(null);
-            setVideoModal({ src, scale, offsetX, offsetY });
+            setVideoModal({ src, scale, offsetX, offsetY, frameDataUrl });
           }}
         >
           <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
             <motion.video
-              autoPlay muted loop playsInline
+              ref={shadersVideoRef}
+              autoPlay muted loop playsInline crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover block"
               src={SHADERS_VIDEO_SRC}
               animate={{ opacity: activeProject === 'shaders' ? 1 : 0 }}
               transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             />
             <motion.video
-              autoPlay muted loop playsInline
+              ref={toolsVideoRef}
+              autoPlay muted loop playsInline crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover block"
               src={TOOLS_VIDEO_SRC}
               animate={{ opacity: activeProject === 'tools' ? 1 : 0 }}
               transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
             />
+            {/* Play overlay */}
+            <div className="absolute inset-0 bg-black/30 flex items-center justify-center pointer-events-none">
+              <div className="flex items-center gap-1 bg-white/20 group-hover:bg-white/40 backdrop-blur-md rounded-[8px] pl-1.5 pr-2 py-1.5 transition-colors duration-150 overflow-hidden">
+                <Play className="w-3.5 h-3.5 text-white" />
+                <span className="text-white text-sm font-medium leading-none">Play</span>
+              </div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
@@ -456,7 +468,7 @@ export default function Home() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed left-0 top-0 z-[9999] h-full w-full bg-black/60 backdrop-blur-sm"
-              onClick={() => setVideoModal(null)}
+              onClick={closeModal}
             />
             <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center pointer-events-none">
             <motion.div
@@ -481,23 +493,48 @@ export default function Home() {
                   className="w-full object-cover"
                   style={{ width: "100%", height: "100%" }}
                 />
-                <span
-                  onClick={() => setVideoModal(null)}
+                <motion.span
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                  onClick={closeModal}
                   className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
                 >
-                  <Plus className="size-5 rotate-45 text-white" />
-                </span>
-                <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
-                  <VideoPlayerPlayButton className="h-4 bg-transparent" />
-                  <VideoPlayerTimeRange className="bg-transparent" />
-                  <VideoPlayerMuteButton className="size-4 bg-transparent" />
-                </VideoPlayerControlBar>
+                  <X className="size-5 text-white" />
+                </motion.span>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                >
+                  <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
+                    <VideoPlayerPlayButton className="h-4 bg-transparent" />
+                    <VideoPlayerTimeRange className="bg-transparent" />
+                    <VideoPlayerMuteButton className="size-4 bg-transparent" />
+                  </VideoPlayerControlBar>
+                </motion.div>
               </VideoPlayer>
+              {videoModal.frameDataUrl && (
+                <motion.img
+                  src={videoModal.frameDataUrl}
+                  alt=""
+                  aria-hidden="true"
+                  initial={{ opacity: 1 }}
+                  animate={{ opacity: 0 }}
+                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                />
+              )}
             </motion.div>
             </div>
           </>
         )}
       </AnimatePresence>
+      <JobExperienceModal
+        experience={selectedExperience}
+        originRects={originRectsRef.current}
+        onClose={() => { setSelectedExperience(null); originRectsRef.current = null; }}
+      />
     </main>
   );
 }
