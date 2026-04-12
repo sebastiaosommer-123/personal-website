@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export interface ExperienceItem {
   company: string;
@@ -134,6 +134,14 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     onClose();
   };
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []); // handleClose closes over stable refs and controls — empty deps is correct
+
   return (
     <>
       {/* Backdrop */}
@@ -151,12 +159,6 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          exit={{
-            opacity: 0,
-            scale: 0.97,
-            filter: "blur(8px)",
-            transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-          }}
           className="relative w-full max-w-[493px] rounded-xl bg-[#F5F5F5] dark:bg-[#1F1F21] overflow-hidden pointer-events-auto my-auto"
         >
           {/* Close button */}

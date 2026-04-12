@@ -163,13 +163,12 @@ export default function Home() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (videoModal) closeModal();
-        else if (selectedExperience) setSelectedExperience(null);
         else if (surfOpen) setSurfOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [surfOpen, videoModal, selectedExperience]);
+  }, [surfOpen, videoModal]);
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
