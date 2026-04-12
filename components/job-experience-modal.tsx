@@ -42,6 +42,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const imageControls = useAnimation();
   const bodyControls = useAnimation();
   const isExitingRef = useRef(false);
+  const handleCloseRef = useRef<() => void>(() => {});
 
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
@@ -134,13 +135,15 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     onClose();
   };
 
+  handleCloseRef.current = handleClose;
+
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
+      if (e.key === "Escape") handleCloseRef.current();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []); // handleClose closes over stable refs and controls — empty deps is correct
+  }, []);
 
   return (
     <>
