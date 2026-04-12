@@ -13,6 +13,9 @@ out/
 .env*.local
 .vercel
 
+# git worktrees
+.worktrees/
+
 # tool-generated files
 .superpowers/
 docs/superpowers/
