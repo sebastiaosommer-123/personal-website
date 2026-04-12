@@ -20,6 +20,7 @@ export type AnimatedBackgroundProps = {
   className?: string;
   transition?: Transition;
   enableHover?: boolean;
+  resetKey?: unknown;
 };
 
 export function AnimatedBackground({
@@ -29,6 +30,7 @@ export function AnimatedBackground({
   className,
   transition,
   enableHover = false,
+  resetKey,
 }: AnimatedBackgroundProps) {
   const [activeId, setActiveId] = useState<string | null>(defaultValue ?? null);
   const [rect, setRect] = useState<{ top: number; height: number } | null>(null);
@@ -60,6 +62,11 @@ export function AnimatedBackground({
   useEffect(() => {
     if (defaultValue) updateRect(defaultValue);
   }, [defaultValue, updateRect]);
+
+  useEffect(() => {
+    setActiveId(null);
+    setRect(null);
+  }, [resetKey]);
 
   return (
     <div ref={containerRef} className='relative'>

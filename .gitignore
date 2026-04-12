@@ -12,3 +12,7 @@ out/
 # local env
 .env*.local
 .vercel
+
+# tool-generated files
+.superpowers/
+docs/superpowers/

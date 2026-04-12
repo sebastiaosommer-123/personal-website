@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 export interface ExperienceItem {
   company: string;
@@ -39,6 +39,18 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const logoRef = useRef<HTMLDivElement>(null);
   const containerControls = useAnimation();
   const headerControls = useAnimation();
+  const imageControls = useAnimation();
+  const bodyControls = useAnimation();
+  const backdropControls = useAnimation();
+  const isExitingRef = useRef(false);
+  const handleCloseRef = useRef<() => void>(() => {});
+
+  useLayoutEffect(() => {
+    backdropControls.start({
+      opacity: 1,
+      transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+    });
+  }, []);
 
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
@@ -50,19 +62,37 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
     const dy = originRects.logo.top - logoTargetRect.top;
 
+    const isDark = document.documentElement.classList.contains("dark");
+    const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
+    const modalBg = isDark ? "#111113" : "#FFFFFF";
+
     containerControls.set({
       clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+      backgroundColor: cardBg,
     });
     headerControls.set({ y: dy });
+    imageControls.set({ opacity: 0, filter: "blur(4px)" });
+    bodyControls.set({ opacity: 0, filter: "blur(4px)" });
 
     const raf = requestAnimationFrame(() => {
       containerControls.start({
         clipPath: "inset(0px 0px 0px 0px round 12px)",
+        backgroundColor: modalBg,
         transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
       });
       headerControls.start({
         y: 0,
         transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+      });
+      imageControls.start({
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
+      });
+      bodyControls.start({
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
       });
     });
 
@@ -89,7 +119,46 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     };
   }, []);
 
-  const handleClose = () => onClose();
+  const handleClose = async () => {
+    if (isExitingRef.current) return;
+    isExitingRef.current = true;
+
+    if (!originRects || !containerRef.current || !logoRef.current) {
+      onClose();
+      return;
+    }
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const logoTargetRect = logoRef.current.getBoundingClientRect();
+    const topClip = Math.max(0, originRects.row.top - containerRect.top);
+    const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
+    const dy = originRects.logo.top - logoTargetRect.top;
+
+    const transition = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
+
+    await Promise.all([
+      backdropControls.start({ opacity: 0, transition }),
+      containerControls.start({
+        clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        transition,
+      }),
+      headerControls.start({ y: dy, transition }),
+      imageControls.start({ opacity: 0, filter: "blur(4px)", transition }),
+      bodyControls.start({ opacity: 0, filter: "blur(4px)", transition }),
+    ]);
+
+    onClose();
+  };
+
+  handleCloseRef.current = handleClose;
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCloseRef.current();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <>
@@ -97,9 +166,8 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       <motion.div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[10000]"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+        animate={backdropControls}
+        onClick={handleClose}
       />
 
       {/* Card wrapper — handles click-outside-to-close; pointer-events-auto so touch scroll works on mobile */}
@@ -107,14 +175,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          exit={{
-            opacity: 0,
-            scale: 0.97,
-            filter: "blur(8px)",
-            transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
-          }}
-          onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-[493px] rounded-xl bg-[#F5F5F5] dark:bg-[#1F1F21] overflow-hidden pointer-events-auto my-auto"
+          className="relative w-full max-w-[493px] rounded-xl overflow-hidden pointer-events-auto my-auto"
         >
           {/* Close button */}
           <button
@@ -128,9 +189,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Image placeholder — transparent during clip expansion, fades in after */}
           <motion.div
             className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.06]"
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            animate={imageControls}
           />
 
           {/* Header row — travels from list position to modal header via translateY */}
@@ -190,11 +249,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           </motion.div>
 
           {/* Body content — fades in after clip expansion completes */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
-          >
+          <motion.div animate={bodyControls}>
             <p
               className="px-4 pt-2 text-base"
               style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
