@@ -63,7 +63,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const dy = originRects.logo.top - logoTargetRect.top;
 
     const isDark = document.documentElement.classList.contains("dark");
-    const cardBg = isDark ? "#1F1F21" : "#F5F5F5";
+    const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
     const modalBg = isDark ? "#111113" : "#FFFFFF";
 
     containerControls.set({
