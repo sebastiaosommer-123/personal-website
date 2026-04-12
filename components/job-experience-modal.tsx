@@ -39,6 +39,8 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const logoRef = useRef<HTMLDivElement>(null);
   const containerControls = useAnimation();
   const headerControls = useAnimation();
+  const imageControls = useAnimation();
+  const bodyControls = useAnimation();
 
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
@@ -54,6 +56,8 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
     });
     headerControls.set({ y: dy });
+    imageControls.set({ opacity: 0, filter: "blur(4px)" });
+    bodyControls.set({ opacity: 0, filter: "blur(4px)" });
 
     const raf = requestAnimationFrame(() => {
       containerControls.start({
@@ -63,6 +67,16 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       headerControls.start({
         y: 0,
         transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+      });
+      imageControls.start({
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
+      });
+      bodyControls.start({
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
       });
     });
 
@@ -128,9 +142,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Image placeholder — transparent during clip expansion, fades in after */}
           <motion.div
             className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.06]"
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+            animate={imageControls}
           />
 
           {/* Header row — travels from list position to modal header via translateY */}
@@ -190,11 +202,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           </motion.div>
 
           {/* Body content — fades in after clip expansion completes */}
-          <motion.div
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
-          >
+          <motion.div animate={bodyControls}>
             <p
               className="px-4 pt-2 text-base"
               style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
