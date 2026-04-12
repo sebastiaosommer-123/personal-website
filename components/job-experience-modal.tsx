@@ -100,11 +100,10 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-        onClick={handleClose}
       />
 
-      {/* Card wrapper */}
-      <div className="fixed inset-0 z-[10001] flex items-start justify-center px-3 py-6 overflow-y-auto pointer-events-none">
+      {/* Card wrapper — handles click-outside-to-close; pointer-events-auto so touch scroll works on mobile */}
+      <div className="fixed inset-0 z-[10001] flex items-start justify-center px-3 py-6 overflow-y-auto" onClick={handleClose}>
         <motion.div
           ref={containerRef}
           animate={containerControls}
@@ -114,6 +113,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
             filter: "blur(8px)",
             transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
           }}
+          onClick={(e) => e.stopPropagation()}
           className="relative w-full max-w-[493px] rounded-xl bg-[#F5F5F5] dark:bg-[#1F1F21] overflow-hidden pointer-events-auto my-auto"
         >
           {/* Close button */}
