@@ -218,7 +218,7 @@ export default function Home() {
   }, [cardX, cardY]);
 
   return (
-    <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
+    <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-10 md:pb-[60px] lg:pb-[80px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
 
         {/* Name + Title */}

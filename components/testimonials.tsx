@@ -134,7 +134,7 @@ export function Testimonials() {
   const activeVariants = prefersReducedMotion ? reducedMotionVariants : variants;
 
   return (
-    <div className="relative flex flex-col gap-3">
+    <div className="relative flex flex-col gap-3 overflow-hidden">
       {/* Hidden measurement container — renders all full cards to find the tallest */}
       <div ref={measureRef} aria-hidden className="invisible absolute w-full pointer-events-none">
         {testimonials.map((t, i) => (
