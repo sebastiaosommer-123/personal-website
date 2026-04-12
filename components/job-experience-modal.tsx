@@ -41,6 +41,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const headerControls = useAnimation();
   const imageControls = useAnimation();
   const bodyControls = useAnimation();
+  const isExitingRef = useRef(false);
 
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
@@ -103,7 +104,35 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     };
   }, []);
 
-  const handleClose = () => onClose();
+  const handleClose = async () => {
+    if (isExitingRef.current) return;
+    isExitingRef.current = true;
+
+    if (!originRects || !containerRef.current || !logoRef.current) {
+      onClose();
+      return;
+    }
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const logoTargetRect = logoRef.current.getBoundingClientRect();
+    const topClip = Math.max(0, originRects.row.top - containerRect.top);
+    const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
+    const dy = originRects.logo.top - logoTargetRect.top;
+
+    const transition = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
+
+    await Promise.all([
+      containerControls.start({
+        clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        transition,
+      }),
+      headerControls.start({ y: dy, transition }),
+      imageControls.start({ opacity: 0, filter: "blur(4px)", transition }),
+      bodyControls.start({ opacity: 0, filter: "blur(4px)", transition }),
+    ]);
+
+    onClose();
+  };
 
   return (
     <>
