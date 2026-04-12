@@ -97,6 +97,7 @@ export default function Home() {
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const showRaf   = useRef<number | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
+  const surfDeviceRef = useRef<HTMLDivElement>(null);
   const shadersVideoRef = useRef<HTMLVideoElement>(null);
   const toolsVideoRef   = useRef<HTMLVideoElement>(null);
   const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
@@ -169,6 +170,19 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [surfOpen, videoModal]);
+
+  useEffect(() => {
+    if (!surfOpen) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      const target = e.target as Element;
+      if (target.closest('[data-surf-toggle]')) return;
+      if (surfDeviceRef.current && !surfDeviceRef.current.contains(target)) {
+        setSurfOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleMouseDown);
+    return () => document.removeEventListener("mousedown", handleMouseDown);
+  }, [surfOpen]);
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
@@ -212,6 +226,7 @@ export default function Home() {
               <DirectionalUnderline as="a" href="https://shader-playground.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { if (!isTouch) handleProjectEnter('shaders', e); }} onMouseLeave={!isTouch ? startHideTimer : undefined}>Shader Playground<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
               <DirectionalUnderline as="a" href="https://ui-sound-lab.sebastiaosommer.com/" target="_blank" className="font-medium inline-flex items-center whitespace-nowrap text-base" style={{ color: 'var(--color-fg)' }} onMouseEnter={(e) => { if (!isTouch) handleProjectEnter('tools', e); }} onMouseLeave={!isTouch ? startHideTimer : undefined}>UI Sound Lab<svg className="ml-[0.3em] mr-[0.15em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}<span className="whitespace-nowrap">and{" "}
               <Toggle
+                data-surf-toggle
                 pressed={surfOpen}
                 onPressedChange={setSurfOpen}
                 variant="outline"
@@ -219,6 +234,7 @@ export default function Home() {
                            border-[var(--color-border)]
                            hover:bg-[var(--color-surface)] hover:text-[var(--color-fg)]
                            data-[state=on]:bg-[var(--color-surface)] data-[state=on]:text-[var(--color-fg)] data-[state=on]:border-[var(--color-border)]
+                           data-[state=on]:hover:bg-transparent
                            active:scale-[0.97] focus-visible:ring-0 focus-visible:ring-offset-0
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
                 style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
@@ -352,10 +368,6 @@ export default function Home() {
       <AnimatePresence initial={false}>
         {surfOpen && (
           <>
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setSurfOpen(false)}
-            />
             <motion.div
               className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
               initial={{ y: "100vh", opacity: 0 }}
@@ -364,9 +376,9 @@ export default function Home() {
               transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
               <div
+                ref={surfDeviceRef}
                 className="pointer-events-auto"
                 style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}
-                onClick={(e) => e.stopPropagation()}
               >
                 <SurfDevice onClose={() => setSurfOpen(false)} />
               </div>
