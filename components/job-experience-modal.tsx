@@ -41,8 +41,16 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const headerControls = useAnimation();
   const imageControls = useAnimation();
   const bodyControls = useAnimation();
+  const backdropControls = useAnimation();
   const isExitingRef = useRef(false);
   const handleCloseRef = useRef<() => void>(() => {});
+
+  useLayoutEffect(() => {
+    backdropControls.start({
+      opacity: 1,
+      transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+    });
+  }, []);
 
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
@@ -123,6 +131,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const transition = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
 
     await Promise.all([
+      backdropControls.start({ opacity: 0, transition }),
       containerControls.start({
         clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
         transition,
@@ -151,9 +160,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       <motion.div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[10000]"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+        animate={backdropControls}
         onClick={handleClose}
       />
 

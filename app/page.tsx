@@ -236,6 +236,7 @@ export default function Home() {
               enableHover={!isTouch}
               className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
               transition={{ type: "spring", stiffness: 400, damping: 35 }}
+              resetKey={selectedExperience?.company}
             >
               {experience.map((exp) => (
                 <div
