@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useMotionValue, animate } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, animate, type AnimationPlaybackControls } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
@@ -107,6 +107,7 @@ export default function Home() {
   const originRectsRef = useRef<OriginRects | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
+  const cardSpringsRef = useRef<{ x: AnimationPlaybackControls | null; y: AnimationPlaybackControls | null }>({ x: null, y: null });
 
   const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
   const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775757301/ui-sound-lab-walkthrough_nrszl7.mp4";
@@ -117,26 +118,39 @@ export default function Home() {
   const handleProjectEnter = (project: 'shaders' | 'tools', e: React.MouseEvent) => {
     clearTimeout(hideTimer.current);
     cancelAnimationFrame(showRaf.current!);
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const el = e.currentTarget as HTMLElement;
+    const rect = el.getBoundingClientRect();
     const newX = rect.left + rect.width / 2 - CARD_W / 2;
     const newY = rect.top - CARD_H - 12;
     if (activeProject === null) {
-      // Set position first, then wait one RAF for Framer Motion to flush
-      // the transform to the DOM before making the card visible.
-      // This prevents a one-frame flash at the wrong position on first hover.
+      // Stop any lingering spring animations so .set() has uncontested ownership.
+      cardSpringsRef.current.x?.stop();
+      cardSpringsRef.current.y?.stop();
+      cardSpringsRef.current = { x: null, y: null };
+      // Pre-position using current rect so the card is never at (0,0).
       cardX.set(newX);
       cardY.set(newY);
-      showRaf.current = requestAnimationFrame(() => setActiveProject(project));
+      // Re-measure inside RAF: by this point any font-load layout shift that
+      // happened since mouseenter has already settled, giving the correct position.
+      showRaf.current = requestAnimationFrame(() => {
+        const freshRect = el.getBoundingClientRect();
+        cardX.set(freshRect.left + freshRect.width / 2 - CARD_W / 2);
+        cardY.set(freshRect.top - CARD_H - 12);
+        setActiveProject(project);
+      });
     } else {
       // Spring between positions when card is already visible
-      animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
-      animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+      cardSpringsRef.current.x = animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
+      cardSpringsRef.current.y = animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
       setActiveProject(project);
     }
   };
 
   const startHideTimer = () => {
     cancelAnimationFrame(showRaf.current!);
+    cardSpringsRef.current.x?.stop();
+    cardSpringsRef.current.y?.stop();
+    cardSpringsRef.current = { x: null, y: null };
     hideTimer.current = setTimeout(() => setActiveProject(null), 200);
   };
 
@@ -183,6 +197,26 @@ export default function Home() {
     document.addEventListener("mousedown", handleMouseDown);
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, [surfOpen]);
+
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      // bfcache restore: Framer Motion's RAF loop restarts and can replay stale
+      // animation state from the previous session. Reset everything so the next
+      // hover starts clean.
+      cancelAnimationFrame(showRaf.current!);
+      clearTimeout(hideTimer.current);
+      cardSpringsRef.current.x?.stop();
+      cardSpringsRef.current.y?.stop();
+      cardSpringsRef.current = { x: null, y: null };
+      cardX.set(0);
+      cardY.set(0);
+      setActiveProject(null);
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, [cardX, cardY]);
+
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-5 md:pb-[30px] lg:pb-[40px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
       <div className="relative w-full max-w-[469px] flex flex-col gap-4">
