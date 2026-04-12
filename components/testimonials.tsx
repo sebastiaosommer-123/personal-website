@@ -92,6 +92,7 @@ export function Testimonials() {
   };
 
   const navigate = (dir: number) => {
+    dragFilter.set("blur(0px)");
     direction.current = dir;
     setActiveIndex((i) => (i + dir + testimonials.length) % testimonials.length);
   };
@@ -150,6 +151,7 @@ export function Testimonials() {
       </div>
 
       <div style={{ minHeight }}>
+        <motion.div style={{ filter: dragFilter }}>
         <AnimatePresence mode="wait" custom={direction.current}>
         <motion.div
           key={activeIndex}
@@ -162,7 +164,7 @@ export function Testimonials() {
             duration: 0.4,
             ease,
           }}
-          style={{ x: dragX, opacity: dragOpacity, filter: dragFilter }}
+          style={{ x: dragX, opacity: dragOpacity }}
           className="flex flex-col items-center text-center select-none cursor-grab active:cursor-grabbing"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -187,6 +189,7 @@ export function Testimonials() {
           </p>
         </motion.div>
       </AnimatePresence>
+      </motion.div>
       </div>
 
       {/* Progress nav */}
