@@ -62,8 +62,13 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
     const dy = originRects.logo.top - logoTargetRect.top;
 
+    const isDark = document.documentElement.classList.contains("dark");
+    const cardBg = isDark ? "#1F1F21" : "#F5F5F5";
+    const modalBg = isDark ? "#111113" : "#FFFFFF";
+
     containerControls.set({
       clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+      backgroundColor: cardBg,
     });
     headerControls.set({ y: dy });
     imageControls.set({ opacity: 0, filter: "blur(4px)" });
@@ -72,6 +77,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     const raf = requestAnimationFrame(() => {
       containerControls.start({
         clipPath: "inset(0px 0px 0px 0px round 12px)",
+        backgroundColor: modalBg,
         transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
       });
       headerControls.start({
@@ -169,7 +175,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          className="relative w-full max-w-[493px] rounded-xl bg-[#F5F5F5] dark:bg-[#1F1F21] overflow-hidden pointer-events-auto my-auto"
+          className="relative w-full max-w-[493px] rounded-xl overflow-hidden pointer-events-auto my-auto"
         >
           {/* Close button */}
           <button
