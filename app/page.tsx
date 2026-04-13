@@ -250,9 +250,7 @@ export default function Home() {
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.16 }}
           >
             <p className="text-base" style={{ lineHeight: 1.5, textWrap: "pretty", color: "var(--color-fg-muted)" } as React.CSSProperties}>
-              Working as Founding Product Designer at a stealth AI startup,
-              collaborating closely with cross functional teams to design.
-              Previously shipped features across multiple apps in production.
+              Founding product designer at a stealth AI company, building consumer wellness apps from zero to one. I work close to product, shaping experiments, onboarding, and retention with a focus on both user value and long term outcomes.
             </p>
             <div className="h-[0.75em]" />
             <div className="text-base" style={{ lineHeight: 1.5, color: "var(--color-fg-muted)" }}>
