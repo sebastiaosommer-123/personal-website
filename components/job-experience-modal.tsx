@@ -195,7 +195,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Header row — travels from list position to modal header via translateY */}
           <motion.div
             animate={headerControls}
-            className="flex items-center justify-between px-4 pt-4"
+            className="flex items-center justify-between px-3 pt-4"
           >
             <div className="flex items-center gap-3">
               <div
@@ -218,7 +218,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
                 <span
                   data-morph="role"
                   className="font-medium text-base"
