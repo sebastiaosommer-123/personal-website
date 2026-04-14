@@ -216,6 +216,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
                   width={38}
                   height={38}
                   className="w-full h-full object-contain"
+                  decoding="sync"
                 />
               </div>
               <div className="flex flex-col gap-0.5" style={{ width: 184 }}>
