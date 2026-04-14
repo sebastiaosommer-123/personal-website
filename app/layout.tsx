@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <ThemeProvider>
           {children}
-          <div className="fixed top-4 right-4 z-50">
+          <div className="fixed top-4 right-4 z-50" data-surf-ignore>
             <AnimatedThemeToggler className="text-[var(--color-fg)]" />
           </div>
         </ThemeProvider>

@@ -190,6 +190,7 @@ export default function Home() {
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as Element;
       if (target.closest('[data-surf-toggle]')) return;
+      if (target.closest('[data-surf-ignore]')) return;
       if (surfDeviceRef.current && !surfDeviceRef.current.contains(target)) {
         setSurfOpen(false);
       }
