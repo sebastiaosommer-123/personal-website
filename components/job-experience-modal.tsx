@@ -78,21 +78,21 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       containerControls.start({
         clipPath: "inset(0px 0px 0px 0px round 12px)",
         backgroundColor: modalBg,
-        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
       });
       headerControls.start({
         y: 0,
-        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
       });
       imageControls.start({
         opacity: 1,
         filter: "blur(0px)",
-        transition: { delay: 0.2, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
       });
       bodyControls.start({
         opacity: 1,
         filter: "blur(0px)",
-        transition: { delay: 0.25, duration: 0.15, ease: [0.23, 1, 0.32, 1] },
+        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
       });
     });
 
