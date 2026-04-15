@@ -33,11 +33,7 @@ const experience: ExperienceItem[] = [
     logo: "/assets/stealth-startup.svg",
     description:
       "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
-    highlights: [
-      "Shipped impactful features across multiple client products",
-      "Redesigned core dashboards, enhancing usability and accessibility",
-      "Played a key role in delivering multiple high-impact projects",
-    ],
+    highlights: [],
   },
   {
     company: "HOP Design",
@@ -45,12 +41,8 @@ const experience: ExperienceItem[] = [
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
     description:
-      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to two designers, ensuring alignment with project goals and user needs.",
-    highlights: [
-      "Shipped impactful features like \"AI Caption\" for Hashtag Expert and \"Create Your Game\" for Stepbet",
-      "Redesigned the Padmé web dashboard, enhancing usability and accessibility",
-      "Played a key role in delivering multiple browsers with Infinity Browsers",
-    ],
+      "Led end to end design across mobile and web for multiple clients. Mentored two designers and contributed to product direction. Selected work includes AllStays, FitnessAI, Stepbet, Padmé, and Infinity Browsers.",
+    highlights: [],
   },
   {
     company: "Tempest",
@@ -58,25 +50,17 @@ const experience: ExperienceItem[] = [
     period: "2022 – 23'",
     logo: "/assets/tempest.svg",
     description:
-      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
-    highlights: [
-      "Shipped impactful features across multiple client products",
-      "Redesigned core dashboards, enhancing usability and accessibility",
-      "Played a key role in delivering multiple high-impact projects",
-    ],
+      "Designed and shipped a privacy focused search engine and browser across iOS and desktop. Worked end to end from concept to launch. Led the design system across the product portfolio.",
+    highlights: [],
   },
   {
-    company: "HOP Studio",
+    company: "44 Studio",
     role: "UX/UI Designer",
     period: "2020 – 22'",
     logo: "/assets/44-studio.svg",
     description:
-      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
-    highlights: [
-      "Shipped impactful features across multiple client products",
-      "Redesigned core dashboards, enhancing usability and accessibility",
-      "Played a key role in delivering multiple high-impact projects",
-    ],
+      "Shipped multiple products across mobile and web, including 7 iOS apps and 4 dashboards. Operated across the full design process in fast moving startup environments. Team later acquired by Tempest.",
+    highlights: [],
   },
 ];
 

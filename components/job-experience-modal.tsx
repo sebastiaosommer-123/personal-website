@@ -257,7 +257,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
               {experience.description}
             </p>
 
-            <div className="px-4 pt-4">
+            {experience.highlights.length > 0 && <div className="px-4 pt-4">
               <span
                 className="font-medium text-base"
                 style={{ color: "var(--color-fg)" }}
@@ -276,7 +276,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
                   </div>
                 ))}
               </div>
-            </div>
+            </div>}
             <div className="pb-4" />
           </motion.div>
         </motion.div>
