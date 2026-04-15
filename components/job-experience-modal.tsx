@@ -11,7 +11,6 @@ export interface ExperienceItem {
   logo: string;
   description: string;
   highlights: string[];
-  skills: string[];
 }
 
 export interface OriginRects {
@@ -267,28 +266,18 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
               </span>
               <div className="mt-1 flex flex-col gap-1">
                 {experience.highlights.map((h, i) => (
-                  <p
+                  <div
                     key={i}
-                    className="text-base"
+                    className="flex gap-2 text-base"
                     style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
                   >
-                    – {h}
-                  </p>
+                    <span className="shrink-0">–</span>
+                    <span>{h}</span>
+                  </div>
                 ))}
               </div>
             </div>
-
-            <div className="px-4 pt-4 pb-4 flex flex-wrap gap-2">
-              {experience.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="flex items-center rounded-full bg-black/[0.06] dark:bg-white/[0.06] border border-black/10 dark:border-white/10 text-sm px-[10px]"
-                  style={{ height: 30, color: "var(--color-fg)" }}
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
+            <div className="pb-4" />
           </motion.div>
         </motion.div>
       </div>

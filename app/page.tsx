@@ -38,7 +38,6 @@ const experience: ExperienceItem[] = [
       "Redesigned core dashboards, enhancing usability and accessibility",
       "Played a key role in delivering multiple high-impact projects",
     ],
-    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Design",
@@ -46,13 +45,12 @@ const experience: ExperienceItem[] = [
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
     description:
-      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to two designers, ensuring alignment with project goals and user needs.",
     highlights: [
-      "Shipped impactful features across multiple client products",
-      "Redesigned core dashboards, enhancing usability and accessibility",
-      "Played a key role in delivering multiple high-impact projects",
+      "Shipped impactful features like \"AI Caption\" for Hashtag Expert and \"Create Your Game\" for Stepbet",
+      "Redesigned the Padmé web dashboard, enhancing usability and accessibility",
+      "Played a key role in delivering multiple browsers with Infinity Browsers",
     ],
-    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "Tempest",
@@ -66,7 +64,6 @@ const experience: ExperienceItem[] = [
       "Redesigned core dashboards, enhancing usability and accessibility",
       "Played a key role in delivering multiple high-impact projects",
     ],
-    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
   {
     company: "HOP Studio",
@@ -80,7 +77,6 @@ const experience: ExperienceItem[] = [
       "Redesigned core dashboards, enhancing usability and accessibility",
       "Played a key role in delivering multiple high-impact projects",
     ],
-    skills: ["Product Design", "UX/UI Design", "Interaction Design", "Web Design", "Prototyping", "User Research"],
   },
 ];
 
