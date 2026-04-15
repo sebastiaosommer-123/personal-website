@@ -40,6 +40,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const headerControls = useAnimation();
   const imageControls = useAnimation();
   const bodyControls = useAnimation();
+  const highlightsControls = useAnimation();
   const backdropControls = useAnimation();
   const isExitingRef = useRef(false);
   const handleCloseRef = useRef<() => void>(() => {});
@@ -72,6 +73,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     headerControls.set({ y: dy });
     imageControls.set({ opacity: 0, filter: "blur(4px)" });
     bodyControls.set({ opacity: 0, filter: "blur(4px)" });
+    highlightsControls.set({ opacity: 0, filter: "blur(4px)" });
 
     const raf = requestAnimationFrame(() => {
       containerControls.start({
@@ -92,6 +94,11 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
         opacity: 1,
         filter: "blur(0px)",
         transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+      });
+      highlightsControls.start({
+        opacity: 1,
+        filter: "blur(0px)",
+        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], delay: 0.1 },
       });
     });
 
@@ -144,6 +151,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
       headerControls.start({ y: dy, transition }),
       imageControls.start({ opacity: 0, filter: "blur(4px)", transition }),
       bodyControls.start({ opacity: 0, filter: "blur(4px)", transition }),
+      highlightsControls.start({ opacity: 0, filter: "blur(4px)", transition }),
     ]);
 
     onClose();
@@ -252,31 +260,33 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           <motion.div animate={bodyControls}>
             {experience.description && <p
               className="px-4 pt-2 text-base"
-              style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
+              style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7, textWrap: "pretty" } as any}
             >
               {experience.description}
             </p>}
 
-            {experience.highlights.length > 0 && <div className="px-4 pt-4">
-              <span
-                className="font-medium text-base"
-                style={{ color: "var(--color-fg)" }}
-              >
-                Highlights
-              </span>
-              <div className="mt-1 flex flex-col gap-1">
-                {experience.highlights.map((h, i) => (
-                  <div
-                    key={i}
-                    className="flex gap-2 text-base"
-                    style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
-                  >
-                    <span className="shrink-0">–</span>
-                    <span>{h}</span>
-                  </div>
-                ))}
-              </div>
-            </div>}
+            <motion.div animate={highlightsControls}>
+              {experience.highlights.length > 0 && <div className="px-4 pt-4">
+                <span
+                  className="font-medium text-base"
+                  style={{ color: "var(--color-fg)", textWrap: "balance" } as any}
+                >
+                  Highlights
+                </span>
+                <div className="mt-1 flex flex-col gap-1">
+                  {experience.highlights.map((h, i) => (
+                    <div
+                      key={i}
+                      className="flex gap-2 text-base"
+                      style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
+                    >
+                      <span className="shrink-0">–</span>
+                      <span style={{ textWrap: "pretty" } as any}>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>}
+            </motion.div>
             <div className="pb-4" />
           </motion.div>
         </motion.div>
