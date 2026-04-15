@@ -32,7 +32,7 @@ const experience: ExperienceItem[] = [
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
     description:
-      "Led end-to-end product design for a diverse client base, creating mobile apps, dashboards, and websites. Provided strategic guidance to designers, ensuring alignment with project goals and user needs.",
+      "Details coming soon.",
     highlights: [],
   },
   {
