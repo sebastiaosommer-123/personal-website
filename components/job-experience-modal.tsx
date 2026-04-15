@@ -250,12 +250,12 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
 
           {/* Body content — fades in after clip expansion completes */}
           <motion.div animate={bodyControls}>
-            <p
+            {experience.description && <p
               className="px-4 pt-2 text-base"
               style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
             >
               {experience.description}
-            </p>
+            </p>}
 
             {experience.highlights.length > 0 && <div className="px-4 pt-4">
               <span

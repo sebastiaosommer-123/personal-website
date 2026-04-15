@@ -31,8 +31,7 @@ const experience: ExperienceItem[] = [
     role: "Sr. Product Designer",
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
-    description:
-      "Details coming soon.",
+    description: "",
     highlights: [],
   },
   {
