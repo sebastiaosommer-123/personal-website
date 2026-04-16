@@ -3,6 +3,7 @@
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
+import { TextShimmer } from "@/components/motion-primitives/text-shimmer";
 
 export interface ExperienceItem {
   company: string;
@@ -216,10 +217,10 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Image area — transparent during clip expansion, fades in after */}
           <motion.div
             className="w-full bg-black/[0.06] dark:bg-white/[0.06] overflow-hidden"
-            style={experience.image ? { aspectRatio: "4/3" } : { height: 200 }}
+            style={experience.image ? { aspectRatio: "4/3" } : { height: 200, background: "white" }}
             animate={imageControls}
           >
-            {experience.image && (
+            {experience.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={experience.image}
@@ -227,6 +228,22 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
                 className="w-full h-full object-cover"
                 decoding="async"
               />
+            ) : (
+              <div className="relative w-full h-full flex items-center justify-center" style={{ paddingTop: 13 }}>
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage:
+                      "radial-gradient(circle, var(--color-fg) 1px, transparent 1px)",
+                    backgroundSize: "12px 12px",
+                    backgroundPosition: "center",
+                    opacity: 0.15,
+                  }}
+                />
+                <TextShimmer duration={2} className="text-base relative z-10">
+                  Details coming soon
+                </TextShimmer>
+              </div>
             )}
           </motion.div>
 
