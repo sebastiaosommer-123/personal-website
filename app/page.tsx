@@ -48,6 +48,7 @@ const experience: ExperienceItem[] = [
     role: "Sr. Product Designer",
     period: "2022 – 23'",
     logo: "/assets/tempest.svg",
+    image: "/assets/sr-product-designer-tempest.webp",
     description:
       "Designed and shipped a privacy focused search engine and browser across iOS and desktop. Worked end to end from concept to launch. Led the design system across the product portfolio.",
     highlights: [],
