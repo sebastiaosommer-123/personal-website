@@ -39,6 +39,7 @@ const experience: ExperienceItem[] = [
     role: "Sr. Product Designer",
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
+    image: "/assets/sr-product-designer-hop-design.png",
     description: (
       <>
         Led end to end design across mobile and web for multiple clients. Mentored two designers and contributed to product direction. Selected work includes{" "}
