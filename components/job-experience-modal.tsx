@@ -76,34 +76,50 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
     bodyControls.set({ opacity: 0, filter: "blur(4px)" });
     highlightsControls.set({ opacity: 0, filter: "blur(4px)" });
 
-    const raf = requestAnimationFrame(() => {
-      containerControls.start({
-        clipPath: "inset(0px 0px 0px 0px round 12px)",
-        backgroundColor: modalBg,
-        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-      });
-      headerControls.start({
-        y: 0,
-        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-      });
-      imageControls.start({
-        opacity: 1,
-        filter: "blur(0px)",
-        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-      });
-      bodyControls.start({
-        opacity: 1,
-        filter: "blur(0px)",
-        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-      });
-      highlightsControls.start({
-        opacity: 1,
-        filter: "blur(0px)",
-        transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], delay: 0.1 },
-      });
-    });
+    let rafId: number | undefined;
+    let cancelled = false;
 
-    return () => cancelAnimationFrame(raf);
+    const runAnimation = () => {
+      if (cancelled) return;
+      rafId = requestAnimationFrame(() => {
+        containerControls.start({
+          clipPath: "inset(0px 0px 0px 0px round 12px)",
+          backgroundColor: modalBg,
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+        });
+        headerControls.start({
+          y: 0,
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+        });
+        imageControls.start({
+          opacity: 1,
+          filter: "blur(0px)",
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+        });
+        bodyControls.start({
+          opacity: 1,
+          filter: "blur(0px)",
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+        });
+        highlightsControls.start({
+          opacity: 1,
+          filter: "blur(0px)",
+          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], delay: 0.1 },
+        });
+      });
+    };
+
+    const logoImgEl = logoRef.current.querySelector('img') as HTMLImageElement | null;
+    if (logoImgEl) {
+      logoImgEl.decode().then(runAnimation).catch(runAnimation);
+    } else {
+      runAnimation();
+    }
+
+    return () => {
+      cancelled = true;
+      if (rafId !== undefined) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useLayoutEffect(() => {
