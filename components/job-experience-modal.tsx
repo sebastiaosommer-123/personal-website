@@ -11,6 +11,7 @@ export interface ExperienceItem {
   logo: string;
   description: string;
   highlights: string[];
+  image?: string;
 }
 
 export interface OriginRects {
@@ -193,11 +194,22 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
             <X size={16} />
           </button>
 
-          {/* Image placeholder — transparent during clip expansion, fades in after */}
+          {/* Image area — transparent during clip expansion, fades in after */}
           <motion.div
-            className="w-full h-[200px] bg-black/[0.06] dark:bg-white/[0.06]"
+            className="w-full bg-black/[0.06] dark:bg-white/[0.06] overflow-hidden"
+            style={experience.image ? { aspectRatio: "4/3" } : { height: 200 }}
             animate={imageControls}
-          />
+          >
+            {experience.image && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={experience.image}
+                alt={`${experience.company} work`}
+                className="w-full h-full object-cover"
+                decoding="async"
+              />
+            )}
+          </motion.div>
 
           {/* Header row — travels from list position to modal header via translateY */}
           <motion.div

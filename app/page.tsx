@@ -57,6 +57,7 @@ const experience: ExperienceItem[] = [
     role: "UX/UI Designer",
     period: "2020 – 22'",
     logo: "/assets/44-studio.svg",
+    image: "/assets/ux-ui-designer-44-studio.webp",
     description:
       "Shipped multiple products across mobile and web, including 7 iOS apps and 4 dashboards. Operated across the full design process in fast moving startup environments. Team later acquired by Tempest.",
     highlights: [],
