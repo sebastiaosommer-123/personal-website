@@ -188,7 +188,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           {/* Close button */}
           <button
             onClick={handleClose}
-            className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-black/[0.06] hover:bg-black/10 dark:bg-white/[0.06] dark:hover:bg-white/10 transition-colors"
+            className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
             aria-label="Close"
           >
             <X size={16} />
