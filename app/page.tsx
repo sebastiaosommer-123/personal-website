@@ -248,7 +248,7 @@ export default function Home() {
                            hover:bg-[var(--color-surface)] hover:text-[var(--color-fg)]
                            data-[state=on]:bg-[var(--color-surface)] data-[state=on]:text-[var(--color-fg)] data-[state=on]:border-[var(--color-border)]
                            data-[state=on]:hover:bg-transparent
-                           active:scale-[0.97] focus-visible:ring-0 focus-visible:ring-offset-0
+                           active:scale-[0.97]
                            transition-[transform,border-color,background-color] duration-150 cursor-pointer"
                 style={{ color: 'var(--color-fg)', verticalAlign: 'middle', fontSize: 'inherit', lineHeight: 1.2, marginBottom: '2px' }}
                 onMouseEnter={() => { if (!isTouch) setSurfPeeking(true); }}

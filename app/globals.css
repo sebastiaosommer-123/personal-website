@@ -28,6 +28,12 @@
   box-sizing: border-box;
 }
 
+:focus-visible {
+  outline: 1.5px solid var(--color-fg);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 :root {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --color-bg: #ffffff;
