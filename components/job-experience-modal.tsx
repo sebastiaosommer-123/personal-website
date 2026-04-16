@@ -2,14 +2,14 @@
 
 import { motion, AnimatePresence, useAnimation } from "motion/react";
 import { X } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 
 export interface ExperienceItem {
   company: string;
   role: string;
   period: string;
   logo: string;
-  description: string;
+  description: React.ReactNode;
   highlights: string[];
   image?: string;
 }
@@ -272,7 +272,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           <motion.div animate={bodyControls}>
             {experience.description && <p
               className="px-4 pt-2 text-base"
-              style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7, textWrap: "pretty" } as any}
+              style={{ lineHeight: 1.4, color: "var(--color-fg-muted)", textWrap: "pretty" } as any}
             >
               {experience.description}
             </p>}

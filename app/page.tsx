@@ -39,8 +39,15 @@ const experience: ExperienceItem[] = [
     role: "Sr. Product Designer",
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
-    description:
-      "Led end to end design across mobile and web for multiple clients. Mentored two designers and contributed to product direction. Selected work includes AllStays, FitnessAI, Stepbet, Padmé, and Infinity Browsers.",
+    description: (
+      <>
+        Led end to end design across mobile and web for multiple clients. Mentored two designers and contributed to product direction. Selected work includes{" "}
+        <DirectionalUnderline as="a" href="https://apps.apple.com/us/app/allstays-camp-rv-camping/id370820516" target="_blank" rel="noopener noreferrer" className="inline-flex items-center font-medium whitespace-nowrap" style={{ color: "var(--color-fg)" }}>AllStays<svg className="ml-[0.3em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+        <DirectionalUnderline as="a" href="https://apps.apple.com/us/app/fitness-ai-gym-workout-planner/id1446224156" target="_blank" rel="noopener noreferrer" className="inline-flex items-center font-medium whitespace-nowrap" style={{ color: "var(--color-fg)" }}>Fitness AI<svg className="ml-[0.3em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>,{" "}
+        <DirectionalUnderline as="a" href="https://www.padme.ai/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center font-medium whitespace-nowrap" style={{ color: "var(--color-fg)" }}>Padmé<svg className="ml-[0.3em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>, and{" "}
+        <DirectionalUnderline as="a" href="https://infinity-browsers.com/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center font-medium whitespace-nowrap" style={{ color: "var(--color-fg)" }}>Infinity Browsers<svg className="ml-[0.3em] size-[0.55em]" fill="none" viewBox="-1 -1 12 12" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.004 9.166 9.337.833m0 0v8.333m0-8.333H1.004" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" /></svg></DirectionalUnderline>.
+      </>
+    ),
     highlights: [],
   },
   {
