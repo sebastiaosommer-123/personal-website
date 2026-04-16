@@ -43,6 +43,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const bodyControls = useAnimation();
   const highlightsControls = useAnimation();
   const backdropControls = useAnimation();
+  const closeButtonControls = useAnimation();
   const isExitingRef = useRef(false);
   const handleCloseRef = useRef<() => void>(() => {});
 
@@ -161,6 +162,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
 
     await Promise.all([
       backdropControls.start({ opacity: 0, transition }),
+      closeButtonControls.start({ opacity: 0, transition }),
       containerControls.start({
         clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
         transition,
@@ -202,13 +204,14 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
           className="relative w-full max-w-[493px] rounded-xl overflow-hidden pointer-events-auto my-auto"
         >
           {/* Close button */}
-          <button
+          <motion.button
+            animate={closeButtonControls}
             onClick={handleClose}
             className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
             aria-label="Close"
           >
             <X size={16} />
-          </button>
+          </motion.button>
 
           {/* Image area — transparent during clip expansion, fades in after */}
           <motion.div
