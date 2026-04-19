@@ -386,7 +386,7 @@ export default function Home() {
         {surfOpen && (
           <div
             ref={constraintsRef}
-            className="fixed inset-0 z-50 pointer-events-none"
+            className="fixed inset-0 z-[60] pointer-events-none"
           >
             <motion.div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -403,7 +403,7 @@ export default function Home() {
                 dragElastic={0}
                 style={{ x: dragX, y: dragY }}
                 className="pointer-events-auto"
-                whileHover={!isTouch ? { cursor: 'move' } : undefined}
+                whileHover={!isTouch ? { cursor: 'grab' } : undefined}
                 whileDrag={!isTouch ? { cursor: 'grabbing' } : undefined}
               >
                 <div style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}>
