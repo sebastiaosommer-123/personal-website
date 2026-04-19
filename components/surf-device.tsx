@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHandle } from "react";
 import { useDeviceAudio } from "@/hooks/use-device-audio";
 import { useRotaryKnob } from "@/hooks/use-rotary-knob";
 import { useSliderDrag } from "@/hooks/use-slider-drag";
@@ -12,11 +12,17 @@ const VIDEOS = [
 ];
 const VOLUME_MAX = 16;
 
+export interface SurfDeviceHandle {
+  isPlaying: () => boolean;
+  pause: () => void;
+  resume: () => void;
+}
+
 export interface SurfDeviceProps {
   onClose: () => void;
 }
 
-export function SurfDevice({ onClose }: SurfDeviceProps) {
+const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const rotaryRef = useRef<HTMLDivElement>(null);
   const slider1Ref = useRef<HTMLDivElement>(null);
@@ -26,6 +32,12 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
   const volIndicatorRef = useRef<HTMLDivElement>(null);
   const volTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hasInteractedRef = useRef(false);
+
+  useImperativeHandle(ref, () => ({
+    isPlaying: () => videoRef.current ? !videoRef.current.paused : false,
+    pause: () => videoRef.current?.pause(),
+    resume: () => videoRef.current?.play().catch(() => {}),
+  }));
 
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -231,4 +243,8 @@ export function SurfDevice({ onClose }: SurfDeviceProps) {
       </div>
     </div>
   );
-}
+});
+
+SurfDevice.displayName = "SurfDevice";
+
+export default SurfDevice;
