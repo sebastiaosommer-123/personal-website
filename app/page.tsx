@@ -175,20 +175,6 @@ export default function Home() {
   }, [surfOpen, videoModal]);
 
   useEffect(() => {
-    if (!surfOpen) return;
-    const handleMouseDown = (e: MouseEvent) => {
-      const target = e.target as Element;
-      if (target.closest('[data-surf-toggle]')) return;
-      if (target.closest('[data-surf-ignore]')) return;
-      if (surfDeviceRef.current && !surfDeviceRef.current.contains(target)) {
-        setSurfOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleMouseDown);
-    return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, [surfOpen]);
-
-  useEffect(() => {
     const handlePageShow = (e: PageTransitionEvent) => {
       if (!e.persisted) return;
       // bfcache restore: Framer Motion's RAF loop restarts and can replay stale
