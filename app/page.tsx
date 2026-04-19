@@ -590,7 +590,8 @@ export default function Home() {
       <JobExperienceModal
         experience={selectedExperience}
         originRects={originRectsRef.current}
-        onClose={() => { setModalClosing(true); setSelectedExperience(null); originRectsRef.current = null; }}
+        onCloseStart={() => setModalClosing(true)}
+        onClose={() => { setSelectedExperience(null); originRectsRef.current = null; }}
         onExitComplete={() => setModalClosing(false)}
       />
     </main>

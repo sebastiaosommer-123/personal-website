@@ -27,6 +27,7 @@ interface JobExperienceModalProps {
   experience: ExperienceItem | null;
   originRects?: OriginRects | null;
   onClose: () => void;
+  onCloseStart?: () => void;
   onExitComplete?: () => void;
 }
 
@@ -34,9 +35,10 @@ interface ModalContentProps {
   experience: ExperienceItem;
   originRects: OriginRects | null | undefined;
   onClose: () => void;
+  onCloseStart?: () => void;
 }
 
-function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
+function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalContentProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const containerControls = useAnimation();
@@ -148,6 +150,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   const handleClose = async () => {
     if (isExitingRef.current) return;
     isExitingRef.current = true;
+    onCloseStart?.();
 
     if (!originRects || !containerRef.current || !logoRef.current) {
       onClose();
@@ -344,7 +347,7 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   );
 }
 
-export function JobExperienceModal({ experience, originRects, onClose, onExitComplete }: JobExperienceModalProps) {
+export function JobExperienceModal({ experience, originRects, onClose, onCloseStart, onExitComplete }: JobExperienceModalProps) {
   return (
     <AnimatePresence onExitComplete={onExitComplete}>
       {experience && (
@@ -353,6 +356,7 @@ export function JobExperienceModal({ experience, originRects, onClose, onExitCom
           experience={experience}
           originRects={originRects}
           onClose={onClose}
+          onCloseStart={onCloseStart}
         />
       )}
     </AnimatePresence>
