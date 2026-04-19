@@ -15,7 +15,7 @@ import {
   VideoPlayerTimeRange,
   VideoPlayerMuteButton,
 } from "@/components/ui/skiper-ui/skiper67";
-import { SurfDevice } from "@/components/surf-device";
+import SurfDevice, { SurfDeviceHandle } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
 import { JobExperienceModal, type ExperienceItem, type OriginRects } from "@/components/job-experience-modal";
 
@@ -92,10 +92,13 @@ export default function Home() {
   const dragY = useMotionValue(0);
   const shadersVideoRef = useRef<HTMLVideoElement>(null);
   const toolsVideoRef   = useRef<HTMLVideoElement>(null);
+  const surfHandleRef = useRef<SurfDeviceHandle>(null);
+  const surfPausedByModal = useRef(false);
   const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
   const [activeProject, setActiveProject] = useState<'shaders' | 'tools' | null>(null);
   const [cardSnappedHidden, setCardSnappedHidden] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<ExperienceItem | null>(null);
+  const [modalClosing, setModalClosing] = useState(false);
   const originRectsRef = useRef<OriginRects | null>(null);
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
@@ -147,6 +150,7 @@ export default function Home() {
   };
 
   const closeModal = () => {
+    setModalClosing(true);
     setCardSnappedHidden(false);
     setVideoModal(null);
   };
@@ -180,6 +184,21 @@ export default function Home() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [surfOpen, videoModal]);
+
+  useEffect(() => {
+    const modalOpen = !!(videoModal || selectedExperience);
+    if (modalOpen) {
+      if (surfHandleRef.current?.isPlaying()) {
+        surfHandleRef.current.pause();
+        surfPausedByModal.current = true;
+      }
+    } else {
+      if (surfPausedByModal.current) {
+        surfHandleRef.current?.resume();
+        surfPausedByModal.current = false;
+      }
+    }
+  }, [videoModal, selectedExperience]);
 
   useEffect(() => {
     const handlePageShow = (e: PageTransitionEvent) => {
@@ -405,7 +424,7 @@ export default function Home() {
                 whileDrag={!isTouch ? { cursor: 'grabbing' } : undefined}
               >
                 <div style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}>
-                  <SurfDevice onClose={closeSurf} />
+                  <SurfDevice ref={surfHandleRef} onClose={closeSurf} />
                 </div>
               </motion.div>
             </motion.div>
@@ -571,7 +590,8 @@ export default function Home() {
       <JobExperienceModal
         experience={selectedExperience}
         originRects={originRectsRef.current}
-        onClose={() => { setSelectedExperience(null); originRectsRef.current = null; }}
+        onClose={() => { setModalClosing(true); setSelectedExperience(null); originRectsRef.current = null; }}
+        onExitComplete={() => setModalClosing(false)}
       />
     </main>
   );
