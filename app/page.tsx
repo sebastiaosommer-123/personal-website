@@ -153,8 +153,6 @@ export default function Home() {
 
   const closeSurf = () => {
     setSurfOpen(false);
-    dragX.set(0);
-    dragY.set(0);
   };
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
@@ -382,7 +380,7 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} onExitComplete={() => { dragX.set(0); dragY.set(0); }}>
         {surfOpen && (
           <div
             ref={constraintsRef}
