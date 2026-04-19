@@ -384,23 +384,34 @@ export default function Home() {
 
       <AnimatePresence initial={false}>
         {surfOpen && (
-          <>
+          <div
+            ref={constraintsRef}
+            className="fixed inset-0 z-50 pointer-events-none"
+          >
             <motion.div
-              className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
               initial={{ y: "100vh", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: "100vh", opacity: 0 }}
               transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
-              <div
+              <motion.div
                 ref={surfDeviceRef}
+                drag={!isTouch}
+                dragConstraints={constraintsRef}
+                dragMomentum={false}
+                dragElastic={0}
+                style={{ x: dragX, y: dragY }}
                 className="pointer-events-auto"
-                style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}
+                whileHover={!isTouch ? { cursor: 'move' } : undefined}
+                whileDrag={!isTouch ? { cursor: 'grabbing' } : undefined}
               >
-                <SurfDevice onClose={() => setSurfOpen(false)} />
-              </div>
+                <div style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}>
+                  <SurfDevice onClose={closeSurf} />
+                </div>
+              </motion.div>
             </motion.div>
-          </>
+          </div>
         )}
       </AnimatePresence>
       {/* Shared video preview card */}
