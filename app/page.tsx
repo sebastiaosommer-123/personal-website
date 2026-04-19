@@ -176,7 +176,7 @@ export default function Home() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (videoModal) closeModal();
-        else if (surfOpen) setSurfOpen(false);
+        else if (surfOpen) closeSurf();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -245,7 +245,7 @@ export default function Home() {
               <Toggle
                 data-surf-toggle
                 pressed={surfOpen}
-                onPressedChange={setSurfOpen}
+                onPressedChange={(open) => (open ? setSurfOpen(true) : closeSurf())}
                 variant="outline"
                 className="rounded-[8px] h-auto min-w-0 py-0.5 px-1.5 mr-0.5 gap-1 font-medium whitespace-nowrap
                            border-[var(--color-border)]
@@ -377,7 +377,7 @@ export default function Home() {
             transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
             style={{ transformOrigin: 'bottom center', transform: `scale(${deviceScale})` }}
           >
-            <SurfDevice onClose={() => setSurfOpen(false)} />
+            <SurfDevice onClose={closeSurf} />
           </motion.div>
         )}
       </AnimatePresence>
