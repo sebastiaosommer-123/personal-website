@@ -104,7 +104,7 @@ export default function Home() {
   const cardY = useMotionValue(0);
   const cardSpringsRef = useRef<{ x: AnimationPlaybackControls | null; y: AnimationPlaybackControls | null }>({ x: null, y: null });
 
-  const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov";
+  const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1776636361/shader-playground-walkthrough_a9sotg.mp4";
   const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775757301/ui-sound-lab-walkthrough_nrszl7.mp4";
 
   const CARD_W = 256;
