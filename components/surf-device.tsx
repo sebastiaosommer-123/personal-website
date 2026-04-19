@@ -150,12 +150,12 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
       {/* Volume Buttons - Right Outer Edge */}
       <div className="absolute -right-[4px] top-[60px] flex flex-col gap-3 z-[5]">
         <button
-          className="w-[6px] h-[56px] bg-[#C4C6C7] dark:bg-gunmetal-600/80 rounded-r shadow-[inset_0_1px_0_rgba(255,255,255,0.6),-2px_2px_6px_rgba(0,0,0,0.15)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),-2px_2px_6px_rgba(0,0,0,0.5)] active:-translate-x-[2px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),-1px_1px_4px_rgba(0,0,0,0.2)] dark:active:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),-1px_1px_4px_rgba(0,0,0,0.6)] transition-transform cursor-pointer"
+          className="relative w-[6px] h-[56px] bg-[#C4C6C7] dark:bg-gunmetal-600/80 rounded-r shadow-[inset_0_1px_0_rgba(255,255,255,0.6),-2px_2px_6px_rgba(0,0,0,0.15)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),-2px_2px_6px_rgba(0,0,0,0.5)] active:-translate-x-[2px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),-1px_1px_4px_rgba(0,0,0,0.2)] dark:active:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),-1px_1px_4px_rgba(0,0,0,0.6)] transition-transform cursor-pointer before:content-[''] before:absolute before:-top-3 before:-bottom-3 before:left-0 before:-right-3"
           aria-label="Volume Up"
           onPointerDown={handleVolumeUp}
         />
         <button
-          className="w-[6px] h-[56px] bg-[#C4C6C7] dark:bg-gunmetal-600/80 rounded-r shadow-[inset_0_1px_0_rgba(255,255,255,0.6),-2px_2px_6px_rgba(0,0,0,0.15)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),-2px_2px_6px_rgba(0,0,0,0.5)] active:-translate-x-[2px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),-1px_1px_4px_rgba(0,0,0,0.2)] dark:active:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),-1px_1px_4px_rgba(0,0,0,0.6)] transition-transform cursor-pointer"
+          className="relative w-[6px] h-[56px] bg-[#C4C6C7] dark:bg-gunmetal-600/80 rounded-r shadow-[inset_0_1px_0_rgba(255,255,255,0.6),-2px_2px_6px_rgba(0,0,0,0.15)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.15),-2px_2px_6px_rgba(0,0,0,0.5)] active:-translate-x-[2px] active:shadow-[inset_0_1px_0_rgba(255,255,255,0.4),-1px_1px_4px_rgba(0,0,0,0.2)] dark:active:shadow-[inset_0_1px_0_rgba(255,255,255,0.1),-1px_1px_4px_rgba(0,0,0,0.6)] transition-transform cursor-pointer before:content-[''] before:absolute before:-top-3 before:-bottom-3 before:left-0 before:-right-3"
           aria-label="Volume Down"
           onPointerDown={handleVolumeDown}
         />
