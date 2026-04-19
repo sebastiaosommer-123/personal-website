@@ -403,7 +403,7 @@ export default function Home() {
         {surfOpen && (
           <div
             ref={constraintsRef}
-            className="fixed inset-0 z-[60] pointer-events-none"
+            className={`fixed inset-0 pointer-events-none ${modalClosing ? 'z-[10002]' : 'z-[60]'}`}
           >
             <motion.div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
@@ -515,7 +515,7 @@ export default function Home() {
         </motion.div>
       </motion.div>
 
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => setModalClosing(false)}>
         {videoModal && (
           <>
             <motion.div
