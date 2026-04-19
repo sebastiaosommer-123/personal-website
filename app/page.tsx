@@ -87,6 +87,9 @@ export default function Home() {
   const showRaf   = useRef<number | undefined>(undefined);
   const cardRef = useRef<HTMLDivElement>(null);
   const surfDeviceRef = useRef<HTMLDivElement>(null);
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const dragX = useMotionValue(0);
+  const dragY = useMotionValue(0);
   const shadersVideoRef = useRef<HTMLVideoElement>(null);
   const toolsVideoRef   = useRef<HTMLVideoElement>(null);
   const [videoModal, setVideoModal] = useState<{ src: string; scale: number; offsetX: number; offsetY: number; frameDataUrl: string | null } | null>(null);
@@ -146,6 +149,12 @@ export default function Home() {
   const closeModal = () => {
     setCardSnappedHidden(false);
     setVideoModal(null);
+  };
+
+  const closeSurf = () => {
+    setSurfOpen(false);
+    dragX.set(0);
+    dragY.set(0);
   };
   const [deviceScale, setDeviceScale] = useState(1);
   const [isTouch, setIsTouch] = useState(false);
