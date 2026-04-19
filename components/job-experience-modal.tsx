@@ -220,8 +220,8 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
 
           {/* Image area — transparent during clip expansion, fades in after */}
           <motion.div
-            className="w-full bg-black/[0.06] dark:bg-white/[0.06] overflow-hidden"
-            style={experience.image ? { aspectRatio: "4/3" } : { height: 200, background: "white" }}
+            className="w-full bg-black/[0.06] dark:bg-transparent overflow-hidden"
+            style={experience.image ? { aspectRatio: "4/3" } : { height: 200 }}
             animate={imageControls}
           >
             {experience.image ? (
