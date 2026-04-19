@@ -27,6 +27,7 @@ interface JobExperienceModalProps {
   experience: ExperienceItem | null;
   originRects?: OriginRects | null;
   onClose: () => void;
+  onExitComplete?: () => void;
 }
 
 interface ModalContentProps {
@@ -343,9 +344,9 @@ function ModalContent({ experience, originRects, onClose }: ModalContentProps) {
   );
 }
 
-export function JobExperienceModal({ experience, originRects, onClose }: JobExperienceModalProps) {
+export function JobExperienceModal({ experience, originRects, onClose, onExitComplete }: JobExperienceModalProps) {
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onExitComplete}>
       {experience && (
         <ModalContent
           key={experience.company}
