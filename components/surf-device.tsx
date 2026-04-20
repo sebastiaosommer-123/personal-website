@@ -31,6 +31,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
   const knob2Ref = useRef<HTMLDivElement>(null);
   const volIndicatorRef = useRef<HTMLDivElement>(null);
   const volTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const screenOffTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hasInteractedRef = useRef(false);
 
   useImperativeHandle(ref, () => ({
@@ -73,6 +74,11 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
       }
     }, 1000);
   }, [volumeLevel]);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => clearTimeout(screenOffTimerRef.current);
+  }, []);
 
   const loadVideo = useCallback((index: number) => {
     const video = videoRef.current;
@@ -242,7 +248,8 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
               onClick={() => {
                 playClick();
                 setScreenOff(true);
-                setTimeout(() => onClose(), 120);
+                clearTimeout(screenOffTimerRef.current);
+                screenOffTimerRef.current = setTimeout(() => onClose(), 120);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
