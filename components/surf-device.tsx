@@ -41,6 +41,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
 
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [screenOff, setScreenOff] = useState(false);
 
   const { playClick, playVolumeClick } = useDeviceAudio();
   const knobAngle = useRotaryKnob(rotaryRef);
@@ -178,6 +179,13 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
             />
           </div>
           <div className="absolute inset-[1px] border-[1.5px] border-gunmetal-800 rounded-t-[31px] rounded-b-[4px] pointer-events-none shadow-[inset_0_0_0_1px_rgba(0,0,0,0.5)]" />
+          <div
+            className="absolute inset-[1px] rounded-t-[31px] rounded-b-[4px] bg-black pointer-events-none z-10"
+            style={{
+              opacity: screenOff ? 1 : 0,
+              transition: "opacity 100ms cubic-bezier(0.23, 1, 0.32, 1)",
+            }}
+          />
         </div>
 
         {/* Controls */}
@@ -231,7 +239,11 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
             <button
               className="w-16 h-16 rounded-full bg-[#F5F6F7] dark:bg-gunmetal-900 border border-[#C8CACD] dark:border-gunmetal-800 shadow-[inset_0_1px_2px_rgba(0,0,0,0.08),0_1px_0_rgba(255,255,255,1)] dark:shadow-[inset_0_1px_2px_rgba(0,0,0,0.8),0_1px_0_rgba(255,255,255,0.05)] flex items-center justify-center cursor-pointer active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] dark:active:shadow-[inset_0_2px_4px_rgba(0,0,0,0.9)] text-[#464749] dark:text-[#8a919c]"
               aria-label="Power"
-              onClick={() => { playClick(); onClose(); }}
+              onClick={() => {
+                playClick();
+                setScreenOff(true);
+                setTimeout(() => onClose(), 120);
+              }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" clipRule="evenodd" d="M12 2.25C12.1989 2.25 12.3897 2.32902 12.5303 2.46967C12.671 2.61032 12.75 2.80109 12.75 3V12C12.75 12.1989 12.671 12.3897 12.5303 12.5303C12.3897 12.671 12.1989 12.75 12 12.75C11.8011 12.75 11.6103 12.671 11.4697 12.5303C11.329 12.3897 11.25 12.1989 11.25 12V3C11.25 2.80109 11.329 2.61032 11.4697 2.46967C11.6103 2.32902 11.8011 2.25 12 2.25ZM6.166 5.106C6.30645 5.24663 6.38534 5.43725 6.38534 5.636C6.38534 5.83475 6.30645 6.02537 6.166 6.166C5.01232 7.31982 4.22669 8.78984 3.90845 10.3902C3.5902 11.9905 3.75364 13.6492 4.37809 15.1566C5.00255 16.6641 6.05997 17.9525 7.41665 18.859C8.77334 19.7654 10.3683 20.2493 12 20.2493C13.6317 20.2493 15.2267 19.7654 16.5833 18.859C17.94 17.9525 18.9975 16.6641 19.6219 15.1566C20.2464 13.6492 20.4098 11.9905 20.0916 10.3902C19.7733 8.78984 18.9877 7.31982 17.834 6.166C17.7603 6.09734 17.7012 6.01454 17.6602 5.92254C17.6192 5.83054 17.5972 5.73123 17.5954 5.63052C17.5936 5.52982 17.6122 5.42979 17.6499 5.3364C17.6876 5.24301 17.7437 5.15818 17.815 5.08696C17.8862 5.01574 17.971 4.9596 18.0644 4.92188C18.1578 4.88416 18.2578 4.86563 18.3585 4.86741C18.4592 4.86919 18.5585 4.89123 18.6505 4.93222C18.7425 4.97321 18.8253 5.03231 18.894 5.106C22.702 8.913 22.702 15.086 18.894 18.894C15.087 22.702 8.914 22.702 5.106 18.894C1.298 15.087 1.298 8.914 5.106 5.106C5.24663 4.96555 5.43725 4.88666 5.636 4.88666C5.83475 4.88666 6.02537 4.96555 6.166 5.106Z" fill="currentColor" />
