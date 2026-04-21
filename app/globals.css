@@ -39,15 +39,15 @@
   --color-bg: #ffffff;
   --color-fg: #18191C;
   --color-fg-muted: #464749;
-  --color-surface: #EEEFF1;
+  --color-surface: #EAECF1;
   --color-border: #C8CACD;
 }
 
 .dark {
-  --color-bg: #111113;
+  --color-bg: #111213;
   --color-fg: #E8E9EB;
   --color-fg-muted: #A0A2A4;
-  --color-surface: #252628;
+  --color-surface: #242528;
   --color-border: #383A3D;
 }
 
