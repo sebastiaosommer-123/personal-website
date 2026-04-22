@@ -213,7 +213,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           <motion.button
             animate={closeButtonControls}
             onClick={handleClose}
-            className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
+            className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
             aria-label="Close"
           >
             <X size={16} />
