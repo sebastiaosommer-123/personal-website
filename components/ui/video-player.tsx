@@ -38,10 +38,10 @@ function ControlsBar({ visible }: { visible: boolean }) {
 
         <TimeSlider.Root className="group relative flex items-center w-full h-4 cursor-pointer">
           <TimeSlider.Track className="relative h-[2px] w-full rounded-full bg-white/20 group-hover:h-[3px] transition-[height] duration-150">
-            <TimeSlider.TrackFill className="absolute h-full bg-white/90 rounded-full will-change-[width]" />
-            <TimeSlider.Progress className="absolute h-full bg-white/35 rounded-full will-change-[width]" />
+            <TimeSlider.TrackFill className="absolute h-full bg-white/90 rounded-full will-change-[width]" style={{ width: 'var(--slider-fill)' }} />
+            <TimeSlider.Progress className="absolute h-full bg-white/35 rounded-full will-change-[width]" style={{ width: 'var(--slider-progress)' }} />
           </TimeSlider.Track>
-          <TimeSlider.Thumb className="absolute w-[10px] h-[10px] -translate-x-1/2 rounded-full bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 will-change-transform" />
+          <TimeSlider.Thumb className="absolute w-[10px] h-[10px] -translate-x-1/2 rounded-full bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 will-change-transform" style={{ left: 'var(--slider-fill)' }} />
         </TimeSlider.Root>
 
         <div className="flex items-center gap-2">
