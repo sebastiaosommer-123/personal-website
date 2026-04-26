@@ -89,6 +89,7 @@ export function VideoPlayer({ src, onClose, controlsDelay = 0.35 }: VideoPlayerP
   const [controlsVisible, setControlsVisible] = useState(true);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const isPausedRef = useRef(false);
+  const hasAnimatedIn = useRef(false);
 
   const scheduleHide = useCallback(() => {
     clearTimeout(hideTimer.current);
@@ -120,6 +121,12 @@ export function VideoPlayer({ src, onClose, controlsDelay = 0.35 }: VideoPlayerP
         isPausedRef.current = false;
         showControls();
       }}
+      onMouseLeave={() => {
+        if (!isPausedRef.current && hasAnimatedIn.current) {
+          clearTimeout(hideTimer.current);
+          setControlsVisible(false);
+        }
+      }}
     >
       <MediaProvider className="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover" />
 
@@ -141,6 +148,10 @@ export function VideoPlayer({ src, onClose, controlsDelay = 0.35 }: VideoPlayerP
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: controlsDelay, duration: 0.15, ease: EASE }}
+        onAnimationComplete={() => {
+          hasAnimatedIn.current = true;
+          scheduleHide();
+        }}
       >
         <ControlsBar visible={controlsVisible} />
       </motion.div>
