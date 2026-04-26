@@ -45,7 +45,7 @@ function ControlsBar({ visible }: { visible: boolean }) {
         </TimeSlider.Root>
 
         <div className="flex items-center gap-4">
-          <PlayButton className="flex items-center justify-center text-white/90 hover:text-white transition-colors duration-100 cursor-pointer">
+          <PlayButton className="flex items-center justify-center text-white/80 hover:text-white transition-colors duration-100 cursor-pointer">
             {paused
               ? <Play size={16} strokeWidth={1.75} className="fill-current" />
               : <Pause size={16} strokeWidth={1.75} className="fill-current" />
