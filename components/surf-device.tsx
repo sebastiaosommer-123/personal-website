@@ -9,6 +9,8 @@ const VIDEOS = [
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov",
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322120/2_axbpw4.mov",
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322760/3_q5yufj.mp4",
+  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1777201638/surf-4_mnz5u9.mov",
+  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1777201636/surf-5_eiw26v.mov",
 ];
 const VOLUME_MAX = 16;
 
@@ -43,6 +45,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [screenOff, setScreenOff] = useState(false);
+  const [isVideoLoading, setIsVideoLoading] = useState(false);
 
   const { playClick, playVolumeClick } = useDeviceAudio();
   const knobAngle = useRotaryKnob(rotaryRef);
@@ -57,6 +60,19 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
     video.muted = true;
     video.volume = 0;
     video.play().catch(() => {});
+  }, []);
+
+  // Preload all videos so navigation is instant
+  useEffect(() => {
+    const preloads = VIDEOS.slice(1).map(url => {
+      const v = document.createElement("video");
+      v.preload = "auto";
+      v.muted = true;
+      v.src = url;
+      v.load();
+      return v;
+    });
+    return () => preloads.forEach(v => { v.src = ""; });
   }, []);
 
   // Volume indicator fade
@@ -84,6 +100,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
     const video = videoRef.current;
     if (!video) return;
     setCurrentVideoIndex(index);
+    setIsVideoLoading(true);
     video.src = VIDEOS[index];
     video.play().catch(() => {});
   }, []);
@@ -182,14 +199,19 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
               loop
               playsInline
               autoPlay
+              onCanPlay={() => setIsVideoLoading(false)}
             />
           </div>
           <div className="absolute inset-[1px] border-[1.5px] border-gunmetal-800 rounded-t-[31px] rounded-b-[4px] pointer-events-none shadow-[inset_0_0_0_1px_rgba(0,0,0,0.5)]" />
           <div
             className="absolute inset-[1px] rounded-t-[31px] rounded-b-[4px] bg-black pointer-events-none z-10"
             style={{
-              opacity: screenOff ? 1 : 0,
-              transition: "opacity 100ms cubic-bezier(0.23, 1, 0.32, 1)",
+              opacity: screenOff || isVideoLoading ? 1 : 0,
+              transition: screenOff
+                ? "opacity 100ms cubic-bezier(0.23, 1, 0.32, 1)"
+                : isVideoLoading
+                ? "opacity 60ms linear"
+                : "opacity 250ms cubic-bezier(0.23, 1, 0.32, 1)",
             }}
           />
         </div>
