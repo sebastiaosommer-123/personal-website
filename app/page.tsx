@@ -39,7 +39,7 @@ const experience: ExperienceItem[] = [
     role: "Sr. Product Designer",
     period: "2023 – 25'",
     logo: "/assets/hop-design.svg",
-    image: "/assets/sr-product-designer-hop-design.png",
+    image: "/assets/sr-product-designer-hop-design.webp",
     description: (
       <>
         Led end to end design across mobile and web for multiple clients. Mentored two designers and contributed to product direction. Selected work includes{" "}
@@ -218,6 +218,11 @@ export default function Home() {
     window.addEventListener('pageshow', handlePageShow);
     return () => window.removeEventListener('pageshow', handlePageShow);
   }, [cardX, cardY]);
+
+  useEffect(() => {
+    const images = experience.flatMap((exp) => exp.image ? [exp.image] : []);
+    images.forEach((src) => { new Image().src = src; });
+  }, []);
 
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-10 md:pb-[60px] lg:pb-[80px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
