@@ -6,15 +6,8 @@ import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
 import { DirectionalUnderline } from "@/components/ui/directional-underline";
 import { Toggle } from "@/components/ui/toggle";
-import { Play, Power, X } from "lucide-react";
-import {
-  VideoPlayer,
-  VideoPlayerContent,
-  VideoPlayerControlBar,
-  VideoPlayerPlayButton,
-  VideoPlayerTimeRange,
-  VideoPlayerMuteButton,
-} from "@/components/ui/skiper-ui/skiper67";
+import { Play, Power } from "lucide-react";
+import { VideoPlayer } from "@/components/ui/video-player";
 import SurfDevice, { SurfDeviceHandle } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
 import { JobExperienceModal, type ExperienceItem, type OriginRects } from "@/components/job-experience-modal";
@@ -557,35 +550,7 @@ export default function Home() {
               }}
               className="pointer-events-auto relative aspect-video w-[min(720px,90vw)] overflow-hidden"
             >
-              <VideoPlayer style={{ width: "100%", height: "100%" }}>
-                <VideoPlayerContent
-                  src={videoModal.src}
-                  autoPlay
-                  slot="media"
-                  className="w-full object-cover"
-                  style={{ width: "100%", height: "100%" }}
-                />
-                <motion.span
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
-                  onClick={closeModal}
-                  className="absolute right-2 top-2 z-10 cursor-pointer rounded-full p-1 transition-colors"
-                >
-                  <X className="size-5 text-white" />
-                </motion.span>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.35, duration: 0.15, ease: "easeOut" }}
-                >
-                  <VideoPlayerControlBar className="absolute bottom-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-center px-5 mix-blend-exclusion md:px-10 md:py-5" style={{ background: 'transparent' }}>
-                    <VideoPlayerPlayButton className="h-4 bg-transparent" />
-                    <VideoPlayerTimeRange className="bg-transparent" />
-                    <VideoPlayerMuteButton className="size-4 bg-transparent" />
-                  </VideoPlayerControlBar>
-                </motion.div>
-              </VideoPlayer>
+              <VideoPlayer src={videoModal.src} onClose={closeModal} />
               {videoModal.frameDataUrl && (
                 <motion.img
                   src={videoModal.frameDataUrl}
