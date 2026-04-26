@@ -399,9 +399,9 @@ export default function Home() {
         {surfPeeking && !surfOpen && (
           <motion.div
             className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none z-40"
-            initial={prefersReducedMotion ? { opacity: 0 } : { y: DEVICE_H * deviceScale }}
-            animate={prefersReducedMotion ? { opacity: 1 } : { y: (DEVICE_H - 80) * deviceScale }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { y: DEVICE_H * deviceScale }}
+            initial={prefersReducedMotion ? {} : { y: DEVICE_H * deviceScale }}
+            animate={prefersReducedMotion ? {} : { y: (DEVICE_H - 80) * deviceScale }}
+            exit={prefersReducedMotion ? {} : { y: DEVICE_H * deviceScale }}
             transition={{ duration: prefersReducedMotion ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] }}
             style={prefersReducedMotion ? undefined : { transformOrigin: 'bottom center', transform: `scale(${deviceScale})` }}
           >
@@ -418,9 +418,9 @@ export default function Home() {
           >
             <motion.div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
-              initial={prefersReducedMotion ? { opacity: 0 } : { y: "100vh", opacity: 0 }}
-              animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
-              exit={prefersReducedMotion ? { opacity: 0 } : { y: "100vh", opacity: 0 }}
+              initial={prefersReducedMotion ? {} : { y: "100vh" }}
+              animate={prefersReducedMotion ? {} : { y: 0 }}
+              exit={prefersReducedMotion ? {} : { y: "100vh" }}
               transition={{ duration: prefersReducedMotion ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
               <motion.div
