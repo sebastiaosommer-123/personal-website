@@ -1,7 +1,7 @@
 "use client"
 
 import { ElementType, useEffect, useMemo, useRef } from "react"
-import { motion, ValueAnimationTransition } from "motion/react"
+import { motion, useReducedMotion, ValueAnimationTransition } from "motion/react"
 
 import { cn } from "@/lib/utils"
 
@@ -56,6 +56,7 @@ const UnderlineToBackground = ({
   targetTextColor = "#fef",
   ...props
 }: UnderlineProps) => {
+  const prefersReducedMotion = useReducedMotion();
   const textRef = useRef<HTMLSpanElement>(null)
 
   // Create custom motion component based on the 'as' prop
@@ -85,25 +86,23 @@ const UnderlineToBackground = ({
     return () => window.removeEventListener("resize", updateUnderlineStyles)
   }, [underlineHeightRatio, underlinePaddingRatio])
 
-  // Animation variants for the underline background
   const underlineVariants = {
     initial: {
       height: "var(--underline-height)",
     },
     target: {
-      height: "100%",
-      transition: transition,
+      height: prefersReducedMotion ? "var(--underline-height)" : "100%",
+      transition: prefersReducedMotion ? { duration: 0.15 } : transition,
     },
   }
 
-  // Animation variants for the text color
   const textVariants = {
     initial: {
       color: "currentColor",
     },
     target: {
       color: targetTextColor,
-      transition: transition,
+      transition: prefersReducedMotion ? { duration: 0.15 } : transition,
     },
   }
 

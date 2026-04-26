@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useAnimation } from "motion/react";
+import { motion, AnimatePresence, useAnimation, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { TextShimmer } from "@/components/motion-primitives/text-shimmer";
@@ -48,6 +48,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
   const highlightsControls = useAnimation();
   const backdropControls = useAnimation();
   const closeButtonControls = useAnimation();
+  const prefersReducedMotion = useReducedMotion();
   const isExitingRef = useRef(false);
   const handleCloseRef = useRef<() => void>(() => {});
 
@@ -61,64 +62,89 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
   useLayoutEffect(() => {
     if (!originRects || !containerRef.current || !logoRef.current) return;
 
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const logoTargetRect = logoRef.current.getBoundingClientRect();
-
-    const topClip = Math.max(0, originRects.row.top - containerRect.top);
-    const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
-    const dy = originRects.logo.top - logoTargetRect.top;
-
-    const isDark = document.documentElement.classList.contains("dark");
-    const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
-    const modalBg = isDark ? "#111113" : "#FFFFFF";
-
-    containerControls.set({
-      clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
-      backgroundColor: cardBg,
-    });
-    headerControls.set({ y: dy });
-    imageControls.set({ opacity: 0, filter: "blur(4px)" });
-    bodyControls.set({ opacity: 0, filter: "blur(4px)" });
-    highlightsControls.set({ opacity: 0, filter: "blur(4px)" });
-
     let rafId: number | undefined;
     let cancelled = false;
 
-    const runAnimation = () => {
-      if (cancelled) return;
-      rafId = requestAnimationFrame(() => {
-        containerControls.start({
-          clipPath: "inset(0px 0px 0px 0px round 12px)",
-          backgroundColor: modalBg,
-          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-        });
-        headerControls.start({
-          y: 0,
-          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-        });
-        imageControls.start({
-          opacity: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-        });
-        bodyControls.start({
-          opacity: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
-        });
-        highlightsControls.start({
-          opacity: 1,
-          filter: "blur(0px)",
-          transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], delay: 0.1 },
-        });
-      });
-    };
+    if (prefersReducedMotion) {
+      containerControls.set({ opacity: 0 });
+      imageControls.set({ opacity: 0 });
+      bodyControls.set({ opacity: 0 });
+      highlightsControls.set({ opacity: 0 });
 
-    const logoImgEl = logoRef.current.querySelector('img') as HTMLImageElement | null;
-    if (logoImgEl) {
-      logoImgEl.decode().then(runAnimation).catch(runAnimation);
+      const run = () => {
+        if (cancelled) return;
+        rafId = requestAnimationFrame(() => {
+          const t = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
+          containerControls.start({ opacity: 1, transition: t });
+          imageControls.start({ opacity: 1, transition: t });
+          bodyControls.start({ opacity: 1, transition: t });
+          highlightsControls.start({ opacity: 1, transition: t });
+        });
+      };
+
+      const logoImgEl = logoRef.current.querySelector('img') as HTMLImageElement | null;
+      if (logoImgEl) {
+        logoImgEl.decode().then(run).catch(run);
+      } else {
+        run();
+      }
     } else {
-      runAnimation();
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const logoTargetRect = logoRef.current.getBoundingClientRect();
+
+      const topClip = Math.max(0, originRects.row.top - containerRect.top);
+      const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
+      const dy = originRects.logo.top - logoTargetRect.top;
+
+      const isDark = document.documentElement.classList.contains("dark");
+      const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
+      const modalBg = isDark ? "#111113" : "#FFFFFF";
+
+      containerControls.set({
+        clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        backgroundColor: cardBg,
+      });
+      headerControls.set({ y: dy });
+      imageControls.set({ opacity: 0, filter: "blur(4px)" });
+      bodyControls.set({ opacity: 0, filter: "blur(4px)" });
+      highlightsControls.set({ opacity: 0, filter: "blur(4px)" });
+
+      const runAnimation = () => {
+        if (cancelled) return;
+        rafId = requestAnimationFrame(() => {
+          containerControls.start({
+            clipPath: "inset(0px 0px 0px 0px round 12px)",
+            backgroundColor: modalBg,
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+          });
+          headerControls.start({
+            y: 0,
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+          });
+          imageControls.start({
+            opacity: 1,
+            filter: "blur(0px)",
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+          });
+          bodyControls.start({
+            opacity: 1,
+            filter: "blur(0px)",
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+          });
+          highlightsControls.start({
+            opacity: 1,
+            filter: "blur(0px)",
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1], delay: 0.1 },
+          });
+        });
+      };
+
+      const logoImgEl = logoRef.current.querySelector('img') as HTMLImageElement | null;
+      if (logoImgEl) {
+        logoImgEl.decode().then(runAnimation).catch(runAnimation);
+      } else {
+        runAnimation();
+      }
     }
 
     return () => {
@@ -152,6 +178,21 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
     isExitingRef.current = true;
     onCloseStart?.();
 
+    const transition = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
+
+    if (prefersReducedMotion) {
+      await Promise.all([
+        backdropControls.start({ opacity: 0, transition }),
+        closeButtonControls.start({ opacity: 0, transition }),
+        containerControls.start({ opacity: 0, transition }),
+        imageControls.start({ opacity: 0, transition }),
+        bodyControls.start({ opacity: 0, transition }),
+        highlightsControls.start({ opacity: 0, transition }),
+      ]);
+      onClose();
+      return;
+    }
+
     if (!originRects || !containerRef.current || !logoRef.current) {
       onClose();
       return;
@@ -162,8 +203,6 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
     const topClip = Math.max(0, originRects.row.top - containerRect.top);
     const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
     const dy = originRects.logo.top - logoTargetRect.top;
-
-    const transition = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
 
     await Promise.all([
       backdropControls.start({ opacity: 0, transition }),

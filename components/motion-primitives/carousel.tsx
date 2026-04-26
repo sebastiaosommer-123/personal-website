@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { motion, Transition, useMotionValue } from 'motion/react';
+import { motion, Transition, useMotionValue, useReducedMotion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -238,6 +238,7 @@ function CarouselContent({
   transition,
 }: CarouselContentProps) {
   const { index, setIndex, setItemsCount, disableDrag } = useCarousel();
+  const prefersReducedMotion = useReducedMotion();
   const [visibleItemsCount, setVisibleItemsCount] = useState(1);
   const dragX = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -304,12 +305,9 @@ function CarouselContent({
       }}
       onDragEnd={disableDrag ? undefined : onDragEnd}
       transition={
-        transition || {
-          damping: 18,
-          stiffness: 90,
-          type: 'spring',
-          duration: 0.2,
-        }
+        prefersReducedMotion
+          ? { duration: 0 }
+          : transition || { damping: 18, stiffness: 90, type: 'spring', duration: 0.2 }
       }
       className={cn(
         'flex items-center',

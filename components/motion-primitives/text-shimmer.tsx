@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 type TextShimmerProps = {
@@ -10,6 +10,24 @@ type TextShimmerProps = {
 };
 
 export function TextShimmer({ children, className, duration = 2 }: TextShimmerProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return (
+      <span
+        className={cn(
+          "relative inline-flex overflow-hidden bg-clip-text text-transparent",
+          "[--base-color:#a1a1aa]",
+          "dark:[--base-color:#71717a]",
+          "[background-image:linear-gradient(var(--base-color),var(--base-color))]",
+          className
+        )}
+      >
+        {children}
+      </span>
+    );
+  }
+
   return (
     <motion.span
       className={cn(

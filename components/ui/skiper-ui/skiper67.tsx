@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useSpring } from "framer-motion";
 import { Pause, Play, Volume2, VolumeX, X } from "lucide-react";
 import {
   MediaControlBar,
@@ -192,6 +192,8 @@ const VideoPopOver = ({
 }: {
   setShowVideoPopOver: (showVideoPopOver: boolean) => void;
 }) => {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <div className="fixed left-0 top-0 z-[101] flex h-screen w-screen items-center justify-center">
       <motion.div
@@ -203,20 +205,22 @@ const VideoPopOver = ({
         onClick={() => setShowVideoPopOver(false)}
       ></motion.div>
       <motion.div
-        initial={{ clipPath: "inset(43.5% 43.5% 33.5% 43.5% )", opacity: 0 }}
-        animate={{ clipPath: "inset(0 0 0 0)", opacity: 1 }}
-        exit={{
-          clipPath: "inset(43.5% 43.5% 33.5% 43.5% )",
-          opacity: 0,
-          transition: {
-            duration: 1,
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-            opacity: { duration: 0.2, delay: 0.8 },
-          },
-        }}
-        transition={{
+        initial={prefersReducedMotion ? { opacity: 0 } : { clipPath: "inset(43.5% 43.5% 33.5% 43.5% )", opacity: 0 }}
+        animate={prefersReducedMotion ? { opacity: 1 } : { clipPath: "inset(0 0 0 0)", opacity: 1 }}
+        exit={prefersReducedMotion
+          ? { opacity: 0, transition: { duration: 0.2 } }
+          : {
+              clipPath: "inset(43.5% 43.5% 33.5% 43.5% )",
+              opacity: 0,
+              transition: {
+                duration: 1,
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                opacity: { duration: 0.2, delay: 0.8 },
+              },
+            }}
+        transition={prefersReducedMotion ? { duration: 0.2 } : {
           duration: 1,
           type: "spring",
           stiffness: 100,

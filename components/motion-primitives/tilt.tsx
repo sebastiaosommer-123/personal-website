@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   motion,
   useMotionTemplate,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
   MotionStyle,
@@ -30,6 +31,8 @@ export function Tilt({
   rotationFactor = 15,
   isRevese = false,
 }: TiltProps) {
+  const prefersReducedMotion = useReducedMotion();
+  const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const isTouchDevice = useRef(false);
   const baselineReadings = useRef<{ beta: number; gamma: number }[]>([]);
@@ -57,6 +60,7 @@ export function Tilt({
   const transform = useMotionTemplate`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
     isTouchDevice.current = window.matchMedia('(pointer: coarse)').matches;
     if (!isTouchDevice.current) return;
 
@@ -104,7 +108,24 @@ export function Tilt({
     }
 
     return () => window.removeEventListener('deviceorientation', handleOrientation);
-  }, [x, y]);
+  }, [x, y, prefersReducedMotion]);
+
+  if (prefersReducedMotion) {
+    return (
+      <div
+        className={className}
+        style={{
+          ...(style as React.CSSProperties),
+          boxShadow: isHovered ? '0 8px 32px rgba(0,0,0,0.18)' : '0 2px 8px rgba(0,0,0,0.08)',
+          transition: 'box-shadow 200ms ease',
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {children}
+      </div>
+    );
+  }
 
   return (
     <motion.div

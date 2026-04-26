@@ -2,7 +2,8 @@
 import { cn } from '@/lib/utils';
 import {
   AnimatePresence,
-  motion
+  motion,
+  useReducedMotion,
 } from 'motion/react';
 import type {
   TargetAndTransition,
@@ -224,6 +225,7 @@ export function TextEffect({
   segmentTransition,
   style,
 }: TextEffectProps) {
+  const prefersReducedMotion = useReducedMotion();
   const segments = splitText(children, per);
   const MotionTag = motion[as as keyof typeof motion] as typeof motion.div;
 
@@ -264,6 +266,21 @@ export function TextEffect({
     }),
   };
 
+  const finalVariants = prefersReducedMotion
+    ? {
+        container: {
+          hidden: { opacity: 0 },
+          visible: { opacity: 1, transition: { duration: 0.2 } },
+          exit: { opacity: 0, transition: { duration: 0.15 } },
+        } as Variants,
+        item: {
+          hidden: { opacity: 1 },
+          visible: { opacity: 1 },
+          exit: { opacity: 0 },
+        } as Variants,
+      }
+    : computedVariants;
+
   return (
     <AnimatePresence mode='popLayout'>
       {trigger && (
@@ -271,7 +288,7 @@ export function TextEffect({
           initial='hidden'
           animate='visible'
           exit='exit'
-          variants={computedVariants.container}
+          variants={finalVariants.container}
           className={className}
           onAnimationComplete={onAnimationComplete}
           onAnimationStart={onAnimationStart}
@@ -282,7 +299,7 @@ export function TextEffect({
             <AnimationComponent
               key={`${per}-${index}-${segment}`}
               segment={segment}
-              variants={computedVariants.item}
+              variants={finalVariants.item}
               per={per}
               segmentWrapperClassName={segmentWrapperClassName}
             />

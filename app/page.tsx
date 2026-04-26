@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useMotionValue, animate, type AnimationPlaybackControls } from "motion/react";
+import { motion, AnimatePresence, useMotionValue, animate, useReducedMotion, type AnimationPlaybackControls } from "motion/react";
 import { useState, useEffect, useRef } from "react";
 import { Tilt } from "@/components/motion-primitives/tilt";
 import { AnimatedBackground } from "@/components/motion-primitives/animated-background";
@@ -19,10 +19,10 @@ import SurfDevice, { SurfDeviceHandle } from "@/components/surf-device";
 import { Testimonials } from "@/components/testimonials";
 import { JobExperienceModal, type ExperienceItem, type OriginRects } from "@/components/job-experience-modal";
 
-const block = (delay: number) => ({
-  initial: { opacity: 0, filter: "blur(8px)" },
-  animate: { opacity: 1, filter: "blur(0px)" },
-  transition: { duration: 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
+const block = (delay: number, rm: boolean | null | undefined = false) => ({
+  initial: rm ? { opacity: 0 } : { opacity: 0, filter: "blur(8px)" },
+  animate: rm ? { opacity: 1 } : { opacity: 1, filter: "blur(0px)" },
+  transition: { duration: rm ? 0.2 : 0.4, ease: [0.23, 1, 0.32, 1] as [number, number, number, number], delay },
 });
 
 const experience: ExperienceItem[] = [
@@ -103,6 +103,7 @@ export default function Home() {
   const cardX = useMotionValue(0);
   const cardY = useMotionValue(0);
   const cardSpringsRef = useRef<{ x: AnimationPlaybackControls | null; y: AnimationPlaybackControls | null }>({ x: null, y: null });
+  const prefersReducedMotion = useReducedMotion();
 
   const SHADERS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1776636361/shader-playground-walkthrough_a9sotg.mp4";
   const TOOLS_VIDEO_SRC = "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775757301/ui-sound-lab-walkthrough_nrszl7.mp4";
@@ -135,8 +136,13 @@ export default function Home() {
       });
     } else {
       // Spring between positions when card is already visible
-      cardSpringsRef.current.x = animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
-      cardSpringsRef.current.y = animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+      if (prefersReducedMotion) {
+        cardX.set(newX);
+        cardY.set(newY);
+      } else {
+        cardSpringsRef.current.x = animate(cardX, newX, { type: 'spring', stiffness: 400, damping: 35 });
+        cardSpringsRef.current.y = animate(cardY, newY, { type: 'spring', stiffness: 400, damping: 35 });
+      }
       setActiveProject(project);
     }
   };
@@ -231,16 +237,16 @@ export default function Home() {
         {/* Name + Title */}
         <div className="flex flex-col gap-0.5 w-[210px]">
           <motion.h1
-            {...block(0)}
+            {...block(0, prefersReducedMotion)}
             className="font-medium text-base"
             style={{ lineHeight: 1.3, color: "var(--color-fg)" }}
           >
             Sebastião Sommer
           </motion.h1>
           <motion.p
-            initial={{ opacity: 0, filter: "blur(8px)" }}
-            animate={{ opacity: 0.54, filter: "blur(0px)" }}
-            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.08 }}
+            initial={{ opacity: 0, ...(prefersReducedMotion ? {} : { filter: "blur(8px)" }) }}
+            animate={{ opacity: 0.54, ...(prefersReducedMotion ? {} : { filter: "blur(0px)" }) }}
+            transition={{ duration: prefersReducedMotion ? 0.2 : 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.08 }}
             className="text-sm"
             style={{ lineHeight: 1.3, color: "var(--color-fg)" }}
           >
@@ -251,10 +257,10 @@ export default function Home() {
         <div className="flex flex-col gap-6">
 
           {/* Bio */}
-          <motion.div 
-            initial={{ opacity: 0, filter: "blur(8px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.16 }}
+          <motion.div
+            initial={{ opacity: 0, ...(prefersReducedMotion ? {} : { filter: "blur(8px)" }) }}
+            animate={{ opacity: 1, ...(prefersReducedMotion ? {} : { filter: "blur(0px)" }) }}
+            transition={{ duration: prefersReducedMotion ? 0.2 : 0.4, ease: [0.23, 1, 0.32, 1], delay: 0.16 }}
           >
             <p className="text-base" style={{ lineHeight: 1.5, textWrap: "pretty", color: "var(--color-fg-muted)" } as React.CSSProperties}>
               Founding product designer at a stealth AI company, building consumer wellness apps from zero to one. I work close to product, shaping experiments across onboarding, activation, and retention with a focus on both user value and long term outcomes.
@@ -286,7 +292,7 @@ export default function Home() {
           </motion.div>
 
           {/* Experience */}
-          <motion.div {...block(0.32)} className="flex flex-col -mx-3">
+          <motion.div {...block(0.32, prefersReducedMotion)} className="flex flex-col -mx-3">
             <AnimatedBackground
               enableHover={!isTouch}
               className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
@@ -352,12 +358,12 @@ export default function Home() {
           </motion.div>
 
           {/* Testimonials */}
-          <motion.div {...block(0.40)}>
+          <motion.div {...block(0.40, prefersReducedMotion)}>
             <Testimonials />
           </motion.div>
 
           {/* Social links */}
-          <motion.div {...block(0.48)} className="flex justify-between gap-6 mt-2">
+          <motion.div {...block(0.48, prefersReducedMotion)} className="flex justify-between gap-6 mt-2">
             {socials.map((s) => (
               <DirectionalUnderline
                 as="a"
@@ -393,11 +399,11 @@ export default function Home() {
         {surfPeeking && !surfOpen && (
           <motion.div
             className="fixed bottom-0 left-0 right-0 flex justify-center pointer-events-none z-40"
-            initial={{ y: DEVICE_H * deviceScale }}
-            animate={{ y: (DEVICE_H - 80) * deviceScale }}
-            exit={{ y: DEVICE_H * deviceScale }}
-            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-            style={{ transformOrigin: 'bottom center', transform: `scale(${deviceScale})` }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { y: DEVICE_H * deviceScale }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { y: (DEVICE_H - 80) * deviceScale }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { y: DEVICE_H * deviceScale }}
+            transition={{ duration: prefersReducedMotion ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] }}
+            style={prefersReducedMotion ? undefined : { transformOrigin: 'bottom center', transform: `scale(${deviceScale})` }}
           >
             <SurfDevice onClose={closeSurf} />
           </motion.div>
@@ -412,10 +418,10 @@ export default function Home() {
           >
             <motion.div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
-              initial={{ y: "100vh", opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: "100vh", opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              initial={prefersReducedMotion ? { opacity: 0 } : { y: "100vh", opacity: 0 }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { y: 0, opacity: 1 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { y: "100vh", opacity: 0 }}
+              transition={{ duration: prefersReducedMotion ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
               <motion.div
                 ref={surfDeviceRef}
@@ -444,20 +450,24 @@ export default function Home() {
         <motion.div
           ref={cardRef}
           className="group w-64 rounded-lg shadow-md overflow-hidden cursor-pointer"
-          animate={{
+          animate={prefersReducedMotion ? {
+            opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
+          } : {
             y: activeProject ? 0 : 20,
             opacity: cardSnappedHidden ? 0 : (activeProject ? 1 : 0),
             scale: activeProject ? 1 : 0.98,
             filter: activeProject ? 'blur(0px)' : 'blur(4px)',
           }}
-          initial={{ y: 20, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+          initial={prefersReducedMotion ? { opacity: 0 } : { y: 20, opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
           whileTap={{ scale: 0.97 }}
           transition={
             cardSnappedHidden
               ? { duration: 0 }
-              : activeProject
-                ? { duration: 0.25, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } }
-                : { duration: 0.12, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } }
+              : prefersReducedMotion
+                ? { duration: activeProject ? 0.2 : 0.12, ease: [0.23, 1, 0.32, 1] }
+                : activeProject
+                  ? { duration: 0.25, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.18, ease: [0.23, 1, 0.32, 1] } }
+                  : { duration: 0.12, ease: [0.23, 1, 0.32, 1], scale: { duration: 0.12, ease: [0.23, 1, 0.32, 1] } }
           }
           onMouseEnter={() => clearTimeout(hideTimer.current)}
           onMouseLeave={startHideTimer}
@@ -534,10 +544,10 @@ export default function Home() {
             />
             <div className="fixed left-0 top-0 z-[10000] flex h-screen w-screen items-center justify-center pointer-events-none">
             <motion.div
-              initial={{ scale: videoModal.scale, x: videoModal.offsetX, y: videoModal.offsetY, borderRadius: "8px" }}
-              animate={{ scale: 1, x: 0, y: 0, borderRadius: "0px" }}
-              exit={{ opacity: 0, scale: 0.97, filter: "blur(8px)" }}
-              transition={{
+              initial={prefersReducedMotion ? { opacity: 0 } : { scale: videoModal.scale, x: videoModal.offsetX, y: videoModal.offsetY, borderRadius: "8px" }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { scale: 1, x: 0, y: 0, borderRadius: "0px" }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.97, filter: "blur(8px)" }}
+              transition={prefersReducedMotion ? { duration: 0.2, ease: [0.23, 1, 0.32, 1] } : {
                 scale:        { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
                 x:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
                 y:            { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
