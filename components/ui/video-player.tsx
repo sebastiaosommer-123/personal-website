@@ -79,6 +79,28 @@ function ControlsBar({ visible }: { visible: boolean }) {
   );
 }
 
+interface CloseButtonProps {
+  onClose: () => void;
+  controlsDelay: number;
+}
+
+function CloseButton({ onClose, controlsDelay }: CloseButtonProps) {
+  const fullscreen = useMediaState("fullscreen");
+  if (fullscreen) return null;
+  return (
+    <motion.button
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: controlsDelay, duration: 0.15, ease: EASE }}
+      onClick={onClose}
+      className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
+      aria-label="Close"
+    >
+      <X size={16} />
+    </motion.button>
+  );
+}
+
 interface VideoPlayerProps {
   src: string;
   onClose: () => void;
@@ -130,17 +152,7 @@ export function VideoPlayer({ src, onClose, controlsDelay = 0.35 }: VideoPlayerP
     >
       <MediaProvider className="w-full h-full [&_video]:w-full [&_video]:h-full [&_video]:object-cover" />
 
-      {/* Close button — same className as job-experience-modal.tsx:252 */}
-      <motion.button
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: controlsDelay, duration: 0.15, ease: EASE }}
-        onClick={onClose}
-        className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
-        aria-label="Close"
-      >
-        <X size={16} />
-      </motion.button>
+      <CloseButton onClose={onClose} controlsDelay={controlsDelay} />
 
       {/* Controls wrapper — one-shot fade-in after morph settles, then hover show/hide inside */}
       <motion.div
