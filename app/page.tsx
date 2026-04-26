@@ -225,7 +225,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex items-start justify-center px-6 pt-10 md:pt-[60px] lg:pt-[80px] pb-10 md:pb-[60px] lg:pb-[80px] relative overflow-visible" style={{ backgroundColor: "var(--color-bg)" }}>
-      <div className="relative w-full max-w-[469px] flex flex-col gap-4">
+      <div className="relative w-full max-w-[560px] flex flex-col gap-4">
 
         {/* Name + Title */}
         <div className="flex flex-col gap-0.5 w-[210px]">
@@ -297,6 +297,7 @@ export default function Home() {
                   key={exp.company}
                   data-id={exp.company}
                   className="w-full cursor-pointer"
+                  style={{ opacity: selectedExperience?.company === exp.company ? 0 : 1 }}
                   onClick={(e) => {
                     const row = e.currentTarget as HTMLElement;
                     const rowRect = row.getBoundingClientRect();

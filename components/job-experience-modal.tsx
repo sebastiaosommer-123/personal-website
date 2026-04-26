@@ -245,7 +245,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          className="relative w-full max-w-[493px] rounded-xl overflow-hidden pointer-events-auto my-auto"
+          className="relative w-full max-w-[584px] rounded-xl pointer-events-auto my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button */}
@@ -260,7 +260,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
 
           {/* Image area — transparent during clip expansion, fades in after */}
           <motion.div
-            className="w-full overflow-hidden"
+            className="w-full overflow-hidden rounded-t-xl"
             style={experience.image ? { aspectRatio: "4/3" } : { height: 200 }}
             animate={imageControls}
           >
