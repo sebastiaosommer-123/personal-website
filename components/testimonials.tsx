@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion, useMotionValue, animate } fr
 
 const THRESHOLD = 50;
 const DRAG_RANGE = 160; // distance over which exit values are fully reached
+const ELASTICITY = 0.3; // rubber-band feel: 0 = hard stop, 1 = no resistance
 
 const testimonials = [
   {
@@ -110,8 +111,14 @@ export function Testimonials() {
   const handlePointerMove = (e: React.PointerEvent) => {
     if (e.buttons === 0) return;
     const delta = e.clientX - pointerStartX.current;
-    const clampedDelta = Math.sign(delta) * Math.min(Math.abs(delta), THRESHOLD);
-    const progress = Math.abs(clampedDelta) / DRAG_RANGE;
+    const absDelta = Math.abs(delta);
+    // Progressive resistance: linear below threshold, asymptotic beyond it.
+    // Formula: limit * (1 - exp(-overscroll / limit / elasticity))
+    const resistedDelta =
+      absDelta <= THRESHOLD
+        ? absDelta
+        : THRESHOLD + THRESHOLD * (1 - Math.exp(-(absDelta - THRESHOLD) / THRESHOLD / ELASTICITY));
+    const progress = resistedDelta / DRAG_RANGE;
 
     if (!prefersReducedMotion) {
       dragX.set(Math.sign(delta) * progress * 16);
@@ -135,7 +142,7 @@ export function Testimonials() {
   const activeVariants = prefersReducedMotion ? reducedMotionVariants : variants;
 
   return (
-    <div className="relative flex flex-col gap-3 overflow-hidden">
+    <div className="relative flex flex-col gap-3">
       {/* Hidden measurement container — renders all full cards to find the tallest */}
       <div ref={measureRef} aria-hidden className="invisible absolute w-full pointer-events-none">
         {testimonials.map((t, i) => (
