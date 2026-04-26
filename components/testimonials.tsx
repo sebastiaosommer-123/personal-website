@@ -93,8 +93,6 @@ export function Testimonials() {
   };
 
   const navigate = (dir: number) => {
-    dragX.set(0);
-    dragOpacity.set(1);
     direction.current = dir;
     setActiveIndex((i) => (i + dir + testimonials.length) % testimonials.length);
   };
