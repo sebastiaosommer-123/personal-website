@@ -34,7 +34,7 @@ function ControlsBar({ visible }: { visible: boolean }) {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-      <div className="relative px-3.5 pb-3 pt-8 flex flex-col gap-2">
+      <div className="relative px-4 pb-4 pt-8 flex flex-col gap-2">
 
         <TimeSlider.Root className="group relative flex items-center w-full h-4 cursor-pointer">
           <TimeSlider.Track className="relative h-[2px] w-full rounded-full bg-white/20 group-hover:h-[3px] transition-[height] duration-150">
@@ -44,7 +44,7 @@ function ControlsBar({ visible }: { visible: boolean }) {
           <TimeSlider.Thumb className="absolute w-[10px] h-[10px] -translate-x-1/2 rounded-full bg-white shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-150 will-change-transform" style={{ left: 'var(--slider-fill)' }} />
         </TimeSlider.Root>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <PlayButton className="flex items-center justify-center text-white/90 hover:text-white transition-colors duration-100 cursor-pointer">
             {paused
               ? <Play size={16} strokeWidth={1.75} className="fill-current" />
@@ -52,7 +52,7 @@ function ControlsBar({ visible }: { visible: boolean }) {
             }
           </PlayButton>
 
-          <div className="flex items-center text-[11px] font-mono tabular-nums text-white/60 tracking-wide select-none">
+          <div className="flex items-center text-[14px] tabular-nums text-white/60 tracking-wide select-none">
             <Time type="current" />
             <span className="mx-0.5 opacity-60">/</span>
             <Time type="duration" />
@@ -62,15 +62,15 @@ function ControlsBar({ visible }: { visible: boolean }) {
 
           <MuteButton className="flex items-center justify-center text-white/70 hover:text-white transition-colors duration-100 cursor-pointer">
             {muted || volume === 0
-              ? <VolumeX size={16} strokeWidth={1.75} />
-              : <Volume2 size={16} strokeWidth={1.75} />
+              ? <VolumeX size={20} strokeWidth={1.75} />
+              : <Volume2 size={20} strokeWidth={1.75} />
             }
           </MuteButton>
 
           <FullscreenButton className="flex items-center justify-center text-white/70 hover:text-white transition-colors duration-100 cursor-pointer">
             {fullscreen
-              ? <Minimize size={16} strokeWidth={1.75} />
-              : <Maximize size={16} strokeWidth={1.75} />
+              ? <Minimize size={20} strokeWidth={1.75} />
+              : <Maximize size={20} strokeWidth={1.75} />
             }
           </FullscreenButton>
         </div>
