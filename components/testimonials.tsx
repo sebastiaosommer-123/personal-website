@@ -9,24 +9,24 @@ const DRAG_RANGE = 160; // distance over which exit values are fully reached
 const testimonials = [
   {
     quote:
+      "Seb doesn't just make things look good, he understands product, makes smart tradeoffs, and moves fast without sacrificing quality. His work helped us get our first paying customers, raise at YC's Demo Day, and set the foundation for everything since...",
+    name: "Ben Katz",
+    role: "Co-Founder",
+    company: "@ HYBRID (YC F24)",
+  },
+  {
+    quote:
+      "Sebastiao stands out as the best partner in product design that I have worked with. He always came prepared with well thought explorations and well structured decision points...",
+    name: "Philip Rogers",
+    role: "Product",
+    company: "@ AllStays",
+  },
+  {
+    quote:
       "If you are seeking a highly motivated and skilled product designer who excels in solving complex UX problems, and top notch UI, I wholeheartedly recommend Sebastião without reservation...",
     name: "João Oliveira Simões",
     role: "Founder & Design Lead",
     company: "@HOP Design",
-  },
-  {
-    quote:
-      "Sebastião is a incredibly talented product designer, and his work for Tempest was no short of amazing. Designing great products takes much more than a UI, and Seb understood that very well...",
-    name: "Ionut Vidu",
-    role: "Head of the Infinity Browsers BU",
-    company: "@ Tempest",
-  },
-  {
-    quote:
-      "I am delighted to have the opportunity to wholeheartedly recommend Sebastião. Having had the privilege of collaborating closely with him during our time at Tempest...",
-    name: "Ahmed Abd Elmageed",
-    role: "Senior Technical Product Owner",
-    company: "@ Sonar",
   },
 ];
 
