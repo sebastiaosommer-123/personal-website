@@ -7,10 +7,10 @@ import { useSliderDrag } from "@/hooks/use-slider-drag";
 
 const VIDEOS = [
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322457/1_l2hxt0.mov",
-  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322120/2_axbpw4.mov",
-  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322760/3_q5yufj.mp4",
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1777201638/surf-4_mnz5u9.mov",
   "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1777201636/surf-5_eiw26v.mov",
+  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322120/2_axbpw4.mov",
+  "https://res.cloudinary.com/dcewfztrv/video/upload/q_auto,f_auto,vc_auto/v1775322760/3_q5yufj.mp4",
 ];
 const VOLUME_MAX = 16;
 

@@ -93,7 +93,8 @@ export function Testimonials() {
   };
 
   const navigate = (dir: number) => {
-    dragFilter.set("blur(0px)");
+    dragX.set(0);
+    dragOpacity.set(1);
     direction.current = dir;
     setActiveIndex((i) => (i + dir + testimonials.length) % testimonials.length);
   };
@@ -159,7 +160,8 @@ export function Testimonials() {
 
       <div style={{ minHeight }}>
         <motion.div style={{ filter: dragFilter }}>
-        <AnimatePresence mode="wait" custom={direction.current}>
+        <AnimatePresence mode="wait" custom={direction.current} onExitComplete={() => dragFilter.set("blur(0px)")}>
+
         <motion.div
           key={activeIndex}
           custom={direction.current}
