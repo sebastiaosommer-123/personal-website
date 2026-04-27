@@ -10,21 +10,21 @@ const ELASTICITY = 0.3; // rubber-band feel: 0 = hard stop, 1 = no resistance
 const testimonials = [
   {
     quote:
-      "Seb doesn't just make things look good, he understands product, makes smart tradeoffs, and moves fast without sacrificing quality. His work helped us get our first paying customers, raise at YC's Demo Day, and set the foundation for everything since...",
+      "Seb doesn't just make things look good, he understands product, makes smart tradeoffs, and moves fast without sacrificing quality. His work helped us get our first paying customers, raise at YC's Demo Day, and set the foundation for everything since.",
     name: "Ben Katz",
     role: "Co-Founder",
     company: "@ HYBRID (YC F24)",
   },
   {
     quote:
-      "Sebastiao stands out as the best partner in product design that I have worked with. He always came prepared with well thought explorations and well structured decision points...",
+      "Sebastiao stands out as the best partner in product design that I have worked with. He always came prepared with well thought explorations and well structured decision points when bringing forth new designs.",
     name: "Philip Rogers",
     role: "Product",
     company: "@ AllStays",
   },
   {
     quote:
-      "If you are seeking a highly motivated and skilled product designer who excels in solving complex UX problems, and top notch UI, I wholeheartedly recommend Sebastião without reservation...",
+      "If you are seeking a highly motivated and skilled product designer who excels in solving complex UX problems, and top notch UI, I wholeheartedly recommend Sebastião without reservation.",
     name: "João Oliveira Simões",
     role: "Founder & Design Lead",
     company: "@ HOP Design",
