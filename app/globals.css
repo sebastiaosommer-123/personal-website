@@ -52,6 +52,7 @@
 }
 
 html {
+  background-color: var(--color-bg);
   transition: background-color 220ms ease, color 220ms ease;
 }
 

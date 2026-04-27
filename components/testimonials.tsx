@@ -143,7 +143,7 @@ export function Testimonials() {
   return (
     <div className="relative flex flex-col gap-3">
       {/* Hidden measurement container — renders all full cards to find the tallest */}
-      <div ref={measureRef} aria-hidden className="invisible absolute w-full pointer-events-none">
+      <div ref={measureRef} aria-hidden className="invisible absolute w-full pointer-events-none h-0 overflow-hidden">
         {testimonials.map((t, i) => (
           <div key={i} className="flex flex-col items-center text-center">
             <p className="text-base" style={{ lineHeight: 1.5, textWrap: "pretty" }}>
