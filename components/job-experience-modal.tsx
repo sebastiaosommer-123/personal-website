@@ -76,6 +76,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
         rafId = requestAnimationFrame(() => {
           const t = { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const };
           containerControls.start({ opacity: 1, transition: t });
+          closeButtonControls.start({ opacity: 1, filter: "blur(0px)", transition: t });
           imageControls.start({ opacity: 1, transition: t });
           bodyControls.start({ opacity: 1, transition: t });
           highlightsControls.start({ opacity: 1, transition: t });
@@ -124,6 +125,11 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           });
           headerControls.start({
             y: 0,
+            transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+          });
+          closeButtonControls.start({
+            opacity: 1,
+            filter: "blur(0px)",
             transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
           });
           imageControls.start({
@@ -259,6 +265,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
         >
           {/* Close button */}
           <motion.button
+            initial={{ opacity: 0, filter: "blur(4px)" }}
             animate={closeButtonControls}
             onClick={handleClose}
             className="absolute top-3 right-3 z-10 rounded-full p-1.5 bg-black/40 hover:bg-black/60 backdrop-blur-md text-white active:scale-[0.97] transition-[transform,background-color] duration-150"
