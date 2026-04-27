@@ -92,9 +92,12 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       const containerRect = containerRef.current.getBoundingClientRect();
       const logoTargetRect = logoRef.current.getBoundingClientRect();
 
-      const topClip = Math.max(0, originRects.row.top - containerRect.top);
-      const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
-      const dy = originRects.logo.top - logoTargetRect.top;
+      const topOverflow = Math.max(0, containerRect.top - originRects.row.top);
+      const bottomOverflow = Math.max(0, originRects.row.bottom - containerRect.bottom);
+      const containerDy = bottomOverflow - topOverflow;
+      const topClip = originRects.row.top - containerRect.top - containerDy;
+      const bottomClip = containerRect.bottom - originRects.row.bottom + containerDy;
+      const dy = originRects.logo.top - logoTargetRect.top - containerDy;
 
       const isDark = document.documentElement.classList.contains("dark");
       const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
@@ -103,6 +106,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       containerControls.set({
         clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
         backgroundColor: cardBg,
+        y: containerDy,
       });
       headerControls.set({ y: dy });
       imageControls.set({ opacity: 0, filter: "blur(4px)" });
@@ -115,6 +119,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           containerControls.start({
             clipPath: "inset(0px 0px 0px 0px round 12px)",
             backgroundColor: modalBg,
+            y: 0,
             transition: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
           });
           headerControls.start({
@@ -200,15 +205,19 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
 
     const containerRect = containerRef.current.getBoundingClientRect();
     const logoTargetRect = logoRef.current.getBoundingClientRect();
-    const topClip = Math.max(0, originRects.row.top - containerRect.top);
-    const bottomClip = Math.max(0, containerRect.bottom - originRects.row.bottom);
-    const dy = originRects.logo.top - logoTargetRect.top;
+    const topOverflow = Math.max(0, containerRect.top - originRects.row.top);
+    const bottomOverflow = Math.max(0, originRects.row.bottom - containerRect.bottom);
+    const containerDy = bottomOverflow - topOverflow;
+    const topClip = originRects.row.top - containerRect.top - containerDy;
+    const bottomClip = containerRect.bottom - originRects.row.bottom + containerDy;
+    const dy = originRects.logo.top - logoTargetRect.top - containerDy;
 
     await Promise.all([
       backdropControls.start({ opacity: 0, transition }),
       closeButtonControls.start({ opacity: 0, transition }),
       containerControls.start({
         clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        y: containerDy,
         transition,
       }),
       headerControls.start({ y: dy, transition }),
