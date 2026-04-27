@@ -24,7 +24,7 @@ const testimonials = [
   },
   {
     quote:
-      "If you are seeking a highly motivated and skilled product designer who excels in solving complex UX problems, and top notch UI, I wholeheartedly recommend Sebastião without reservation.",
+      "test If you are seeking a highly motivated and skilled product designer who excels in solving complex UX problems, and top notch UI, I wholeheartedly recommend Sebastião without reservation.",
     name: "João Oliveira Simões",
     role: "Founder & Design Lead",
     company: "@ HOP Design",
