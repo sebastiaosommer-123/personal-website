@@ -34,6 +34,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
   const knob2Ref = useRef<HTMLDivElement>(null);
   const volIndicatorRef = useRef<HTMLDivElement>(null);
   const volTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const volResetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const screenOffTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hasInteractedRef = useRef(false);
 
@@ -121,20 +122,25 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
         el.style.filter = "blur(8px)";
 
         // Reset to right-side start after exit completes, so next entry comes from the right
-        setTimeout(() => {
+        if (volResetTimerRef.current) clearTimeout(volResetTimerRef.current);
+        volResetTimerRef.current = setTimeout(() => {
           const el = volIndicatorRef.current;
           if (!el) return;
           el.style.transition = "none";
           el.style.transform = "translateX(10px) scale(0.95)";
           el.style.filter = "blur(8px)";
-        }, 160);
+        }, 200);
       }
     }, 1000);
   }, [volumeLevel, prefersReducedMotion]);
 
   // Clean up timers on unmount
   useEffect(() => {
-    return () => clearTimeout(screenOffTimerRef.current);
+    return () => {
+      clearTimeout(screenOffTimerRef.current);
+      clearTimeout(volTimerRef.current);
+      clearTimeout(volResetTimerRef.current);
+    };
   }, []);
 
   const loadVideo = useCallback((index: number) => {
