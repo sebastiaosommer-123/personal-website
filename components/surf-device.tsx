@@ -203,10 +203,10 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
       {/* Volume Level Indicator */}
       <div
         ref={volIndicatorRef}
-        className="absolute z-[15] bg-[rgba(0,0,0,0.1)] dark:bg-[rgba(255,255,255,0.15)]"
+        className="absolute z-[15] bg-[rgba(255,255,255,0.15)]"
         style={{
           right: "12px",
-          top: "60px",
+          top: "70px",
           width: "4px",
           height: "80px",
           borderRadius: "2px",
@@ -216,7 +216,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
         }}
       >
         <div
-          className="absolute bottom-0 w-full bg-[rgba(0,0,0,0.5)] dark:bg-[rgba(255,255,255,0.75)]"
+          className="absolute bottom-0 w-full bg-[rgba(255,255,255,0.75)]"
           style={{
             borderRadius: "2px",
             height: `${(volumeLevel / VOLUME_MAX) * 100}%`,
