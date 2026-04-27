@@ -77,21 +77,60 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
     return () => preloads.forEach(v => { v.src = ""; });
   }, []);
 
-  // Volume indicator fade
+  // Volume indicator — directional entry/exit with blur+scale (Emil style)
   useEffect(() => {
     if (!hasInteractedRef.current) return;
     const el = volIndicatorRef.current;
     if (!el) return;
-    el.style.transition = "opacity 0.2s ease";
-    el.style.opacity = "1";
+
+    const easing = "cubic-bezier(0.23,1,0.32,1)";
+
+    // Entry: slide in from right, 200ms
+    if (prefersReducedMotion) {
+      el.style.transition = `opacity 200ms ${easing}`;
+      el.style.opacity = "1";
+    } else {
+      el.style.transition = [
+        `opacity 200ms ${easing}`,
+        `transform 200ms ${easing}`,
+        `filter 200ms ${easing}`,
+      ].join(", ");
+      el.style.opacity = "1";
+      el.style.transform = "translateX(0) scale(1)";
+      el.style.filter = "blur(0px)";
+    }
+
     if (volTimerRef.current) clearTimeout(volTimerRef.current);
+
     volTimerRef.current = setTimeout(() => {
-      if (volIndicatorRef.current) {
-        volIndicatorRef.current.style.transition = "opacity 0.4s ease";
-        volIndicatorRef.current.style.opacity = "0";
+      const el = volIndicatorRef.current;
+      if (!el) return;
+
+      // Exit: slide out to left, 150ms (faster than entry)
+      if (prefersReducedMotion) {
+        el.style.transition = `opacity 150ms ${easing}`;
+        el.style.opacity = "0";
+      } else {
+        el.style.transition = [
+          `opacity 150ms ${easing}`,
+          `transform 150ms ${easing}`,
+          `filter 150ms ${easing}`,
+        ].join(", ");
+        el.style.opacity = "0";
+        el.style.transform = "translateX(-10px) scale(0.95)";
+        el.style.filter = "blur(8px)";
+
+        // Reset to right-side start after exit completes, so next entry comes from the right
+        setTimeout(() => {
+          const el = volIndicatorRef.current;
+          if (!el) return;
+          el.style.transition = "none";
+          el.style.transform = "translateX(10px) scale(0.95)";
+          el.style.filter = "blur(8px)";
+        }, 160);
       }
     }, 1000);
-  }, [volumeLevel]);
+  }, [volumeLevel, prefersReducedMotion]);
 
   // Clean up timers on unmount
   useEffect(() => {
