@@ -158,19 +158,26 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
       {/* Volume Level Indicator */}
       <div
         ref={volIndicatorRef}
-        className="absolute flex flex-col-reverse gap-[3px] z-[15]"
-        style={{ right: 12, top: 60, opacity: 0 }}
+        className="absolute z-[15] bg-[rgba(0,0,0,0.1)] dark:bg-[rgba(255,255,255,0.15)]"
+        style={{
+          right: 12,
+          top: 60,
+          width: 4,
+          height: 80,
+          borderRadius: 2,
+          opacity: 0,
+          transform: "translateX(10px) scale(0.95)",
+          filter: "blur(8px)",
+        }}
       >
-        {Array.from({ length: 16 }, (_, i) => i + 1).map((level) => (
-          <div
-            key={level}
-            className={`w-[4px] h-[4px] rounded-full ${
-              level <= volumeLevel
-                ? "bg-[rgba(0,0,0,0.5)] dark:bg-[rgba(255,255,255,0.75)]"
-                : "bg-[rgba(0,0,0,0.1)] dark:bg-[rgba(255,255,255,0.15)]"
-            }`}
-          />
-        ))}
+        <div
+          className="absolute bottom-0 w-full bg-[rgba(0,0,0,0.5)] dark:bg-[rgba(255,255,255,0.75)]"
+          style={{
+            borderRadius: 2,
+            height: `${(volumeLevel / VOLUME_MAX) * 100}%`,
+            transition: "height 80ms cubic-bezier(0.23,1,0.32,1)",
+          }}
+        />
       </div>
 
       {/* Volume Buttons - Right Outer Edge */}
