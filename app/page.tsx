@@ -405,7 +405,7 @@ export default function Home() {
       </AnimatePresence>
 
       <AnimatePresence initial={false} onExitComplete={() => { dragX.set(0); dragY.set(0); }}>
-        {surfOpen && (
+        {(surfPeeking || surfOpen) && (
           <div
             ref={constraintsRef}
             className={`fixed inset-0 pointer-events-none ${modalClosing ? 'z-[10002]' : 'z-[60]'}`}
@@ -413,20 +413,20 @@ export default function Home() {
             <motion.div
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
               initial={prefersReducedMotion ? {} : { y: "100vh" }}
-              animate={prefersReducedMotion ? {} : { y: 0 }}
+              animate={prefersReducedMotion ? {} : { y: surfOpen ? 0 : "100vh" }}
               exit={prefersReducedMotion ? {} : { y: "100vh" }}
               transition={{ duration: prefersReducedMotion ? 0.2 : 0.5, ease: [0.23, 1, 0.32, 1] }}
             >
               <motion.div
                 ref={surfDeviceRef}
-                drag={!isTouch}
+                drag={surfOpen && !isTouch}
                 dragConstraints={constraintsRef}
                 dragMomentum={false}
                 dragElastic={0}
                 style={{ x: dragX, y: dragY }}
                 className="pointer-events-auto"
-                whileHover={!isTouch ? { cursor: 'grab' } : undefined}
-                whileDrag={!isTouch ? { cursor: 'grabbing' } : undefined}
+                whileHover={surfOpen && !isTouch ? { cursor: 'grab' } : undefined}
+                whileDrag={surfOpen && !isTouch ? { cursor: 'grabbing' } : undefined}
               >
                 <div style={{ transform: `scale(${deviceScale})`, transformOrigin: 'center center' }}>
                   <SurfDevice ref={surfHandleRef} onClose={closeSurf} />
