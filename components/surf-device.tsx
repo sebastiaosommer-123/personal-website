@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useEffect, useCallback, forwardRef, useImperativeHandle } from "react";
+import { useReducedMotion } from "motion/react";
 import { useDeviceAudio } from "@/hooks/use-device-audio";
 import { useRotaryKnob } from "@/hooks/use-rotary-knob";
 import { useSliderDrag } from "@/hooks/use-slider-drag";
@@ -43,6 +44,7 @@ const SurfDevice = forwardRef<SurfDeviceHandle, SurfDeviceProps>(({ onClose }, r
   }));
 
   const [volumeLevel, setVolumeLevel] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [screenOff, setScreenOff] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
