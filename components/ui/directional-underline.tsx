@@ -65,6 +65,7 @@ export const DirectionalUnderline = React.forwardRef<HTMLElement, DirectionalUnd
             } else {
               el.style.transition = "none"
               el.style.clipPath = `inset(0 ${100 - x}% 0 ${x}%)`
+              void el.offsetWidth // force reflow to commit reset before transition starts
               requestAnimationFrame(() => {
                 el.style.transition = "clip-path 150ms cubic-bezier(0.23,1,0.32,1)"
                 el.style.clipPath = "inset(0 0 0 0)"
