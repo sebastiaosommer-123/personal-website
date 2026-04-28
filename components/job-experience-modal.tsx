@@ -51,6 +51,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
   const prefersReducedMotion = useReducedMotion();
   const isExitingRef = useRef(false);
   const handleCloseRef = useRef<() => void>(() => {});
+  const clipStateRef = useRef<{ topClip: number; bottomClip: number; leftClip: number; rightClip: number; containerDy: number; dy: number } | null>(null);
 
   useLayoutEffect(() => {
     backdropControls.start({
@@ -101,6 +102,8 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       const leftClip = Math.max(0, originRects.row.left - containerRect.left);
       const rightClip = Math.max(0, containerRect.right - originRects.row.right);
       const dy = originRects.logo.top - logoTargetRect.top - containerDy;
+
+      clipStateRef.current = { topClip, bottomClip, leftClip, rightClip, containerDy, dy };
 
       const isDark = document.documentElement.classList.contains("dark");
       const cardBg = isDark ? "#1F1F21" : "#EEEFF1";
@@ -206,21 +209,12 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       return;
     }
 
-    if (!originRects || !containerRef.current || !logoRef.current) {
+    if (!clipStateRef.current) {
       onClose();
       return;
     }
 
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const logoTargetRect = logoRef.current.getBoundingClientRect();
-    const topOverflow = Math.max(0, containerRect.top - originRects.row.top);
-    const bottomOverflow = Math.max(0, originRects.row.bottom - containerRect.bottom);
-    const containerDy = bottomOverflow - topOverflow;
-    const topClip = originRects.row.top - containerRect.top - containerDy;
-    const bottomClip = containerRect.bottom - originRects.row.bottom + containerDy;
-    const leftClip = Math.max(0, originRects.row.left - containerRect.left);
-    const rightClip = Math.max(0, containerRect.right - originRects.row.right);
-    const dy = originRects.logo.top - logoTargetRect.top - containerDy;
+    const { topClip, bottomClip, leftClip, rightClip, containerDy, dy } = clipStateRef.current;
 
     await Promise.all([
       backdropControls.start({ opacity: 0, transition }),
