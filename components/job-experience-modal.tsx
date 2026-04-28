@@ -258,7 +258,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          className="relative w-full max-w-[590px] rounded-xl pointer-events-auto my-auto"
+          className="relative w-full max-w-[592px] rounded-xl pointer-events-auto my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button */}
