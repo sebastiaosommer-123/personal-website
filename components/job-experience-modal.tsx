@@ -98,6 +98,8 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       const containerDy = bottomOverflow - topOverflow;
       const topClip = originRects.row.top - containerRect.top - containerDy;
       const bottomClip = containerRect.bottom - originRects.row.bottom + containerDy;
+      const leftClip = Math.max(0, originRects.row.left - containerRect.left);
+      const rightClip = Math.max(0, containerRect.right - originRects.row.right);
       const dy = originRects.logo.top - logoTargetRect.top - containerDy;
 
       const isDark = document.documentElement.classList.contains("dark");
@@ -105,7 +107,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       const modalBg = isDark ? "#111113" : "#FFFFFF";
 
       containerControls.set({
-        clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        clipPath: `inset(${topClip}px ${rightClip}px ${bottomClip}px ${leftClip}px round 12px)`,
         backgroundColor: cardBg,
         y: containerDy,
       });
@@ -216,13 +218,15 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
     const containerDy = bottomOverflow - topOverflow;
     const topClip = originRects.row.top - containerRect.top - containerDy;
     const bottomClip = containerRect.bottom - originRects.row.bottom + containerDy;
+    const leftClip = Math.max(0, originRects.row.left - containerRect.left);
+    const rightClip = Math.max(0, containerRect.right - originRects.row.right);
     const dy = originRects.logo.top - logoTargetRect.top - containerDy;
 
     await Promise.all([
       backdropControls.start({ opacity: 0, transition }),
       closeButtonControls.start({ opacity: 0, transition }),
       containerControls.start({
-        clipPath: `inset(${topClip}px 0px ${bottomClip}px 0px round 12px)`,
+        clipPath: `inset(${topClip}px ${rightClip}px ${bottomClip}px ${leftClip}px round 12px)`,
         y: containerDy,
         transition,
       }),
@@ -260,7 +264,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
         <motion.div
           ref={containerRef}
           animate={containerControls}
-          className="relative w-full max-w-[584px] rounded-xl pointer-events-auto my-auto"
+          className="relative w-full max-w-[590px] rounded-xl pointer-events-auto my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button */}
@@ -310,7 +314,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           {/* Header row — travels from list position to modal header via translateY */}
           <motion.div
             animate={headerControls}
-            className="flex items-center justify-between px-3 pt-4"
+            className="flex items-center justify-between px-4 pt-4"
           >
             <div className="flex items-center gap-3">
               <div
