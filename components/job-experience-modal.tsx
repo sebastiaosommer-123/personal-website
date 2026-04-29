@@ -308,7 +308,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           {/* Header row — travels from list position to modal header via translateY */}
           <motion.div
             animate={headerControls}
-            className="flex items-center justify-between px-4 pt-4"
+            className="flex items-center justify-between px-3 sm:px-4 pt-4"
           >
             <div className="flex items-center gap-3">
               <div
@@ -365,14 +365,14 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           {/* Body content — fades in after clip expansion completes */}
           <motion.div animate={bodyControls}>
             {experience.description && <p
-              className="px-4 pt-2 text-base sm:text-pretty"
+              className="px-3 sm:px-4 pt-2 text-base sm:text-pretty"
               style={{ lineHeight: 1.4, color: "var(--color-fg-muted)" }}
             >
               {experience.description}
             </p>}
 
             <motion.div animate={highlightsControls}>
-              {experience.highlights.length > 0 && <div className="px-4 pt-4">
+              {experience.highlights.length > 0 && <div className="px-3 sm:px-4 pt-4">
                 <span
                   className="font-medium text-base sm:text-balance"
                   style={{ color: "var(--color-fg)" }}
