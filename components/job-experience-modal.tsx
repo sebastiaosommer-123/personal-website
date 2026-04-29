@@ -365,8 +365,8 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
           {/* Body content — fades in after clip expansion completes */}
           <motion.div animate={bodyControls}>
             {experience.description && <p
-              className="px-4 pt-2 text-base"
-              style={{ lineHeight: 1.4, color: "var(--color-fg-muted)", textWrap: "pretty" } as any}
+              className="px-4 pt-2 text-base sm:text-pretty"
+              style={{ lineHeight: 1.4, color: "var(--color-fg-muted)" }}
             >
               {experience.description}
             </p>}
@@ -374,8 +374,8 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
             <motion.div animate={highlightsControls}>
               {experience.highlights.length > 0 && <div className="px-4 pt-4">
                 <span
-                  className="font-medium text-base"
-                  style={{ color: "var(--color-fg)", textWrap: "balance" } as any}
+                  className="font-medium text-base sm:text-balance"
+                  style={{ color: "var(--color-fg)" }}
                 >
                   Highlights
                 </span>
@@ -387,7 +387,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
                       style={{ lineHeight: 1.4, color: "var(--color-fg)", opacity: 0.7 }}
                     >
                       <span className="shrink-0">–</span>
-                      <span style={{ textWrap: "pretty" } as any}>{h}</span>
+                      <span className="sm:text-pretty">{h}</span>
                     </div>
                   ))}
                 </div>
