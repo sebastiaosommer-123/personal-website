@@ -21,7 +21,7 @@ const block = (delay: number, rm: boolean | null | undefined = false) => ({
 const experience: ExperienceItem[] = [
   {
     company: "Stealth AI Startup",
-    role: "Sr. Product Designer",
+    role: "Founding Designer",
     period: "2025 – Current",
     logo: "/assets/stealth-startup.svg",
     description: "",
