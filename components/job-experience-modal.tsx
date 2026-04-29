@@ -254,7 +254,7 @@ function ModalContent({ experience, originRects, onClose, onCloseStart }: ModalC
       />
 
       {/* Card wrapper — handles click-outside-to-close; pointer-events-auto so touch scroll works on mobile */}
-      <div className="fixed inset-0 z-[10001] flex items-start justify-center px-3 py-6 overflow-y-auto" onClick={handleClose}>
+      <div className="fixed inset-0 z-[10001] flex items-start justify-center px-4 sm:px-3 py-6 overflow-y-auto" onClick={handleClose}>
         <motion.div
           ref={containerRef}
           animate={containerControls}

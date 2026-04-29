@@ -285,7 +285,7 @@ export default function Home() {
           </motion.div>
 
           {/* Experience */}
-          <motion.div {...block(0.32, prefersReducedMotion)} className="flex flex-col -mx-3">
+          <motion.div {...block(0.32, prefersReducedMotion)} className="flex flex-col -mx-2 sm:-mx-3">
             <AnimatedBackground
               enableHover={!isTouch}
               className="rounded-xl bg-black/[0.04] dark:bg-white/[0.06]"
